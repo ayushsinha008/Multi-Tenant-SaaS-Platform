@@ -39,24 +39,26 @@ export default function ProjectsPage() {
   if (isLoading) return <div className="animate-pulse flex gap-6">Loading projects...</div>;
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="space-y-12 pb-12">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between border-b-[4px] border-black pb-8 gap-8">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-white">Projects</h1>
-          <p className="text-slate-400 mt-1">Manage and track your team's initiatives.</p>
+          <h1 className="text-7xl font-black tracking-tighter text-black uppercase leading-none">
+            Active<br/><span className="text-white" style={{ WebkitTextStroke: '3px black' }}>Projects</span>
+          </h1>
+          <p className="text-xl font-bold text-black/70 mt-4 uppercase">Manage and track your initiatives.</p>
         </div>
         
-        <div className="flex items-center gap-3">
-          <div className="bg-[#111827] border border-white/10 p-1 rounded-lg flex items-center">
-            <button onClick={() => setView('grid')} className={`p-1.5 rounded-md transition-colors ${view === 'grid' ? 'bg-white/10 text-white' : 'text-slate-400 hover:text-slate-200'}`}>
-              <LayoutGrid className="w-4 h-4" />
+        <div className="flex items-center gap-4">
+          <div className="flex bg-white border-[3px] border-black shadow-[4px_4px_0_0_#000000]">
+            <button onClick={() => setView('grid')} className={`p-3 border-r-[3px] border-black transition-colors ${view === 'grid' ? 'bg-[#00FF4C] text-black' : 'text-black hover:bg-black hover:text-[#00FF4C]'}`}>
+              <LayoutGrid className="w-6 h-6" strokeWidth={2.5} />
             </button>
-            <button onClick={() => setView('list')} className={`p-1.5 rounded-md transition-colors ${view === 'list' ? 'bg-white/10 text-white' : 'text-slate-400 hover:text-slate-200'}`}>
-              <List className="w-4 h-4" />
+            <button onClick={() => setView('list')} className={`p-3 transition-colors ${view === 'list' ? 'bg-[#00FF4C] text-black' : 'text-black hover:bg-black hover:text-[#00FF4C]'}`}>
+              <List className="w-6 h-6" strokeWidth={2.5} />
             </button>
           </div>
-          <Button onClick={() => setIsModalOpen(true)}>
-            <Plus className="w-4 h-4 mr-2" />
+          <Button onClick={() => setIsModalOpen(true)} className="bg-[#00FF4C] text-black border-[3px] border-black shadow-[4px_4px_0_0_#000000] hover:bg-black hover:text-[#00FF4C] h-14">
+            <Plus className="w-6 h-6 mr-2" strokeWidth={3} />
             New Project
           </Button>
         </div>
@@ -70,7 +72,7 @@ export default function ProjectsPage() {
           primaryAction={{ label: 'Create Project', onClick: () => setIsModalOpen(true) }}
         />
       ) : (
-        <div className={view === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6' : 'flex flex-col gap-4'}>
+        <div className={view === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8' : 'flex flex-col gap-6'}>
           <AnimatePresence>
             {projects.map((project: any, i: number) => (
               <motion.div
@@ -81,28 +83,28 @@ export default function ProjectsPage() {
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.2, delay: i * 0.05 }}
               >
-                <Card className="hover:border-indigo-500/30 transition-all duration-300 group cursor-pointer h-full">
-                  <div className={`p-6 ${view === 'list' ? 'flex items-center gap-6' : ''}`}>
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-indigo-500/20 to-purple-500/20 border border-indigo-500/20 flex items-center justify-center text-indigo-400 shrink-0">
-                        <Folder className="w-6 h-6" />
+                <Card className="hover:border-black transition-all group cursor-pointer h-full border-[4px] border-black bg-white shadow-[8px_8px_0_0_#000000] hover:-translate-y-2 hover:-translate-x-2 hover:shadow-[16px_16px_0_0_#000000]">
+                  <div className={`p-8 ${view === 'list' ? 'flex items-center gap-8' : ''}`}>
+                    <div className="flex items-start justify-between mb-8">
+                      <div className="w-16 h-16 bg-black flex items-center justify-center text-[#00FF4C] shrink-0 transform -rotate-3 group-hover:rotate-0 transition-transform">
+                        <Folder className="w-8 h-8" strokeWidth={2.5} />
                       </div>
-                      <button className="text-slate-500 hover:text-white p-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <MoreHorizontal className="w-5 h-5" />
+                      <button className="text-black hover:bg-black hover:text-[#00FF4C] p-2 transition-colors border-[2px] border-transparent hover:border-black opacity-0 group-hover:opacity-100">
+                        <MoreHorizontal className="w-6 h-6" strokeWidth={3} />
                       </button>
                     </div>
                     
                     <div className={view === 'list' ? 'flex-1' : ''}>
-                      <h3 className="text-lg font-semibold text-white mb-1 group-hover:text-indigo-400 transition-colors">{project.name}</h3>
-                      <p className="text-sm text-slate-400 line-clamp-2 mb-4">{project.description || 'No description provided.'}</p>
+                      <h3 className="text-3xl font-black text-black uppercase tracking-tighter mb-2 group-hover:text-[#00FF4C] transition-colors leading-none" style={{ WebkitTextStroke: '1px black' }}>{project.name}</h3>
+                      <p className="text-sm font-bold text-black/60 line-clamp-2 mb-8 uppercase tracking-widest">{project.description || 'No description provided.'}</p>
                       
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between pt-6 border-t-[4px] border-black">
                         <Badge variant={project.status === 'ACTIVE' ? 'success' : 'secondary'}>
                           {project.status || 'ACTIVE'}
                         </Badge>
-                        <div className="flex -space-x-2">
+                        <div className="flex -space-x-3">
                           {[1, 2, 3].map((j) => (
-                            <div key={j} className="w-7 h-7 rounded-full bg-slate-700 border-2 border-[#111827] z-10" />
+                            <div key={j} className="w-10 h-10 rounded-none bg-black border-[3px] border-white z-10 flex items-center justify-center text-[#00FF4C] font-black text-xs uppercase">{j}</div>
                           ))}
                         </div>
                       </div>
@@ -115,23 +117,23 @@ export default function ProjectsPage() {
         </div>
       )}
 
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Create New Project" description="Projects help you organize your team's tasks.">
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Create Project" description="Initialize a new workspace node.">
         <form onSubmit={(e) => {
           e.preventDefault();
           const fd = new FormData(e.currentTarget);
           createProject.mutate({ name: fd.get('name') as string, description: fd.get('description') as string });
-        }} className="space-y-4">
+        }} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1">Project Name</label>
+            <label className="block text-xl font-black text-black mb-2 uppercase tracking-tighter">Project Name</label>
             <Input name="name" required placeholder="Website Redesign" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1">Description</label>
-            <textarea name="description" rows={3} className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" placeholder="Optional details..." />
+            <label className="block text-xl font-black text-black mb-2 uppercase tracking-tighter">Description</label>
+            <textarea name="description" rows={4} className="flex w-full border-[3px] border-black bg-white px-4 py-3 text-sm font-bold text-black shadow-[4px_4px_0_0_#000000] placeholder:text-black/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00FF4C] focus-visible:ring-offset-2 transition-all focus-visible:shadow-[6px_6px_0_0_#000000] focus-visible:-translate-y-0.5 focus-visible:-translate-x-0.5 resize-none" placeholder="Optional details..." />
           </div>
-          <div className="pt-4 flex justify-end gap-3 border-t border-white/10">
+          <div className="pt-6 flex justify-end gap-4 border-t-[4px] border-black mt-8">
             <Button variant="ghost" type="button" onClick={() => setIsModalOpen(false)}>Cancel</Button>
-            <Button type="submit" disabled={createProject.isPending}>
+            <Button type="submit" disabled={createProject.isPending} className="bg-black text-[#00FF4C] hover:bg-[#00FF4C] hover:text-black">
               {createProject.isPending ? 'Creating...' : 'Create Project'}
             </Button>
           </div>

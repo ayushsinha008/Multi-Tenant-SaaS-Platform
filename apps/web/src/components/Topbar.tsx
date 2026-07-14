@@ -84,17 +84,17 @@ export function Topbar({ onOpenCmd }: { onOpenCmd: () => void }) {
         </button>
       </div>
 
-      <div className="hidden md:flex items-center text-sm font-medium text-slate-400 relative" ref={workspaceRef}>
+      <div className="hidden md:flex items-center text-sm font-black text-black relative" ref={workspaceRef}>
         <button 
           onClick={() => setIsWorkspaceOpen(!isWorkspaceOpen)}
-          className="flex items-center gap-2 px-3 py-1.5 bg-white/5 hover:bg-white/10 rounded-md border border-white/10 mr-2 transition-colors text-slate-200"
+          className="flex items-center gap-2 px-4 py-2 bg-white border-[3px] border-black shadow-[4px_4px_0_0_#000000] hover:translate-x-1 hover:translate-y-1 hover:shadow-none mr-4 transition-all text-black uppercase tracking-widest"
         >
-          <Briefcase className="w-4 h-4 text-indigo-400" />
+          <Briefcase className="w-5 h-5 text-[#00FF4C]" strokeWidth={3} />
           {activeOrg?.name || 'No Workspace Selected'}
-          <ChevronDown className="w-4 h-4 text-slate-500" />
+          <ChevronDown className="w-5 h-5 text-black" strokeWidth={3} />
         </button>
-        <span className="mx-2 text-slate-600">/</span>
-        <span className="text-slate-200">Dashboard</span>
+        <span className="mx-2 text-black/50 text-xl font-black">/</span>
+        <span className="text-black uppercase tracking-widest text-lg ml-2">Dashboard</span>
 
         {/* Workspace Dropdown */}
         <AnimatePresence>
@@ -104,10 +104,10 @@ export function Topbar({ onOpenCmd }: { onOpenCmd: () => void }) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 10 }}
               transition={{ duration: 0.15 }}
-              className="absolute top-12 left-0 w-64 bg-[#111827] border border-white/10 rounded-xl shadow-2xl py-2 z-50"
+              className="absolute top-16 left-0 w-72 bg-white border-[4px] border-black shadow-[8px_8px_0_0_#000000] py-2 z-50"
             >
-              <div className="px-3 pb-2 mb-2 border-b border-white/5">
-                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Your Workspaces</p>
+              <div className="px-4 pb-4 mb-2 border-b-[3px] border-black">
+                <p className="text-xs font-black text-black/50 uppercase tracking-widest pt-2">Your Workspaces</p>
               </div>
               <div className="max-h-60 overflow-y-auto px-2">
                 {organizations.map((org: any) => (
@@ -117,15 +117,15 @@ export function Topbar({ onOpenCmd }: { onOpenCmd: () => void }) {
                       setActiveWorkspace(org._id);
                       setIsWorkspaceOpen(false);
                     }}
-                    className="w-full flex items-center justify-between px-3 py-2 text-sm text-slate-300 hover:bg-white/5 rounded-lg transition-colors"
+                    className="w-full flex items-center justify-between px-4 py-3 text-sm font-black text-black hover:bg-[#00FF4C] hover:border-black transition-colors uppercase border-b-[2px] border-transparent hover:border-black"
                   >
-                    <span className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 font-bold text-xs uppercase">
+                    <span className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-black flex items-center justify-center text-[#00FF4C] font-black text-sm uppercase">
                         {org.name[0]}
                       </div>
                       {org.name}
                     </span>
-                    {activeWorkspaceId === org._id && <Check className="w-4 h-4 text-indigo-400" />}
+                    {activeWorkspaceId === org._id && <Check className="w-6 h-6 text-black" strokeWidth={4} />}
                   </button>
                 ))}
               </div>
@@ -138,12 +138,12 @@ export function Topbar({ onOpenCmd }: { onOpenCmd: () => void }) {
         {/* Search Trigger */}
         <button 
           onClick={onOpenCmd}
-          className="flex items-center gap-2 px-3 py-1.5 bg-[#111827] border border-white/10 rounded-lg text-slate-400 hover:text-slate-200 transition-colors"
+          className="flex items-center gap-3 px-4 py-2 bg-white border-[3px] border-black shadow-[4px_4px_0_0_#000000] hover:translate-x-1 hover:translate-y-1 hover:shadow-none text-black transition-all uppercase tracking-widest font-black"
         >
-          <Search className="w-4 h-4" />
-          <span className="text-sm">Search...</span>
-          <kbd className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-white/5 text-[10px] font-mono border border-white/10">
-            <span className="text-xs">⌘</span>K
+          <Search className="w-5 h-5" strokeWidth={3} />
+          <span className="text-sm hidden sm:inline">Search...</span>
+          <kbd className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 bg-[#00FF4C] border-[2px] border-black text-xs font-black">
+            <span>⌘</span>K
           </kbd>
         </button>
 
@@ -151,11 +151,11 @@ export function Topbar({ onOpenCmd }: { onOpenCmd: () => void }) {
         <div className="relative" ref={notifRef}>
           <button 
             onClick={() => setIsNotifOpen(!isNotifOpen)}
-            className={`relative p-2 transition-colors rounded-lg ${isNotifOpen ? 'bg-white/10 text-white' : 'text-slate-400 hover:text-white'}`}
+            className={`relative p-3 border-[3px] border-black transition-all shadow-[4px_4px_0_0_#000000] hover:translate-x-1 hover:translate-y-1 hover:shadow-none ${isNotifOpen ? 'bg-black text-[#00FF4C]' : 'bg-white text-black'}`}
           >
-            <Bell className="w-5 h-5" />
+            <Bell className="w-6 h-6" strokeWidth={2.5} />
             {unreadCount > 0 && (
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-indigo-500 ring-2 ring-[#0F172A]" />
+              <span className="absolute top-1.5 right-1.5 w-3 h-3 bg-[#FF0000] border-[2px] border-black" />
             )}
           </button>
 
@@ -166,28 +166,28 @@ export function Topbar({ onOpenCmd }: { onOpenCmd: () => void }) {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
                 transition={{ duration: 0.15 }}
-                className="absolute top-12 right-0 w-80 sm:w-96 bg-[#111827] border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden flex flex-col max-h-[32rem]"
+                className="absolute top-16 right-0 w-80 sm:w-96 bg-white border-[4px] border-black shadow-[8px_8px_0_0_#000000] z-50 overflow-hidden flex flex-col max-h-[32rem]"
               >
-                <div className="p-4 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
+                <div className="p-6 border-b-[4px] border-black flex items-center justify-between bg-[#00FF4C]">
                   <div>
-                    <h3 className="font-semibold text-white">Notifications</h3>
-                    <p className="text-xs text-slate-400 mt-0.5">You have {unreadCount} unread messages</p>
+                    <h3 className="font-black text-black uppercase text-xl">Notifications</h3>
+                    <p className="text-sm font-bold text-black/70 mt-1 uppercase">You have {unreadCount} unread</p>
                   </div>
                   {unreadCount > 0 && (
                     <button 
                       onClick={() => markAllAsRead.mutate()}
-                      className="text-xs font-medium text-indigo-400 hover:text-indigo-300 transition-colors flex items-center gap-1"
+                      className="text-xs font-black text-black border-[2px] border-black px-2 py-1 bg-white hover:bg-black hover:text-white transition-colors flex items-center gap-2 uppercase tracking-widest"
                     >
-                      <CheckCircle2 className="w-3.5 h-3.5" />
-                      Mark all read
+                      <CheckCircle2 className="w-4 h-4" strokeWidth={3} />
+                      Read All
                     </button>
                   )}
                 </div>
                 
                 <div className="overflow-y-auto flex-1 p-2 space-y-1">
                   {notifications.length === 0 ? (
-                    <div className="p-8 text-center text-slate-500 text-sm">
-                      <Bell className="w-8 h-8 mx-auto mb-3 text-slate-600 opacity-50" />
+                    <div className="p-12 text-center text-black/50 text-sm font-black uppercase tracking-widest">
+                      <Bell className="w-16 h-16 mx-auto mb-4 text-black/20" strokeWidth={1} />
                       No notifications yet
                     </div>
                   ) : (
@@ -197,14 +197,14 @@ export function Topbar({ onOpenCmd }: { onOpenCmd: () => void }) {
                         onClick={() => {
                           if (!notif.read) markAsRead.mutate(notif._id);
                         }}
-                        className={`w-full text-left p-3 rounded-lg transition-colors flex gap-3 ${notif.read ? 'opacity-60 hover:bg-white/5' : 'bg-indigo-500/5 hover:bg-indigo-500/10'}`}
+                        className={`w-full text-left p-4 transition-colors flex gap-4 border-b-[2px] border-black last:border-b-0 ${notif.read ? 'opacity-60 bg-white hover:bg-[#ECECEC]' : 'bg-black text-white hover:bg-black/90'}`}
                       >
                         <div className="mt-1 shrink-0">
-                          {notif.read ? <Circle className="w-2.5 h-2.5 text-slate-600" /> : <div className="w-2.5 h-2.5 rounded-full bg-indigo-500" />}
+                          {notif.read ? <Circle className="w-4 h-4 text-black" strokeWidth={3} /> : <div className="w-4 h-4 bg-[#00FF4C] border-[2px] border-white" />}
                         </div>
                         <div>
-                          <p className="text-sm text-slate-200 leading-snug">{notif.message}</p>
-                          <span className="text-xs text-slate-500 mt-1 block">
+                          <p className={`text-sm font-bold uppercase leading-snug ${notif.read ? 'text-black' : 'text-white'}`}>{notif.message}</p>
+                          <span className={`text-xs font-bold uppercase mt-2 block ${notif.read ? 'text-black/50' : 'text-[#00FF4C]'}`}>
                             {new Date(notif.createdAt).toLocaleDateString()} at {new Date(notif.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                           </span>
                         </div>

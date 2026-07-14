@@ -82,64 +82,72 @@ export default function MembersPage() {
   if (isLoading) return <div className="animate-pulse">Loading members...</div>;
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="space-y-12 pb-12">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between border-b-[4px] border-black pb-8 gap-8">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-white">Team Members</h1>
-          <p className="text-slate-400 mt-1">Manage access and roles for your team.</p>
+          <h1 className="text-7xl font-black tracking-tighter text-black uppercase leading-none">
+            Team<br/><span className="text-[#00FF4C]" style={{ WebkitTextStroke: '3px black' }}>Directory</span>
+          </h1>
+          <p className="text-xl font-bold text-black/70 mt-4 uppercase">Manage personnel and access roles.</p>
         </div>
-        <Button onClick={() => setIsInviteOpen(true)}>
-          <UserPlus className="w-4 h-4 mr-2" />
+        <Button onClick={() => setIsInviteOpen(true)} className="bg-[#00FF4C] text-black border-[3px] border-black shadow-[4px_4px_0_0_#000000] hover:bg-black hover:text-[#00FF4C] hover:shadow-none hover:translate-x-1 hover:translate-y-1 h-16 px-8 text-lg">
+          <UserPlus className="w-6 h-6 mr-2" strokeWidth={3} />
           Invite Member
         </Button>
       </div>
 
-      <div className="bg-[#111827] border border-white/10 rounded-2xl overflow-hidden shadow-2xl pb-32">
-        <div className="overflow-visible">
-          <table className="w-full text-sm text-left">
-            <thead className="text-xs text-slate-400 uppercase bg-white/5 border-b border-white/10">
+      <div className="border-[4px] border-black bg-white shadow-[12px_12px_0_0_#000000] overflow-visible pb-12 relative">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-black border-l-[4px] border-b-[4px] border-black flex items-center justify-center -mr-[4px] -mt-[4px]">
+          <Users className="w-16 h-16 text-[#00FF4C]" strokeWidth={1} />
+        </div>
+        
+        <div className="overflow-visible pt-16 px-8">
+          <table className="w-full text-sm text-left border-collapse">
+            <thead className="text-xl text-black font-black uppercase tracking-tighter border-b-[4px] border-black">
               <tr>
-                <th className="px-6 py-4 font-semibold tracking-wider">Member</th>
-                <th className="px-6 py-4 font-semibold tracking-wider">Role</th>
-                <th className="px-6 py-4 font-semibold tracking-wider">Status</th>
-                <th className="px-6 py-4 font-semibold tracking-wider">Joined</th>
-                <th className="px-6 py-4 font-semibold tracking-wider text-right">Actions</th>
+                <th className="py-4 px-4 border-r-[4px] border-black">Operative</th>
+                <th className="py-4 px-4 border-r-[4px] border-black">Clearance</th>
+                <th className="py-4 px-4 border-r-[4px] border-black">Status</th>
+                <th className="py-4 px-4 border-r-[4px] border-black">Onboarded</th>
+                <th className="py-4 px-4 text-right">Directives</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/10">
+            <tbody className="divide-y-[4px] divide-black font-bold uppercase">
               {members.map((member: any) => (
-                <tr key={member._id} className="hover:bg-white/5 transition-colors group">
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      <Avatar src={member.userId?.avatar} fallback={member.userId?.name || member.email} />
+                <tr key={member._id} className="hover:bg-[#00FF4C] transition-colors group">
+                  <td className="py-6 px-4 border-r-[4px] border-black">
+                    <div className="flex items-center gap-4">
+                      <div className="border-[3px] border-black rounded-none overflow-hidden">
+                        <Avatar src={member.userId?.avatar} fallback={member.userId?.name || member.email} />
+                      </div>
                       <div>
-                        <div className="font-medium text-white">{member.userId?.name || 'Pending Invite'}</div>
-                        <div className="text-slate-400 text-xs">{member.email || member.userId?.email}</div>
+                        <div className="text-xl font-black text-black leading-none">{member.userId?.name || 'Pending Invite'}</div>
+                        <div className="text-black/60 text-sm mt-1">{member.email || member.userId?.email}</div>
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-1.5 text-slate-300">
-                      {member.role === 'OWNER' ? <Shield className="w-3 h-3 text-indigo-400" /> : <Users className="w-3 h-3" />}
-                      <span className="font-medium">{member.role}</span>
+                  <td className="py-6 px-4 border-r-[4px] border-black">
+                    <div className="flex items-center gap-2 text-black">
+                      {member.role === 'OWNER' ? <Shield className="w-5 h-5 text-black" strokeWidth={3} /> : <Users className="w-5 h-5 text-black" strokeWidth={3} />}
+                      <span className="text-lg font-black tracking-tighter">{member.role}</span>
                     </div>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="py-6 px-4 border-r-[4px] border-black">
                     <Badge variant={member.status === 'ACTIVE' ? 'success' : 'secondary'}>
                       {member.status}
                     </Badge>
                   </td>
-                  <td className="px-6 py-4 text-slate-400">
+                  <td className="py-6 px-4 text-black border-r-[4px] border-black text-lg">
                     {new Date(member.joinedAt || member.createdAt).toLocaleDateString()}
                   </td>
-                  <td className="px-6 py-4 text-right relative">
+                  <td className="py-6 px-4 text-right relative">
                     {member.role !== 'OWNER' && (
                       <div ref={openActionId === member._id ? actionRef : null}>
                         <button 
                           onClick={() => setOpenActionId(openActionId === member._id ? null : member._id)}
-                          className={`p-2 rounded-lg transition-colors ${openActionId === member._id ? 'bg-white/10 text-white' : 'text-slate-500 hover:text-white hover:bg-white/10 opacity-0 group-hover:opacity-100'}`}
+                          className={`p-3 border-[3px] border-black transition-colors ${openActionId === member._id ? 'bg-black text-[#00FF4C]' : 'bg-white text-black hover:bg-black hover:text-[#00FF4C] opacity-0 group-hover:opacity-100'}`}
                         >
-                          <MoreHorizontal className="w-4 h-4" />
+                          <MoreHorizontal className="w-5 h-5" strokeWidth={3} />
                         </button>
                         
                         <AnimatePresence>
@@ -149,32 +157,31 @@ export default function MembersPage() {
                               animate={{ opacity: 1, scale: 1 }}
                               exit={{ opacity: 0, scale: 0.95 }}
                               transition={{ duration: 0.1 }}
-                              className="absolute right-6 top-12 w-48 bg-[#1f2937] border border-white/10 rounded-xl shadow-2xl py-1 z-50 overflow-hidden"
+                              className="absolute right-16 top-6 w-56 bg-white border-[4px] border-black shadow-[8px_8px_0_0_#000000] z-50 flex flex-col"
                             >
                               {member.role === 'MEMBER' ? (
                                 <button
                                   onClick={() => updateRole.mutate({ id: member._id, role: 'ADMIN' })}
-                                  className="w-full px-4 py-2 text-left text-sm text-slate-300 hover:bg-white/5 hover:text-white flex items-center gap-2"
+                                  className="w-full px-4 py-3 text-left font-black text-black hover:bg-black hover:text-[#00FF4C] flex items-center gap-3 border-b-[2px] border-black transition-colors"
                                 >
-                                  <ArrowUpCircle className="w-4 h-4 text-indigo-400" />
-                                  Make Admin
+                                  <ArrowUpCircle className="w-5 h-5" strokeWidth={3} />
+                                  ELEVATE TO ADMIN
                                 </button>
                               ) : (
                                 <button
                                   onClick={() => updateRole.mutate({ id: member._id, role: 'MEMBER' })}
-                                  className="w-full px-4 py-2 text-left text-sm text-slate-300 hover:bg-white/5 hover:text-white flex items-center gap-2"
+                                  className="w-full px-4 py-3 text-left font-black text-black hover:bg-black hover:text-white flex items-center gap-3 border-b-[2px] border-black transition-colors"
                                 >
-                                  <ArrowDownCircle className="w-4 h-4 text-yellow-400" />
-                                  Make Member
+                                  <ArrowDownCircle className="w-5 h-5" strokeWidth={3} />
+                                  DEMOTE TO MEMBER
                                 </button>
                               )}
-                              <div className="h-px bg-white/10 my-1" />
                               <button
                                 onClick={() => removeMember.mutate(member._id)}
-                                className="w-full px-4 py-2 text-left text-sm text-red-400 hover:bg-red-500/10 flex items-center gap-2"
+                                className="w-full px-4 py-3 text-left font-black text-black bg-[#FF0000] hover:bg-black hover:text-[#FF0000] flex items-center gap-3 transition-colors"
                               >
-                                <Trash2 className="w-4 h-4" />
-                                Remove Member
+                                <Trash2 className="w-5 h-5" strokeWidth={3} />
+                                TERMINATE
                               </button>
                             </motion.div>
                           )}
@@ -189,39 +196,39 @@ export default function MembersPage() {
         </div>
         
         {members.length === 0 && (
-          <div className="p-12">
+          <div className="p-16 border-t-[4px] border-black bg-[#ECECEC]">
             <EmptyState
               icon={Users}
-              title="No members yet"
-              description="Invite your team members to collaborate on projects and tasks."
-              primaryAction={{ label: 'Invite Member', onClick: () => setIsInviteOpen(true) }}
+              title="NO OPERATIVES DETECTED"
+              description="Transmit an invitation to expand your operational capacity."
+              primaryAction={{ label: 'INITIATE INVITE', onClick: () => setIsInviteOpen(true) }}
             />
           </div>
         )}
       </div>
 
-      <Modal isOpen={isInviteOpen} onClose={() => setIsInviteOpen(false)} title="Invite Team Member" description="Send an email invitation to join your workspace.">
+      <Modal isOpen={isInviteOpen} onClose={() => setIsInviteOpen(false)} title="Transmit Invitation" description="Deploy an encrypted email token to recruit personnel.">
         <form onSubmit={(e) => {
           e.preventDefault();
           const fd = new FormData(e.currentTarget);
           inviteMember.mutate(fd.get('email') as string);
-        }} className="space-y-4">
+        }} className="space-y-6">
           {errorMsg && (
-            <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+            <div className="p-4 bg-[#FF0000] border-[4px] border-black text-black font-black uppercase shadow-[4px_4px_0_0_#000000]">
               {errorMsg}
             </div>
           )}
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1">Email Address</label>
+            <label className="block text-xl font-black text-black mb-2 uppercase tracking-tighter">Target Email Address</label>
             <div className="relative">
-              <Mail className="absolute left-3 top-3 w-5 h-5 text-slate-500" />
-              <Input name="email" type="email" required placeholder="colleague@example.com" className="pl-10" />
+              <Mail className="absolute left-4 top-4 w-6 h-6 text-black" strokeWidth={2} />
+              <Input name="email" type="email" required placeholder="colleague@example.com" className="pl-14 h-14" />
             </div>
           </div>
-          <div className="pt-4 flex justify-end gap-3 border-t border-white/10">
+          <div className="pt-6 flex justify-end gap-4 border-t-[4px] border-black mt-8">
             <Button variant="ghost" type="button" onClick={() => setIsInviteOpen(false)}>Cancel</Button>
-            <Button type="submit" disabled={inviteMember.isPending}>
-              {inviteMember.isPending ? 'Sending...' : 'Send Invite'}
+            <Button type="submit" disabled={inviteMember.isPending} className="bg-black text-[#00FF4C] hover:bg-[#00FF4C] hover:text-black h-14 px-8">
+              {inviteMember.isPending ? 'TRANSMITTING...' : 'SEND INVITE'}
             </Button>
           </div>
         </form>
