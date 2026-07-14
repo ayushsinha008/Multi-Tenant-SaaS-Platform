@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: saas_mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    networks:
+      - saas_network
+
+  redis:
+    image: redis:alpine
+    container_name: saas_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - saas_network
+
+  server:
+    build: 
+      context: ./apps/server
+      dockerfile: Dockerfile
+    container_name: saas_server
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - NODE_ENV=development
+      - FRONTEND_URL=http://localhost:3000
+      - MONGODB_URI=mongodb://admin:password@mongodb:27017/saas?authSource=admin
+      - REDIS_URL=redis://redis:6379
+      - JWT_ACCESS_SECRET=dev_access_secret
+      - JWT_REFRESH_SECRET=dev_refresh_secret
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - saas_network
+
+  web:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+    container_name: saas_web
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:5000/api/v1
+      - NEXT_PUBLIC_SOCKET_URL=http://localhost:5000
+    depends_on:
+      - server
+    networks:
+      - saas_network
+
+volumes:
+  mongodb_data:
+
+networks:
+  saas_network:
+    driver: bridge

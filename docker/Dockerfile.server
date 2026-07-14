@@ -1,0 +1,29 @@
+FROM node:20-alpine AS builder
+# Set working directory
+WORKDIR /app
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+# Copy package files
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/server/package.json ./apps/server/
+# Install dependencies
+RUN pnpm install --frozen-lockfile
+# Copy source
+COPY apps/server ./apps/server
+# Build
+RUN pnpm --filter server build
+
+FROM node:20-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+# Copy built artifacts and dependencies
+COPY --from=builder /app/package.json /app/pnpm-workspace.yaml ./
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/apps/server/package.json ./apps/server/
+COPY --from=builder /app/apps/server/dist ./apps/server/dist
+COPY --from=builder /app/apps/server/node_modules ./apps/server/node_modules
+
+EXPOSE 5000
+CMD ["pnpm", "--filter", "server", "start"]
