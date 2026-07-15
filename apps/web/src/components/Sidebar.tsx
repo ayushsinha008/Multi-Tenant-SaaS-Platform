@@ -27,6 +27,13 @@ const navItems = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { user, logout } = useAuthStore();
+
+  const handleLogout = () => {
+    logout();
+    router.push('/login');
+  };
 
   return (
     <aside className="w-72 h-screen flex flex-col bg-[#FFFDF5] border-r-[3px] border-[#1A1A1A] overflow-hidden shrink-0 relative z-20">
