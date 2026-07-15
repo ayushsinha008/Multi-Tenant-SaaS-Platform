@@ -30,12 +30,7 @@ const navItems = [
 export function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, logout } = useAuthStore();
-
-  const handleLogout = () => {
-    logout();
-    router.push('/login');
-  };
+  const { user } = useAuthStore();
 
   return (
     <aside className="w-72 h-screen flex flex-col bg-[#FFFDF5] border-r-[3px] border-[#1A1A1A] overflow-hidden shrink-0 relative z-20">
@@ -110,25 +105,7 @@ export function Sidebar() {
         </Link>
       </div>
 
-      {/* User + Logout */}
-      <div className="p-4 border-t-[3px] border-[#1A1A1A]">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl border-[2px] border-[#1A1A1A] bg-[#FBCFE8] flex items-center justify-center font-black text-sm text-[#1A1A1A] uppercase shrink-0">
-            {user?.name?.charAt(0) || 'U'}
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-xs font-bold text-[#1A1A1A] truncate">{user?.name}</p>
-            <p className="text-[10px] font-medium text-[#1A1A1A]/40 truncate">{user?.email}</p>
-          </div>
-          <button
-            onClick={handleLogout}
-            title="Logout"
-            className="w-8 h-8 rounded-lg border-[2px] border-[#1A1A1A]/20 flex items-center justify-center text-[#1A1A1A]/40 hover:border-red-400 hover:bg-red-50 hover:text-red-500 transition-all"
-          >
-            <LogOut className="w-3.5 h-3.5" strokeWidth={2.5} />
-          </button>
-        </div>
-      </div>
+
     </aside>
   );
 }

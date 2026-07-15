@@ -1,27 +1,33 @@
 'use client';
 
 import { useAuthStore } from '@/store/useAuthStore';
-import { Search, Bell, ChevronDown, Check, Building2, CheckCircle2, Circle } from 'lucide-react';
+import { Search, Bell, ChevronDown, Check, Building2, CheckCircle2, Circle, LogOut, User } from 'lucide-react';
 import { Avatar } from './ui/Avatar';
 import { useState, useEffect, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
 import { motion, AnimatePresence } from 'framer-motion';
 
+import { useRouter } from 'next/navigation';
+
 export function Topbar({ onOpenCmd }: { onOpenCmd: () => void }) {
-  const { user, activeWorkspaceId, setActiveWorkspace } = useAuthStore();
+  const { user, activeWorkspaceId, setActiveWorkspace, logout } = useAuthStore();
+  const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [isWorkspaceOpen, setIsWorkspaceOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const queryClient = useQueryClient();
 
   const workspaceRef = useRef<HTMLDivElement>(null);
   const notifRef = useRef<HTMLDivElement>(null);
+  const profileRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (workspaceRef.current && !workspaceRef.current.contains(e.target as Node)) setIsWorkspaceOpen(false);
       if (notifRef.current && !notifRef.current.contains(e.target as Node)) setIsNotifOpen(false);
+      if (profileRef.current && !profileRef.current.contains(e.target as Node)) setIsProfileOpen(false);
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -199,10 +205,55 @@ export function Topbar({ onOpenCmd }: { onOpenCmd: () => void }) {
           </AnimatePresence>
         </div>
 
-        {/* User avatar */}
+        {/* User profile dropdown */}
         {mounted && (
-          <div className="border-[3px] border-[#1A1A1A] rounded-full shadow-[3px_3px_0px_#1A1A1A] hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_#1A1A1A] transition-all cursor-pointer">
-            <Avatar src={user?.avatar} fallback={user?.name || 'U'} size="md" />
+          <div className="relative" ref={profileRef}>
+            <button
+              onClick={() => setIsProfileOpen(!isProfileOpen)}
+              className="block border-[3px] border-[#1A1A1A] rounded-full shadow-[3px_3px_0px_#1A1A1A] hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_#1A1A1A] active:translate-y-[2px] active:shadow-none transition-all"
+            >
+              <Avatar src={user?.avatar} fallback={user?.name || 'U'} size="md" />
+            </button>
+
+            <AnimatePresence>
+              {isProfileOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute top-[calc(100%+8px)] right-0 w-56 bg-white rounded-2xl border-[3px] border-[#1A1A1A] shadow-[6px_6px_0px_#1A1A1A] z-50 overflow-hidden"
+                >
+                  <div className="px-4 py-3 border-b-[2px] border-[#1A1A1A] bg-[#FBCFE8]">
+                    <p className="text-sm font-bold text-[#1A1A1A] truncate">{user?.name}</p>
+                    <p className="text-[10px] font-medium text-[#1A1A1A]/60 truncate">{user?.email}</p>
+                  </div>
+                  <div className="p-2 space-y-1">
+                    <button
+                      onClick={() => {
+                        setIsProfileOpen(false);
+                        router.push('/dashboard/settings');
+                      }}
+                      className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-[#1A1A1A] rounded-xl hover:bg-[#FBCFE8]/40 transition-colors"
+                    >
+                      <User className="w-4 h-4" strokeWidth={2.5} />
+                      Profile Settings
+                    </button>
+                    <button
+                      onClick={() => {
+                        setIsProfileOpen(false);
+                        logout();
+                        router.push('/login');
+                      }}
+                      className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-red-600 rounded-xl hover:bg-red-50 transition-colors"
+                    >
+                      <LogOut className="w-4 h-4" strokeWidth={2.5} />
+                      Log out
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         )}
       </div>
