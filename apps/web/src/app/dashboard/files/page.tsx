@@ -155,7 +155,7 @@ export default function FilesPage() {
                       </div>
                     )}
                     {/* Hover overlay */}
-                    <div className="absolute inset-0 bg-[#1A1A1A]/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+                    <div className="absolute inset-0 bg-[#1A1A1A]/60 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 focus-within:opacity-100 transition-opacity flex items-center justify-center gap-3">
                       <a href={file.url} download target="_blank" rel="noreferrer" className="w-9 h-9 rounded-lg border-[2px] border-white bg-white flex items-center justify-center hover:bg-[#BBF7D0] transition-colors">
                         <Download className="w-4 h-4 text-[#1A1A1A]" strokeWidth={2.5} />
                       </a>

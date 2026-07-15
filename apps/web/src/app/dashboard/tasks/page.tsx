@@ -123,8 +123,8 @@ export default function TasksPage() {
           </div>
         </div>
       ) : (
-        <div className="flex-1 overflow-x-auto kanban-scroll bg-[#FFFDF5]">
-          <div className="flex h-full w-max min-w-full">
+        <div className="flex-1 overflow-x-hidden bg-[#FFFDF5]">
+          <div className="grid grid-cols-4 h-full w-full">
             {columns.map((col) => {
             const colTasks = tasks.filter((t: any) => t.status === col);
             const cfg = columnConfig[col];
@@ -133,7 +133,7 @@ export default function TasksPage() {
             return (
               <div
                 key={col}
-                className={`flex-1 min-w-[300px] flex flex-col border-r-[3px] border-[#1A1A1A] last:border-r-0 transition-colors ${isDragOver ? 'bg-[#F8F8F0]' : ''}`}
+                className={`flex flex-col border-r-[3px] border-[#1A1A1A] last:border-r-0 transition-colors ${isDragOver ? 'bg-[#F8F8F0]' : ''}`}
                 style={{ backgroundColor: cfg.bg }}
                 onDragOver={(e) => { 
                   e.preventDefault(); 

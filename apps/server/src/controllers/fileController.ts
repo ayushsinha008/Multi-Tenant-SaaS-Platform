@@ -4,14 +4,16 @@ import { v2 as cloudinary } from 'cloudinary';
 import { File } from '../models/File';
 import { ActivityLogService } from '../services/ActivityLogService';
 
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
+// Cloudinary configuration will be applied dynamically inside functions to avoid dotenv hoisting issues
 
 export const uploadFile = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    cloudinary.config({
+      cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+      api_key: process.env.CLOUDINARY_API_KEY,
+      api_secret: process.env.CLOUDINARY_API_SECRET,
+    });
+
     const file = req.file;
     const { projectId, taskId } = req.body;
     const organizationId = req.organization!._id;
@@ -64,6 +66,12 @@ export const uploadFile = async (req: Request, res: Response, next: NextFunction
 
 export const deleteFile = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    cloudinary.config({
+      cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+      api_key: process.env.CLOUDINARY_API_KEY,
+      api_secret: process.env.CLOUDINARY_API_SECRET,
+    });
+
     const { id } = req.params;
     const organizationId = req.organization!._id;
 
