@@ -77,6 +77,7 @@ export const paymentSuccess = async (req: Request, res: Response, next: NextFunc
     res.redirect(`${FRONTEND_URL}/dashboard/settings?payment=success&plan=${newPlan}`);
   } catch (error) {
     console.error('Payment success error:', error);
+    const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
     res.redirect(`${FRONTEND_URL}/dashboard/settings?payment=error`);
   }
 };
