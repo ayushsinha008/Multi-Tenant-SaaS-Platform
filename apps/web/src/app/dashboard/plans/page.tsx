@@ -5,11 +5,18 @@ import { Button } from '@/components/ui/Button';
 import { CheckSquare, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { api } from '@/lib/axios';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 
 export default function PlansPage() {
-  const { user, activeWorkspaceId, updateWorkspace } = useAuthStore();
+  const { user, activeWorkspaceId } = useAuthStore();
   
+  const updateWorkspace = useMutation({
+    mutationFn: async (data: { plan: string }) => {
+      const res = await api.patch(`/organizations/${activeWorkspaceId}`, data);
+      return res.data;
+    }
+  });
+
   const { data: orgsData } = useQuery({
     queryKey: ['organizations'],
     queryFn: () => api.get('/organizations'),

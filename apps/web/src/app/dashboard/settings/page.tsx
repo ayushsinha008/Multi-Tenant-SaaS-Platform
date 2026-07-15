@@ -75,7 +75,6 @@ export default function SettingsPage() {
 
 
   const updateProfile = useMutation({
-    queryKey: ['updateProfile'],
     mutationFn: async (data: { name?: string; avatar?: string }) => {
       const res = await api.patch('/auth/profile', data);
       return res.data;
@@ -348,19 +347,19 @@ export default function SettingsPage() {
                     id: 'emailNotifications',
                     label: 'Email Notifications',
                     desc: 'Receive a daily digest and important alerts via email.',
-                    value: user?.preferences?.emailNotifications ?? true
+                    value: (user as any)?.preferences?.emailNotifications ?? true
                   },
                   {
                     id: 'pushNotifications',
                     label: 'In-App Push Notifications',
                     desc: 'Receive real-time alerts inside the application.',
-                    value: user?.preferences?.pushNotifications ?? true
+                    value: (user as any)?.preferences?.pushNotifications ?? true
                   },
                   {
                     id: 'marketingEmails',
                     label: 'Marketing & Updates',
                     desc: 'Receive feature updates, tips, and promotional offers.',
-                    value: user?.preferences?.marketingEmails ?? false
+                    value: (user as any)?.preferences?.marketingEmails ?? false
                   }
                 ].map((pref) => (
                   <div key={pref.id} className="flex items-center justify-between pb-6 border-b-[2px] border-[#1A1A1A]/10 last:pb-0 last:border-b-0">
@@ -390,7 +389,9 @@ export default function SettingsPage() {
               <div>
                 <h2 className="text-2xl font-bold text-[#1A1A1A] tracking-tight">Security</h2>
                 <p className="text-sm font-medium text-[#1A1A1A]/40 mt-1">Manage your account security and authentication</p>
-{/* Connected Accounts */}
+              </div>
+
+              {/* Connected Accounts */}
               <div className="rounded-2xl border-[3px] border-[#1A1A1A] bg-white p-6 md:p-8 shadow-[4px_4px_0px_#1A1A1A]">
                 <h3 className="text-sm font-bold text-[#1A1A1A] mb-4">Connected Accounts</h3>
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-xl border-[2px] border-[#1A1A1A]/10 bg-[#FFFDF5] gap-4">
