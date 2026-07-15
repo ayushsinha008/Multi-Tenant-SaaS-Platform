@@ -16,13 +16,13 @@ import {
 } from 'lucide-react';
 
 const navItems = [
-  { name: 'Overview',  href: '/dashboard',          icon: LayoutDashboard, color: '#DDD6FE' },
-  { name: 'Projects',  href: '/dashboard/projects',  icon: Folder,          color: '#BAE6FD' },
-  { name: 'Tasks',     href: '/dashboard/tasks',     icon: CheckSquare,     color: '#BBF7D0' },
-  { name: 'Members',   href: '/dashboard/members',   icon: Users,           color: '#FBCFE8' },
-  { name: 'Files',     href: '/dashboard/files',     icon: File,            color: '#FEF08A' },
-  { name: 'Activity',  href: '/dashboard/activity',  icon: Activity,        color: '#FED7AA' },
-  { name: 'Settings',  href: '/dashboard/settings',  icon: Settings,        color: '#DDD6FE' },
+  { name: 'Overview', href: '/dashboard', icon: LayoutDashboard, color: '#DDD6FE' },
+  { name: 'Projects', href: '/dashboard/projects', icon: Folder, color: '#BAE6FD' },
+  { name: 'Tasks', href: '/dashboard/tasks', icon: CheckSquare, color: '#BBF7D0' },
+  { name: 'Members', href: '/dashboard/members', icon: Users, color: '#FBCFE8' },
+  { name: 'Files', href: '/dashboard/files', icon: File, color: '#FEF08A' },
+  { name: 'Activity', href: '/dashboard/activity', icon: Activity, color: '#FED7AA' },
+  { name: 'Settings', href: '/dashboard/settings', icon: Settings, color: '#DDD6FE' },
 ];
 
 export function Sidebar() {
@@ -61,16 +61,14 @@ export function Sidebar() {
                 />
               )}
               <div
-                className={`relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-150 group ${
-                  isActive
+                className={`relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-150 group ${isActive
                     ? 'text-[#1A1A1A]'
                     : 'text-[#1A1A1A]/50 hover:text-[#1A1A1A] hover:bg-white hover:shadow-[2px_2px_0px_#1A1A1A] hover:border-[2px] hover:border-[#1A1A1A]'
-                }`}
+                  }`}
               >
                 <div
-                  className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-all ${
-                    isActive ? 'bg-white/70 border-[2px] border-[#1A1A1A]' : 'bg-transparent group-hover:bg-white/50'
-                  }`}
+                  className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-all ${isActive ? 'bg-white/70 border-[2px] border-[#1A1A1A]' : 'bg-transparent group-hover:bg-white/50'
+                    }`}
                 >
                   <item.icon className="w-4 h-4" strokeWidth={isActive ? 2.5 : 2} />
                 </div>
@@ -101,6 +99,26 @@ export function Sidebar() {
             Upgrade Now ✨
           </div>
         </Link>
+      </div>
+
+      {/* User + Logout */}
+      <div className="p-4 border-t-[3px] border-[#1A1A1A]">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl border-[2px] border-[#1A1A1A] bg-[#FBCFE8] flex items-center justify-center font-black text-sm text-[#1A1A1A] uppercase shrink-0">
+            {user?.name?.charAt(0) || 'U'}
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-bold text-[#1A1A1A] truncate">{user?.name}</p>
+            <p className="text-[10px] font-medium text-[#1A1A1A]/40 truncate">{user?.email}</p>
+          </div>
+          <button
+            onClick={handleLogout}
+            title="Logout"
+            className="w-8 h-8 rounded-lg border-[2px] border-[#1A1A1A]/20 flex items-center justify-center text-[#1A1A1A]/40 hover:border-red-400 hover:bg-red-50 hover:text-red-500 transition-all"
+          >
+            <LogOut className="w-3.5 h-3.5" strokeWidth={2.5} />
+          </button>
+        </div>
       </div>
     </aside>
   );
