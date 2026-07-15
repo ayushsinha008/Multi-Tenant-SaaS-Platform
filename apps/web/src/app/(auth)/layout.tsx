@@ -8,28 +8,11 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
   return (
     <div className="flex min-h-screen bg-[#FFFDF5] text-[#1A1A1A] font-sans selection:bg-[#FEF08A]">
       {/* Background Grid */}
-      <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+      <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#1A1A1A10_1px,transparent_1px),linear-gradient(to_bottom,#1A1A1A10_1px,transparent_1px)] bg-[size:24px_24px]"></div>
       
       {/* Left side - Branding & Hero (hidden on mobile) */}
       <div className="hidden lg:flex w-1/2 relative flex-col justify-between p-12 overflow-hidden z-10 border-r-[4px] border-[#1A1A1A] bg-[#BAE6FD]">
         
-        {/* Floating Shapes */}
-        <motion.div 
-          animate={{ y: [0, -10, 0], rotate: [0, 5, 0] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-20 right-20 w-24 h-24 bg-[#FEF08A] rounded-full border-[4px] border-[#1A1A1A] shadow-[8px_8px_0px_#1A1A1A] flex items-center justify-center z-0"
-        >
-          <Star className="w-10 h-10 text-[#1A1A1A]" strokeWidth={3} fill="#1A1A1A" />
-        </motion.div>
-
-        <motion.div 
-          animate={{ y: [0, 15, 0], rotate: [0, -10, 0] }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-40 right-10 w-32 h-32 bg-[#FBCFE8] rounded-2xl border-[4px] border-[#1A1A1A] shadow-[12px_12px_0px_#1A1A1A] flex items-center justify-center z-0 transform -rotate-12"
-        >
-          <Zap className="w-12 h-12 text-[#1A1A1A]" strokeWidth={3} fill="#1A1A1A" />
-        </motion.div>
-
         <div className="relative z-10 flex items-center gap-4 font-black text-2xl text-[#1A1A1A] uppercase tracking-tight">
           <div className="w-14 h-14 rounded-2xl bg-[#DDD6FE] border-[4px] border-[#1A1A1A] flex items-center justify-center shadow-[6px_6px_0px_#1A1A1A] hover:-translate-y-1 hover:shadow-[8px_8px_0px_#1A1A1A] transition-all cursor-pointer">
             <Sparkles className="w-7 h-7 text-[#1A1A1A]" strokeWidth={3} />
@@ -54,9 +37,9 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="rounded-3xl border-[4px] border-[#1A1A1A] bg-white p-8 shadow-[12px_12px_0px_#1A1A1A] relative mt-16 transform rotate-1 hover:rotate-0 hover:-translate-y-1 transition-all duration-300"
+            className="rounded-3xl border-[4px] border-[#1A1A1A] bg-white p-8 shadow-[8px_8px_0px_#1A1A1A] relative mt-16"
           >
-            <div className="absolute -top-6 -left-6 w-14 h-14 bg-[#BBF7D0] border-[4px] border-[#1A1A1A] rounded-full flex items-center justify-center shadow-[6px_6px_0px_#1A1A1A]">
+            <div className="absolute -top-6 -left-6 w-14 h-14 bg-[#BBF7D0] border-[4px] border-[#1A1A1A] rounded-full flex items-center justify-center shadow-[4px_4px_0px_#1A1A1A]">
               <Quote className="w-6 h-6 text-[#1A1A1A]" strokeWidth={3} fill="#1A1A1A" />
             </div>
             <h2 className="text-xl text-[#1A1A1A] font-bold leading-relaxed">
