@@ -3,12 +3,10 @@ import crypto from 'crypto';
 import { Organization } from '../models/Organization';
 import { ActivityLogService } from '../services/ActivityLogService';
 
-const PAYU_MERCHANT_KEY = process.env.PAYU_MERCHANT_KEY || '';
-const PAYU_MERCHANT_SALT = process.env.PAYU_MERCHANT_SALT || '';
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
-
 export const generateHash = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const PAYU_MERCHANT_KEY = process.env.PAYU_MERCHANT_KEY || '';
+    const PAYU_MERCHANT_SALT = process.env.PAYU_MERCHANT_SALT || '';
     const { amount, productinfo, firstname, email, phone, udf1 } = req.body;
     
     // Generate unique transaction ID
@@ -33,6 +31,8 @@ export const generateHash = async (req: Request, res: Response, next: NextFuncti
 
 export const paymentSuccess = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const PAYU_MERCHANT_SALT = process.env.PAYU_MERCHANT_SALT || '';
+    const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
     const { txnid, amount, productinfo, firstname, email, status, hash, key, udf1 } = req.body;
 
     // Verify hash
@@ -82,5 +82,6 @@ export const paymentSuccess = async (req: Request, res: Response, next: NextFunc
 };
 
 export const paymentFailure = async (req: Request, res: Response, next: NextFunction) => {
+  const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
   res.redirect(`${FRONTEND_URL}/dashboard/settings?payment=failure`);
 };
