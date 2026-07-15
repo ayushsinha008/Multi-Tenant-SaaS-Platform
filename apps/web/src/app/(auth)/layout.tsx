@@ -39,9 +39,6 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             transition={{ delay: 0.4 }}
             className="rounded-3xl border-[4px] border-[#1A1A1A] bg-white p-8 shadow-[8px_8px_0px_#1A1A1A] relative mt-16"
           >
-            <div className="absolute -top-6 -left-6 w-14 h-14 bg-[#BBF7D0] border-[4px] border-[#1A1A1A] rounded-full flex items-center justify-center shadow-[4px_4px_0px_#1A1A1A]">
-              <Quote className="w-6 h-6 text-[#1A1A1A]" strokeWidth={3} fill="#1A1A1A" />
-            </div>
             <h2 className="text-xl text-[#1A1A1A] font-bold leading-relaxed">
               "Migrating to ReadyNest was incredibly smooth. The brutalist UI is so refreshing, and the Kanban boards make our updates crystal clear."
             </h2>
