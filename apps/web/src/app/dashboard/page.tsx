@@ -3,158 +3,193 @@
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
 import { useAuthStore } from '@/store/useAuthStore';
-import { Card, CardContent } from '@/components/ui/Card';
 import { motion } from 'framer-motion';
-import { Folder, CheckSquare, Users, Activity, BarChart3, Clock, TrendingUp } from 'lucide-react';
-import { EmptyState } from '@/components/ui/EmptyState';
+import { Folder, CheckSquare, Users, Activity, TrendingUp, ArrowRight, Clock, Sparkles } from 'lucide-react';
+
+const cardColors = [
+  { bg: '#BAE6FD', icon: '#7DD3FC' }, // sky
+  { bg: '#DDD6FE', icon: '#C4B5FD' }, // lavender
+  { bg: '#BBF7D0', icon: '#86EFAC' }, // mint
+  { bg: '#FBCFE8', icon: '#F9A8D4' }, // pink
+];
 
 export default function DashboardOverview() {
-  const activeWorkspaceId = useAuthStore((state) => state.activeWorkspaceId);
+  const { activeWorkspaceId, user } = useAuthStore();
 
   const { data: analytics, isLoading } = useQuery({
     queryKey: ['analytics', activeWorkspaceId],
-    queryFn: async () => {
-      const res = await api.get('/analytics');
-      return res.data;
-    },
+    queryFn: async () => { const res = await api.get('/analytics'); return res.data; },
     enabled: !!activeWorkspaceId,
   });
 
-  if (isLoading) {
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {[...Array(4)].map((_, i) => (
-          <div key={i} className="h-32 bg-[#111827] rounded-xl border border-white/5 animate-pulse" />
-        ))}
-      </div>
-    );
-  }
+  const { data: organizations = [] } = useQuery({
+    queryKey: ['organizations'],
+    queryFn: async () => { const res = await api.get('/organizations'); return res.data.organizations || []; }
+  });
 
-  const stats = [
-    { label: 'Total Projects', value: analytics?.overview?.totalProjects || 0, icon: Folder, color: 'text-indigo-400', bg: 'bg-indigo-500/10' },
-    { label: 'Active Tasks', value: analytics?.overview?.totalTasks || 0, icon: CheckSquare, color: 'text-green-400', bg: 'bg-green-500/10' },
-    { label: 'Team Members', value: analytics?.overview?.totalMembers || 0, icon: Users, color: 'text-blue-400', bg: 'bg-blue-500/10' },
-    { label: 'Completion Rate', value: '64%', icon: TrendingUp, color: 'text-purple-400', bg: 'bg-purple-500/10' },
+  const activeOrg = organizations.find((org: any) => org._id === activeWorkspaceId);
+  const barHeights = [40, 70, 45, 90, 65, 80, 50, 100, 75, 60, 85, 95];
+
+  const kpis = [
+    { label: 'Projects', value: analytics?.overview?.totalProjects ?? 0, icon: Folder, color: cardColors[0] },
+    { label: 'Active Tasks', value: analytics?.overview?.totalTasks ?? 0, icon: CheckSquare, color: cardColors[1] },
+    { label: 'Team Members', value: analytics?.overview?.totalMembers ?? 0, icon: Users, color: cardColors[2] },
+    { label: 'Completion', value: '64%', icon: TrendingUp, color: cardColors[3] },
   ];
 
-  if (!analytics?.overview?.totalProjects && !analytics?.overview?.totalTasks) {
-    return (
-      <EmptyState
-        icon={BarChart3}
-        title="Welcome to your new workspace"
-        description="Get started by creating your first project and inviting your team members to collaborate."
-        primaryAction={{ label: 'Create Project', onClick: () => window.location.href = '/dashboard/projects' }}
-      />
-    );
-  }
-
   return (
-    <div className="space-y-12 pb-12">
-      {/* Huge Editorial Header */}
-      <div className="flex flex-col md:flex-row items-end justify-between border-b-[4px] border-black pb-8 gap-8">
+    <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-8">
+
+      {/* Welcome header */}
+      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between">
         <div>
-          <h1 className="text-7xl font-black tracking-tighter text-black uppercase leading-none">
-            System<br/><span className="text-[#00FF4C]" style={{ WebkitTextStroke: '3px black' }}>Overview</span>
+          <h1 className="text-3xl font-bold text-[#1A1A1A] tracking-tight">
+            Good morning, {user?.name?.split(' ')[0] || 'there'} 👋
           </h1>
-          <p className="text-xl font-bold text-black/70 mt-4 uppercase max-w-md">Command center active. All systems operational. Your workspace at a glance.</p>
+          <p className="text-base font-medium text-[#1A1A1A]/50 mt-1">
+            Here's what's happening in <span className="font-bold text-[#1A1A1A]">{activeOrg?.name || 'your workspace'}</span>
+          </p>
         </div>
-        <div className="hidden lg:block text-right">
-          <div className="text-9xl font-black text-black/5 tracking-tighter leading-none select-none">
-            {new Date().getFullYear()}
-          </div>
+        <div className="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl border-[3px] border-[#1A1A1A] bg-[#DDD6FE] shadow-[3px_3px_0px_#1A1A1A]">
+          <Sparkles className="w-4 h-4 text-[#1A1A1A]" strokeWidth={2.5} />
+          <span className="text-sm font-bold text-[#1A1A1A]">{activeOrg?.name || 'Workspace'}</span>
         </div>
+      </motion.div>
+
+      {/* KPI Grid */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
+        {kpis.map((kpi, i) => (
+          <motion.div
+            key={kpi.label}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.07 }}
+            className="group rounded-2xl border-[3px] border-[#1A1A1A] p-6 shadow-[4px_4px_0px_#1A1A1A] hover:-translate-y-1 hover:shadow-[6px_6px_0px_#1A1A1A] transition-all cursor-default"
+            style={{ backgroundColor: kpi.color.bg }}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div
+                className="w-10 h-10 rounded-xl border-[2px] border-[#1A1A1A] flex items-center justify-center"
+                style={{ backgroundColor: kpi.color.icon }}
+              >
+                <kpi.icon className="w-5 h-5 text-[#1A1A1A]" strokeWidth={2.5} />
+              </div>
+              <span className="text-xs font-bold text-[#1A1A1A]/40 uppercase tracking-wide">{kpi.label}</span>
+            </div>
+            <div className="text-4xl font-bold text-[#1A1A1A] tracking-tight">
+              {isLoading ? '—' : kpi.value}
+            </div>
+          </motion.div>
+        ))}
       </div>
 
-      {/* Broken Grid: 70 / 30 layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
-        {/* Massive KPI Hero (70%) */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-          className="lg:col-span-8"
+      {/* Content row */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        {/* Activity feed */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="lg:col-span-5 rounded-2xl border-[3px] border-[#1A1A1A] bg-white shadow-[4px_4px_0px_#1A1A1A] overflow-hidden"
         >
-          <div className="h-full border-[4px] border-black bg-[#00FF4C] p-12 shadow-[12px_12px_0_0_#000000] relative overflow-hidden group hover:-translate-y-2 hover:-translate-x-2 hover:shadow-[20px_20px_0_0_#000000] transition-all">
-            <div className="absolute top-0 right-0 -mt-12 -mr-12 w-64 h-64 border-[8px] border-black rounded-full opacity-20 group-hover:scale-150 transition-transform duration-700" />
-            <h2 className="text-2xl font-black uppercase border-[3px] border-black inline-block px-4 py-2 bg-white mb-12">Total Active Projects</h2>
-            <div className="text-[10rem] font-black leading-none tracking-tighter text-black -ml-4">{analytics?.overview?.totalProjects || 0}</div>
-            <div className="absolute bottom-8 right-8 text-black">
-              <TrendingUp className="w-24 h-24" strokeWidth={1} />
+          <div className="px-6 py-4 border-b-[3px] border-[#1A1A1A] bg-[#FBCFE8] flex items-center justify-between">
+            <h2 className="font-bold text-[#1A1A1A]">Recent Activity</h2>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-[#86EFAC] border-[1px] border-[#1A1A1A] animate-pulse" />
+              <span className="text-xs font-medium text-[#1A1A1A]/50">Live</span>
             </div>
           </div>
-        </motion.div>
-
-        {/* Supporting Stat (30%) */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-          className="lg:col-span-4 flex flex-col gap-8"
-        >
-          <div className="flex-1 border-[4px] border-black bg-black p-8 shadow-[8px_8px_0_0_#00FF4C] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[12px_12px_0_0_#00FF4C] transition-all flex flex-col justify-between relative overflow-hidden">
-            {/* Background pattern */}
-            <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'repeating-linear-gradient(45deg, #00FF4C 25%, transparent 25%, transparent 75%, #00FF4C 75%, #00FF4C), repeating-linear-gradient(45deg, #00FF4C 25%, transparent 25%, transparent 75%, #00FF4C 75%, #00FF4C)', backgroundPosition: '0 0, 10px 10px', backgroundSize: '20px 20px' }}></div>
-            
-            <div className="relative z-10 text-[#00FF4C]">
-              <Users className="w-12 h-12 mb-6" strokeWidth={2} />
-              <div className="text-6xl font-black tracking-tighter">{analytics?.overview?.totalMembers || 0}</div>
-              <div className="text-xl font-bold uppercase mt-2">Team Members</div>
-            </div>
-          </div>
-          
-          <div className="flex-1 border-[4px] border-black bg-white p-8 shadow-[8px_8px_0_0_#000000] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[12px_12px_0_0_#000000] transition-all flex flex-col justify-between">
-            <div className="text-black">
-              <CheckSquare className="w-12 h-12 mb-6" strokeWidth={2} />
-              <div className="text-6xl font-black tracking-tighter">{analytics?.overview?.totalTasks || 0}</div>
-              <div className="text-xl font-bold uppercase mt-2">Active Tasks</div>
-            </div>
-          </div>
-        </motion.div>
-
-      </div>
-
-      {/* Another broken grid layout: 40 / 60 */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-12">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="lg:col-span-5">
-          <div className="h-full border-[4px] border-black bg-white p-8 shadow-[8px_8px_0_0_#000000]">
-            <div className="flex items-center justify-between border-b-[4px] border-black pb-4 mb-6">
-              <h3 className="text-3xl font-black uppercase tracking-tighter text-black">Recent Activity</h3>
-              <Activity className="w-8 h-8 text-[#00FF4C] stroke-black" strokeWidth={2} />
-            </div>
-            <div className="space-y-6">
-              {[1, 2, 3].map((_, i) => (
-                <div key={i} className="flex gap-6 relative group">
-                  <div className="w-4 h-4 bg-[#00FF4C] border-[3px] border-black mt-1 z-10 group-hover:scale-150 transition-transform" />
-                  {i !== 2 && <div className="absolute top-6 left-[6px] w-[4px] h-16 bg-black" />}
-                  <div>
-                    <p className="text-lg font-bold text-black uppercase leading-tight"><span className="bg-black text-[#00FF4C] px-2 py-0.5 mr-2">SYS</span> Task Updated</p>
-                    <p className="text-sm font-bold text-black/50 mt-1 uppercase">2 hours ago</p>
-                  </div>
+          <div className="divide-y-[2px] divide-[#1A1A1A]/10">
+            {[
+              { text: 'New project created', time: '2m ago', dot: '#BAE6FD' },
+              { text: 'Task marked complete', time: '1h ago', dot: '#BBF7D0' },
+              { text: 'Member invited', time: '3h ago', dot: '#DDD6FE' },
+              { text: 'Settings updated', time: '1d ago', dot: '#FBCFE8' },
+            ].map((item, i) => (
+              <div key={i} className="px-6 py-4 flex items-center gap-4 hover:bg-[#FFFDF5] transition-colors">
+                <div className="w-3 h-3 rounded-full border-[2px] border-[#1A1A1A] shrink-0" style={{ backgroundColor: item.dot }} />
+                <p className="text-sm font-medium text-[#1A1A1A] flex-1">{item.text}</p>
+                <div className="flex items-center gap-1 text-[#1A1A1A]/30 shrink-0">
+                  <Clock className="w-3.5 h-3.5" strokeWidth={2} />
+                  <span className="text-xs font-medium">{item.time}</span>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
+          </div>
+          <div className="px-6 py-3 border-t-[2px] border-[#1A1A1A]/10">
+            <a href="/dashboard/activity" className="flex items-center gap-1.5 text-xs font-bold text-[#1A1A1A]/40 hover:text-[#1A1A1A] transition-colors">
+              View all <ArrowRight className="w-3.5 h-3.5" />
+            </a>
           </div>
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="lg:col-span-7">
-          <div className="h-full border-[4px] border-black bg-black p-8 shadow-[12px_12px_0_0_#00FF4C] relative overflow-hidden">
-            <h3 className="text-3xl font-black uppercase tracking-tighter text-[#00FF4C] mb-8 relative z-10">Velocity Matrix</h3>
-            
-            {/* Abstract Graphic */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-64 border-y-[4px] border-[#00FF4C]/20 -rotate-12 pointer-events-none" />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-32 border-y-[4px] border-[#00FF4C]/20 rotate-12 pointer-events-none" />
-            
-            <div className="relative z-10 flex items-end h-[250px] gap-4 w-full px-4">
-              {[40, 70, 45, 90, 65, 80, 50, 100].map((height, i) => (
-                <motion.div 
+        {/* Bar chart */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="lg:col-span-7 rounded-2xl border-[3px] border-[#1A1A1A] bg-white shadow-[4px_4px_0px_#1A1A1A] overflow-hidden"
+        >
+          <div className="px-6 py-4 border-b-[3px] border-[#1A1A1A] bg-[#BBF7D0] flex items-center justify-between">
+            <div>
+              <h2 className="font-bold text-[#1A1A1A]">Velocity Chart</h2>
+              <p className="text-xs font-medium text-[#1A1A1A]/50 mt-0.5">Last 12 weeks</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-sm bg-[#86EFAC] border-[2px] border-[#1A1A1A]" />
+              <span className="text-xs font-medium text-[#1A1A1A]/50">Throughput</span>
+            </div>
+          </div>
+          <div className="p-6">
+            <div className="flex items-end h-[180px] gap-1.5">
+              {barHeights.map((h, i) => (
+                <motion.div
                   key={i}
                   initial={{ height: 0 }}
-                  animate={{ height: `${height}%` }}
-                  transition={{ delay: 0.5 + (i * 0.1), type: 'spring' }}
-                  className="flex-1 bg-[#00FF4C] border-[3px] border-black hover:bg-white transition-colors cursor-crosshair"
+                  animate={{ height: `${h}%` }}
+                  transition={{ delay: 0.4 + i * 0.04, type: 'spring', stiffness: 100 }}
+                  className="flex-1 rounded-t-lg border-[2px] border-[#1A1A1A] cursor-crosshair transition-colors"
+                  style={{ backgroundColor: i === 7 ? '#86EFAC' : '#BBF7D0' }}
                 />
               ))}
             </div>
+            <div className="flex justify-between mt-3 pt-3 border-t-[2px] border-[#1A1A1A]/10">
+              <span className="text-xs font-medium text-[#1A1A1A]/30">Week 1</span>
+              <span className="text-xs font-medium text-[#1A1A1A]/30">Week 12</span>
+            </div>
           </div>
         </motion.div>
       </div>
+
+      {/* Quick nav */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5 }}
+        className="grid grid-cols-2 lg:grid-cols-4 gap-4"
+      >
+        {[
+          { label: 'Projects', href: '/dashboard/projects', icon: Folder, color: '#BAE6FD' },
+          { label: 'Tasks', href: '/dashboard/tasks', icon: CheckSquare, color: '#BBF7D0' },
+          { label: 'Members', href: '/dashboard/members', icon: Users, color: '#FBCFE8' },
+          { label: 'Activity', href: '/dashboard/activity', icon: Activity, color: '#FED7AA' },
+        ].map((item) => (
+          <a
+            key={item.label}
+            href={item.href}
+            className="group flex items-center justify-between p-5 rounded-2xl border-[3px] border-[#1A1A1A] bg-white shadow-[3px_3px_0px_#1A1A1A] hover:-translate-y-1 hover:shadow-[5px_5px_0px_#1A1A1A] transition-all"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl border-[2px] border-[#1A1A1A] flex items-center justify-center" style={{ backgroundColor: item.color }}>
+                <item.icon className="w-4 h-4 text-[#1A1A1A]" strokeWidth={2.5} />
+              </div>
+              <span className="text-sm font-bold text-[#1A1A1A]">{item.label}</span>
+            </div>
+            <ArrowRight className="w-4 h-4 text-[#1A1A1A]/20 group-hover:text-[#1A1A1A] group-hover:translate-x-0.5 transition-all" strokeWidth={2.5} />
+          </a>
+        ))}
+      </motion.div>
     </div>
   );
 }

@@ -10,6 +10,7 @@ import activityRoutes from './activityRoutes';
 import analyticsRoutes from './analyticsRoutes';
 import commentRoutes from './commentRoutes';
 import searchRoutes from './searchRoutes';
+import paymentRoutes from './paymentRoutes';
 
 const router = Router();
 
@@ -24,5 +25,6 @@ router.use('/activity', activityRoutes);
 router.use('/analytics', analyticsRoutes);
 router.use('/comments', commentRoutes);
 router.use('/search', searchRoutes);
+router.use('/payment', paymentRoutes);
 
 export default router;

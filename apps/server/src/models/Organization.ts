@@ -5,6 +5,8 @@ export interface IOrganization extends Document {
   slug: string;
   logo?: string;
   ownerId: mongoose.Types.ObjectId;
+  plan: 'FREE' | 'PRO' | 'BUSINESS';
+  billingCycle?: 'MONTHLY' | 'YEARLY';
   createdAt: Date;
   updatedAt: Date;
 }
@@ -15,6 +17,8 @@ const organizationSchema = new Schema<IOrganization>(
     slug: { type: String, required: true, unique: true, lowercase: true },
     logo: { type: String },
     ownerId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    plan: { type: String, enum: ['FREE', 'PRO', 'BUSINESS'], default: 'FREE' },
+    billingCycle: { type: String, enum: ['MONTHLY', 'YEARLY'] }
   },
   { timestamps: true }
 );

@@ -1,68 +1,106 @@
 @import "tailwindcss";
 
+/* ─── Neo Brutalist Design Tokens ─────────────────────────────────────────── */
 :root {
-  --background: #ECECEC;
-  --foreground: #000000;
-  
-  --color-neon: #00FF4C;
-  --color-black: #000000;
-  --color-white: #FFFFFF;
-  --color-gray: #ECECEC;
+  /* Palette */
+  --cream:     #FFFDF5;
+  --ink:       #1A1A1A;
+  --sky:       #BAE6FD;
+  --sky-dark:  #7DD3FC;
+  --lavender:  #DDD6FE;
+  --lavender-dark: #C4B5FD;
+  --mint:      #BBF7D0;
+  --mint-dark: #86EFAC;
+  --pink:      #FBCFE8;
+  --pink-dark: #F9A8D4;
+  --yellow:    #FEF08A;
+  --yellow-dark: #FDE047;
+  --orange:    #FED7AA;
+  --orange-dark: #FDBA74;
+  --white:     #FFFFFF;
+
+  /* Borders */
+  --border-width: 3px;
+  --border-color: #1A1A1A;
+
+  /* Shadows */
+  --shadow-sm:  3px 3px 0px 0px #1A1A1A;
+  --shadow-md:  4px 4px 0px 0px #1A1A1A;
+  --shadow-lg:  6px 6px 0px 0px #1A1A1A;
+  --shadow-xl:  8px 8px 0px 0px #1A1A1A;
+  --shadow-2xl: 12px 12px 0px 0px #1A1A1A;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  
-  --color-neon: var(--color-neon);
-  
-  /* Brutalist Shadows */
-  --shadow-brutal: 4px 4px 0px 0px #000000;
-  --shadow-brutal-lg: 8px 8px 0px 0px #000000;
-  --shadow-brutal-sm: 2px 2px 0px 0px #000000;
-  --shadow-brutal-white: 4px 4px 0px 0px #ffffff;
+  --color-cream: var(--cream);
+  --color-ink: var(--ink);
+  --color-sky: var(--sky);
+  --color-lavender: var(--lavender);
+  --color-mint: var(--mint);
+  --color-pink-pastel: var(--pink);
+  --color-yellow-pastel: var(--yellow);
+  --color-orange-pastel: var(--orange);
 }
 
-/* Force stark contrast in dark mode too, or disable it. The instructions say Maximalist, so we just stick to high contrast black/white/neon. Let's make dark mode basically inverted or just black background. */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #000000;
-    --foreground: #FFFFFF;
-  }
+/* ─── Base Styles ─────────────────────────────────────────────────────────── */
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background-color: var(--cream);
+  color: var(--ink);
 }
 
-/* Utilities for scrollbar, selection etc. */
+/* ─── Text Selection ──────────────────────────────────────────────────────── */
 ::selection {
-  background: var(--color-neon);
-  color: #000000;
+  background: var(--lavender);
+  color: var(--ink);
 }
 
+/* ─── Scrollbar ───────────────────────────────────────────────────────────── */
 ::-webkit-scrollbar {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
 }
-
 ::-webkit-scrollbar-track {
-  background: var(--background);
-  border-left: 2px solid #000;
+  background: var(--cream);
 }
-
 ::-webkit-scrollbar-thumb {
-  background: #000000;
-  border: 2px solid var(--background);
+  background: var(--ink);
+  border-radius: 999px;
+  border: 2px solid var(--cream);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #333;
 }
 
-@media (prefers-color-scheme: dark) {
-  ::-webkit-scrollbar-track {
-    border-left: 2px solid #333;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: var(--color-neon);
-    border: 2px solid var(--background);
-  }
+/* ─── Focus Ring ──────────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 3px solid var(--lavender-dark);
+  outline-offset: 2px;
+}
+
+/* ─── Custom Scrollbar for Kanban ─────────────────────────────────────────── */
+.kanban-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ink) var(--cream);
+}
+
+/* ─── Utility: Bounce animation for empty states ─────────────────────────── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(2deg); }
+}
+.animate-wiggle {
+  animation: wiggle 2s ease-in-out infinite;
 }

@@ -16,18 +16,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   React.useEffect(() => {
     setIsMounted(true);
-    
-    // Redirect if not authenticated
-    if (!user) {
-      router.push('/login');
-      return;
-    }
-
-    // Redirect to onboarding if no workspaces
-    if (!activeWorkspaceId) {
-      router.push('/onboarding');
-      return;
-    }
+    if (!user) { router.push('/login'); return; }
+    if (!activeWorkspaceId) { router.push('/onboarding'); return; }
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
@@ -41,29 +31,33 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   if (!isMounted || !user || !activeWorkspaceId) {
     return (
-      <div className="min-h-screen bg-[#0F172A] flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin" />
+      <div className="min-h-screen bg-[#FFFDF5] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-14 h-14 rounded-2xl border-[3px] border-[#1A1A1A] bg-[#DDD6FE] shadow-[4px_4px_0px_#1A1A1A] flex items-center justify-center">
+            <div className="w-5 h-5 rounded-full border-[3px] border-[#1A1A1A] border-t-transparent animate-spin" />
+          </div>
+          <p className="text-sm font-bold text-[#1A1A1A]/40">Loading your workspace...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="flex h-screen bg-[#0F172A] overflow-hidden text-slate-200">
+    <div className="flex h-screen bg-[#FFFDF5] overflow-hidden">
       <Sidebar />
-      
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-500/10 blur-[120px] rounded-full pointer-events-none" />
-        
+
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         <Topbar onOpenCmd={() => setCmdOpen(true)} />
-        
-        <main className="flex-1 overflow-y-auto p-6 md:p-8 z-10 scroll-smooth">
+
+        <main className="flex-1 overflow-y-auto">
           <AnimatePresence mode="wait">
             <motion.div
               key={typeof window !== 'undefined' ? window.location.pathname : 'path'}
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.18 }}
+              className="h-full"
             >
               {children}
             </motion.div>

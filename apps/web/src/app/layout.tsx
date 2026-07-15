@@ -1,13 +1,17 @@
 import type { Metadata } from "next";
-import { Space_Grotesk } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/Providers";
 
-const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-jakarta",
+});
 
 export const metadata: Metadata = {
-  title: "Multi-Tenant SaaS Platform",
-  description: "A production-ready Multi-Tenant SaaS Platform",
+  title: "Omnistack — The workspace for modern teams",
+  description: "A beautiful, production-ready multi-tenant SaaS workspace platform.",
 };
 
 export default function RootLayout({
@@ -17,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${spaceGrotesk.className} bg-[#ECECEC] text-[#000000] selection:bg-[#00FF4C] selection:text-black antialiased`}>
+      <body className={`${plusJakarta.className} bg-[#FFFDF5] text-[#1A1A1A] antialiased`}>
         <Providers>
           {children}
         </Providers>

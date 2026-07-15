@@ -3,15 +3,21 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const badgeVariants = cva(
-  'inline-flex items-center border-[2px] border-black px-2.5 py-0.5 text-xs font-black uppercase tracking-widest transition-colors focus:outline-none focus:ring-2 focus:ring-[#00FF4C] focus:ring-offset-2',
+  'inline-flex items-center gap-1 border-[2px] border-[#1A1A1A] px-3 py-1 text-xs font-bold tracking-wide transition-colors rounded-full',
   {
     variants: {
       variant: {
-        default: 'bg-black text-white shadow-[2px_2px_0_0_#00FF4C]',
-        secondary: 'bg-[#ECECEC] text-black shadow-[2px_2px_0_0_#000000]',
-        destructive: 'bg-[#FF0000] text-black shadow-[2px_2px_0_0_#000000]',
-        outline: 'text-black shadow-[2px_2px_0_0_#00FF4C]',
-        success: 'bg-[#00FF4C] text-black shadow-[2px_2px_0_0_#000000]',
+        default:     'bg-[#1A1A1A] text-white',
+        sky:         'bg-[#BAE6FD] text-[#1A1A1A]',
+        lavender:    'bg-[#DDD6FE] text-[#1A1A1A]',
+        mint:        'bg-[#BBF7D0] text-[#1A1A1A]',
+        pink:        'bg-[#FBCFE8] text-[#1A1A1A]',
+        yellow:      'bg-[#FEF08A] text-[#1A1A1A]',
+        orange:      'bg-[#FED7AA] text-[#1A1A1A]',
+        destructive: 'bg-red-100 text-red-700 border-red-300',
+        outline:     'bg-white text-[#1A1A1A]',
+        success:     'bg-[#BBF7D0] text-[#1A1A1A]',
+        secondary:   'bg-[#FFFDF5] text-[#1A1A1A]',
       },
     },
     defaultVariants: {

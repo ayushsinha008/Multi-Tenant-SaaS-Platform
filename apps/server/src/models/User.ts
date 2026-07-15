@@ -8,6 +8,11 @@ export interface IUser extends Document {
   avatar?: string;
   googleId?: string;
   isEmailVerified: boolean;
+  preferences: {
+    emailNotifications: boolean;
+    pushNotifications: boolean;
+    marketingEmails: boolean;
+  };
   createdAt: Date;
   updatedAt: Date;
   comparePassword(candidatePassword: string): Promise<boolean>;
@@ -21,6 +26,11 @@ const userSchema = new Schema<IUser>(
     avatar: { type: String },
     googleId: { type: String },
     isEmailVerified: { type: Boolean, default: false },
+    preferences: {
+      emailNotifications: { type: Boolean, default: true },
+      pushNotifications: { type: Boolean, default: true },
+      marketingEmails: { type: Boolean, default: false },
+    }
   },
   { timestamps: true }
 );

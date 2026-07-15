@@ -38,6 +38,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
         id: user._id,
         name: user.name,
         email: user.email,
+        preferences: user.preferences,
       },
     });
   } catch (error) {
@@ -83,6 +84,61 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
         name: user.name,
         email: user.email,
         avatar: user.avatar,
+        preferences: user.preferences,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const googleLogin = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { email, name, avatar, uid } = req.body;
+
+    if (!email || !uid) {
+      throw createHttpError(400, 'Email and UID are required');
+    }
+
+    let user = await User.findOne({ email });
+
+    // If user doesn't exist, create them
+    if (!user) {
+      // Create a random password for OAuth users since they don't use it
+      const randomPassword = Math.random().toString(36).slice(-10) + Math.random().toString(36).slice(-10);
+      user = await User.create({ 
+        name: name || 'User', 
+        email, 
+        password: randomPassword,
+        avatar 
+      });
+    }
+
+    const accessToken = generateAccessToken(user._id);
+    const refreshToken = generateRefreshToken(user._id);
+
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 15 * 60 * 1000, // 15 mins
+    });
+
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
+
+    res.status(200).json({
+      message: 'Login successful',
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar,
+        preferences: user.preferences,
       },
     });
   } catch (error) {
@@ -142,6 +198,7 @@ export const getProfile = async (req: Request, res: Response, next: NextFunction
         name: req.user?.name,
         email: req.user?.email,
         avatar: req.user?.avatar,
+        preferences: req.user?.preferences,
       },
     });
   } catch (error) {
@@ -165,6 +222,32 @@ export const updateProfile = async (req: Request, res: Response, next: NextFunct
         name: req.user?.name,
         email: req.user?.email,
         avatar: req.user?.avatar,
+        preferences: req.user?.preferences,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updatePreferences = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { emailNotifications, pushNotifications, marketingEmails } = req.body;
+    
+    if (typeof emailNotifications === 'boolean') req.user!.preferences.emailNotifications = emailNotifications;
+    if (typeof pushNotifications === 'boolean') req.user!.preferences.pushNotifications = pushNotifications;
+    if (typeof marketingEmails === 'boolean') req.user!.preferences.marketingEmails = marketingEmails;
+
+    await req.user!.save();
+
+    res.status(200).json({
+      message: 'Preferences updated successfully',
+      user: {
+        id: req.user?._id,
+        name: req.user?.name,
+        email: req.user?.email,
+        avatar: req.user?.avatar,
+        preferences: req.user?.preferences,
       },
     });
   } catch (error) {

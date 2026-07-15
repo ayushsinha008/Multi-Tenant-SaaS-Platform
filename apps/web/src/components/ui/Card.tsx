@@ -1,12 +1,14 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
-import { motion, HTMLMotionProps } from 'framer-motion';
 
 const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn('border-[3px] border-black bg-white text-black shadow-[8px_8px_0_0_#000000] overflow-hidden relative transition-transform hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[12px_12px_0_0_#000000]', className)}
+      className={cn(
+        'border-[3px] border-[#1A1A1A] bg-white rounded-2xl shadow-[4px_4px_0px_#1A1A1A] overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[6px_6px_0px_#1A1A1A]',
+        className
+      )}
       {...props}
     />
   )
@@ -22,14 +24,14 @@ CardHeader.displayName = 'CardHeader';
 
 const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLHeadingElement>>(
   ({ className, ...props }, ref) => (
-    <h3 ref={ref} className={cn('text-2xl font-black uppercase tracking-tighter text-black', className)} {...props} />
+    <h3 ref={ref} className={cn('text-xl font-bold text-[#1A1A1A] tracking-tight', className)} {...props} />
   )
 );
 CardTitle.displayName = 'CardTitle';
 
 const CardDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
   ({ className, ...props }, ref) => (
-    <p ref={ref} className={cn('text-sm font-medium text-black/70', className)} {...props} />
+    <p ref={ref} className={cn('text-sm font-medium text-[#1A1A1A]/60', className)} {...props} />
   )
 );
 CardDescription.displayName = 'CardDescription';

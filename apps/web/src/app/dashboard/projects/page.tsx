@@ -4,13 +4,28 @@ import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Folder, Plus, MoreHorizontal, LayoutGrid, List } from 'lucide-react';
+import { Folder, Plus, LayoutGrid, List, ArrowRight, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Modal } from '@/components/ui/Modal';
 import { Input } from '@/components/ui/Input';
+
+// Rotating pastel card colors for projects
+const projectCardColors = [
+  '#BAE6FD', // sky
+  '#DDD6FE', // lavender
+  '#BBF7D0', // mint
+  '#FBCFE8', // pink
+  '#FEF08A', // yellow
+  '#FED7AA', // orange
+];
+
+const statusBadgeVariant: Record<string, any> = {
+  'ACTIVE': 'mint',
+  'ARCHIVED': 'sky',
+  'COMPLETED': 'lavender',
+};
 
 export default function ProjectsPage() {
   const queryClient = useQueryClient();
@@ -19,10 +34,7 @@ export default function ProjectsPage() {
 
   const { data: projects = [], isLoading } = useQuery({
     queryKey: ['projects'],
-    queryFn: async () => {
-      const res = await api.get('/projects');
-      return res.data.projects;
-    }
+    queryFn: async () => { const res = await api.get('/projects'); return res.data.projects; }
   });
 
   const createProject = useMutation({
@@ -30,110 +42,163 @@ export default function ProjectsPage() {
       const res = await api.post('/projects', data);
       return res.data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['projects'] });
-      setIsModalOpen(false);
-    }
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['projects'] }); setIsModalOpen(false); }
   });
 
-  if (isLoading) return <div className="animate-pulse flex gap-6">Loading projects...</div>;
-
   return (
-    <div className="space-y-12 pb-12">
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between border-b-[4px] border-black pb-8 gap-8">
+    <div className="p-6 md:p-8 max-w-7xl mx-auto">
+
+      {/* Header */}
+      <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-7xl font-black tracking-tighter text-black uppercase leading-none">
-            Active<br/><span className="text-white" style={{ WebkitTextStroke: '3px black' }}>Projects</span>
-          </h1>
-          <p className="text-xl font-bold text-black/70 mt-4 uppercase">Manage and track your initiatives.</p>
+          <h1 className="text-3xl font-bold text-[#1A1A1A] tracking-tight">Projects</h1>
+          <p className="text-sm font-medium text-[#1A1A1A]/40 mt-1">
+            {projects.length} {projects.length === 1 ? 'project' : 'projects'} in this workspace
+          </p>
         </div>
-        
-        <div className="flex items-center gap-4">
-          <div className="flex bg-white border-[3px] border-black shadow-[4px_4px_0_0_#000000]">
-            <button onClick={() => setView('grid')} className={`p-3 border-r-[3px] border-black transition-colors ${view === 'grid' ? 'bg-[#00FF4C] text-black' : 'text-black hover:bg-black hover:text-[#00FF4C]'}`}>
-              <LayoutGrid className="w-6 h-6" strokeWidth={2.5} />
+        <div className="flex items-center gap-3">
+          {/* View toggle */}
+          <div className="flex rounded-xl border-[3px] border-[#1A1A1A] overflow-hidden shadow-[3px_3px_0px_#1A1A1A]">
+            <button
+              onClick={() => setView('grid')}
+              className={`p-2.5 transition-colors ${view === 'grid' ? 'bg-[#1A1A1A] text-white' : 'bg-white text-[#1A1A1A] hover:bg-[#FFFDF5]'}`}
+            >
+              <LayoutGrid className="w-4 h-4" strokeWidth={2} />
             </button>
-            <button onClick={() => setView('list')} className={`p-3 transition-colors ${view === 'list' ? 'bg-[#00FF4C] text-black' : 'text-black hover:bg-black hover:text-[#00FF4C]'}`}>
-              <List className="w-6 h-6" strokeWidth={2.5} />
+            <button
+              onClick={() => setView('list')}
+              className={`p-2.5 transition-colors border-l-[2px] border-[#1A1A1A] ${view === 'list' ? 'bg-[#1A1A1A] text-white' : 'bg-white text-[#1A1A1A] hover:bg-[#FFFDF5]'}`}
+            >
+              <List className="w-4 h-4" strokeWidth={2} />
             </button>
           </div>
-          <Button onClick={() => setIsModalOpen(true)} className="bg-[#00FF4C] text-black border-[3px] border-black shadow-[4px_4px_0_0_#000000] hover:bg-black hover:text-[#00FF4C] h-14">
-            <Plus className="w-6 h-6 mr-2" strokeWidth={3} />
+          <Button onClick={() => setIsModalOpen(true)} variant="default" size="default">
+            <Plus className="w-4 h-4 mr-2" strokeWidth={3} />
             New Project
           </Button>
         </div>
       </div>
 
-      {projects.length === 0 ? (
+      {/* Content */}
+      {isLoading ? (
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+          {[1,2,3].map(i => <div key={i} className="h-52 rounded-2xl border-[3px] border-[#1A1A1A] bg-[#FFFDF5] animate-pulse" />)}
+        </div>
+      ) : projects.length === 0 ? (
         <EmptyState
           icon={Folder}
           title="No projects yet"
-          description="Create your first project to start organizing tasks and collaborating with your team."
-          primaryAction={{ label: 'Create Project', onClick: () => setIsModalOpen(true) }}
+          description="Create your first project to start organizing your team's work."
+          accentColor="#BAE6FD"
+          primaryAction={{ label: '+ New Project', onClick: () => setIsModalOpen(true) }}
         />
-      ) : (
-        <div className={view === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8' : 'flex flex-col gap-6'}>
+      ) : view === 'grid' ? (
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
           <AnimatePresence>
+            {projects.map((project: any, i: number) => {
+              const cardColor = projectCardColors[i % projectCardColors.length];
+              return (
+                <motion.div
+                  key={project._id}
+                  layout
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ delay: i * 0.06 }}
+                  className="rounded-2xl border-[3px] border-[#1A1A1A] overflow-hidden shadow-[4px_4px_0px_#1A1A1A] hover:-translate-y-1 hover:shadow-[6px_6px_0px_#1A1A1A] transition-all group"
+                >
+                  {/* Card color band */}
+                  <div className="h-2" style={{ backgroundColor: cardColor }} />
+
+                  <div className="bg-white p-6">
+                    {/* Status + number */}
+                    <div className="flex items-center justify-between mb-4">
+                      <Badge variant={statusBadgeVariant[project.status] || 'sky'}>
+                        {project.status || 'ACTIVE'}
+                      </Badge>
+                      <span className="text-xs font-bold text-[#1A1A1A]/20">#{String(i + 1).padStart(2, '0')}</span>
+                    </div>
+
+                    {/* Project name */}
+                    <h2 className="text-xl font-bold text-[#1A1A1A] tracking-tight mb-2 leading-tight">{project.name}</h2>
+
+                    {project.description && (
+                      <p className="text-sm font-medium text-[#1A1A1A]/50 line-clamp-2 mb-4 leading-relaxed">{project.description}</p>
+                    )}
+
+                    {/* Footer */}
+                    <div className="flex items-center justify-between pt-4 border-t-[2px] border-[#1A1A1A]/10">
+                      <div className="flex items-center gap-1.5 text-[#1A1A1A]/30">
+                        <Clock className="w-3.5 h-3.5" strokeWidth={2} />
+                        <span className="text-xs font-medium">
+                          {new Date(project.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                        </span>
+                      </div>
+                      <a href="/dashboard/tasks" className="flex items-center gap-1 text-xs font-bold text-[#1A1A1A]/30 hover:text-[#1A1A1A] transition-colors">
+                        Tasks <ArrowRight className="w-3.5 h-3.5" strokeWidth={2.5} />
+                      </a>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+        </div>
+      ) : (
+        /* List view */
+        <div className="rounded-2xl border-[3px] border-[#1A1A1A] overflow-hidden shadow-[4px_4px_0px_#1A1A1A]">
+          <div className="grid grid-cols-[auto_1fr_auto_auto] gap-6 px-6 py-3.5 bg-[#1A1A1A] text-white text-xs font-bold uppercase tracking-wide">
+            <span className="w-8">#</span>
+            <span>Project</span>
+            <span className="w-24 text-center">Status</span>
+            <span className="w-20 text-right">Created</span>
+          </div>
+          <div className="divide-y-[2px] divide-[#1A1A1A]/10">
             {projects.map((project: any, i: number) => (
               <motion.div
                 key={project._id}
                 layout
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.2, delay: i * 0.05 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: i * 0.04 }}
+                className="grid grid-cols-[auto_1fr_auto_auto] gap-6 px-6 py-4 bg-white hover:bg-[#FFFDF5] items-center transition-colors"
               >
-                <Card className="hover:border-black transition-all group cursor-pointer h-full border-[4px] border-black bg-white shadow-[8px_8px_0_0_#000000] hover:-translate-y-2 hover:-translate-x-2 hover:shadow-[16px_16px_0_0_#000000]">
-                  <div className={`p-8 ${view === 'list' ? 'flex items-center gap-8' : ''}`}>
-                    <div className="flex items-start justify-between mb-8">
-                      <div className="w-16 h-16 bg-black flex items-center justify-center text-[#00FF4C] shrink-0 transform -rotate-3 group-hover:rotate-0 transition-transform">
-                        <Folder className="w-8 h-8" strokeWidth={2.5} />
-                      </div>
-                      <button className="text-black hover:bg-black hover:text-[#00FF4C] p-2 transition-colors border-[2px] border-transparent hover:border-black opacity-0 group-hover:opacity-100">
-                        <MoreHorizontal className="w-6 h-6" strokeWidth={3} />
-                      </button>
-                    </div>
-                    
-                    <div className={view === 'list' ? 'flex-1' : ''}>
-                      <h3 className="text-3xl font-black text-black uppercase tracking-tighter mb-2 group-hover:text-[#00FF4C] transition-colors leading-none" style={{ WebkitTextStroke: '1px black' }}>{project.name}</h3>
-                      <p className="text-sm font-bold text-black/60 line-clamp-2 mb-8 uppercase tracking-widest">{project.description || 'No description provided.'}</p>
-                      
-                      <div className="flex items-center justify-between pt-6 border-t-[4px] border-black">
-                        <Badge variant={project.status === 'ACTIVE' ? 'success' : 'secondary'}>
-                          {project.status || 'ACTIVE'}
-                        </Badge>
-                        <div className="flex -space-x-3">
-                          {[1, 2, 3].map((j) => (
-                            <div key={j} className="w-10 h-10 rounded-none bg-black border-[3px] border-white z-10 flex items-center justify-center text-[#00FF4C] font-black text-xs uppercase">{j}</div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Card>
+                <span className="w-8 text-xs font-bold text-[#1A1A1A]/20">#{i + 1}</span>
+                <div>
+                  <h3 className="text-base font-bold text-[#1A1A1A]">{project.name}</h3>
+                  {project.description && (
+                    <p className="text-xs font-medium text-[#1A1A1A]/40 mt-0.5 line-clamp-1">{project.description}</p>
+                  )}
+                </div>
+                <div className="w-24 flex justify-center">
+                  <Badge variant={statusBadgeVariant[project.status] || 'sky'}>{project.status || 'ACTIVE'}</Badge>
+                </div>
+                <div className="w-20 text-right text-xs font-medium text-[#1A1A1A]/30">
+                  {new Date(project.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                </div>
               </motion.div>
             ))}
-          </AnimatePresence>
+          </div>
         </div>
       )}
 
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Create Project" description="Initialize a new workspace node.">
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="New Project" description="Create a project to organize your team." accentColor="#BAE6FD">
         <form onSubmit={(e) => {
           e.preventDefault();
           const fd = new FormData(e.currentTarget);
           createProject.mutate({ name: fd.get('name') as string, description: fd.get('description') as string });
-        }} className="space-y-6">
+        }} className="space-y-5">
           <div>
-            <label className="block text-xl font-black text-black mb-2 uppercase tracking-tighter">Project Name</label>
-            <Input name="name" required placeholder="Website Redesign" />
+            <label className="block text-sm font-bold text-[#1A1A1A] mb-2">Project Name</label>
+            <Input name="name" required placeholder="Project Alpha" />
           </div>
           <div>
-            <label className="block text-xl font-black text-black mb-2 uppercase tracking-tighter">Description</label>
-            <textarea name="description" rows={4} className="flex w-full border-[3px] border-black bg-white px-4 py-3 text-sm font-bold text-black shadow-[4px_4px_0_0_#000000] placeholder:text-black/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00FF4C] focus-visible:ring-offset-2 transition-all focus-visible:shadow-[6px_6px_0_0_#000000] focus-visible:-translate-y-0.5 focus-visible:-translate-x-0.5 resize-none" placeholder="Optional details..." />
+            <label className="block text-sm font-bold text-[#1A1A1A] mb-2">Description</label>
+            <textarea name="description" rows={3} className="flex w-full rounded-xl border-[3px] border-[#1A1A1A] bg-white px-4 py-3 text-sm font-medium placeholder:text-[#1A1A1A]/30 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#C4B5FD] resize-none shadow-[3px_3px_0px_#1A1A1A]" placeholder="What's this project about?" />
           </div>
-          <div className="pt-6 flex justify-end gap-4 border-t-[4px] border-black mt-8">
-            <Button variant="ghost" type="button" onClick={() => setIsModalOpen(false)}>Cancel</Button>
-            <Button type="submit" disabled={createProject.isPending} className="bg-black text-[#00FF4C] hover:bg-[#00FF4C] hover:text-black">
+          <div className="flex justify-end gap-3 pt-2">
+            <Button type="button" variant="ghost" onClick={() => setIsModalOpen(false)}>Cancel</Button>
+            <Button type="submit" disabled={createProject.isPending} variant="primary">
               {createProject.isPending ? 'Creating...' : 'Create Project'}
             </Button>
           </div>

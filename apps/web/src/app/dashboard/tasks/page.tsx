@@ -4,163 +4,253 @@ import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
 import { motion } from 'framer-motion';
-import { Plus, CheckSquare, MessageSquare, Paperclip, MoreVertical, Users } from 'lucide-react';
+import { Plus, CheckSquare, MessageSquare, Paperclip, Users } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Avatar } from '@/components/ui/Avatar';
 import { Modal } from '@/components/ui/Modal';
 import { Input } from '@/components/ui/Input';
 
-  const priorities: Record<string, string> = {
-    'Low': 'bg-white text-black border-[2px] border-black shadow-[2px_2px_0_0_#000000]',
-    'Medium': 'bg-[#00FF4C] text-black border-[2px] border-black shadow-[2px_2px_0_0_#000000]',
-    'High': 'bg-black text-[#00FF4C] border-[2px] border-black shadow-[2px_2px_0_0_#00FF4C]',
-    'Urgent': 'bg-[#FF0000] text-black border-[2px] border-black shadow-[2px_2px_0_0_#000000]',
+// Each column gets its own pastel identity
+const columnConfig: Record<string, { bg: string; header: string; pill: string; empty: string }> = {
+  'Todo':        { bg: '#FFFDF5',  header: '#BAE6FD', pill: 'sky',     empty: '#BAE6FD' },
+  'In Progress': { bg: '#FFFDF5',  header: '#FEF08A', pill: 'yellow',  empty: '#FEF08A' },
+  'In Review':   { bg: '#FFFDF5',  header: '#DDD6FE', pill: 'lavender',empty: '#DDD6FE' },
+  'Done':        { bg: '#FFFDF5',  header: '#BBF7D0', pill: 'mint',    empty: '#BBF7D0' },
+};
+
+const priorityStyle: Record<string, string> = {
+  'Low':    'bg-[#BAE6FD] text-[#1A1A1A] border-[#1A1A1A]',
+  'Medium': 'bg-[#FEF08A] text-[#1A1A1A] border-[#1A1A1A]',
+  'High':   'bg-[#FBCFE8] text-[#1A1A1A] border-[#1A1A1A]',
+  'Urgent': 'bg-[#1A1A1A] text-white border-[#1A1A1A]',
+};
+
+export default function TasksPage() {
+  const queryClient = useQueryClient();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+  const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null);
+  const [dragOverCol, setDragOverCol] = useState<string | null>(null);
+
+  const { data: tasks = [] } = useQuery({
+    queryKey: ['tasks'],
+    queryFn: async () => { const res = await api.get('/tasks'); return res.data.tasks; }
+  });
+
+  const { data: projects = [] } = useQuery({
+    queryKey: ['projects'],
+    queryFn: async () => { const res = await api.get('/projects'); return res.data.projects; }
+  });
+
+  const createTask = useMutation({
+    mutationFn: async (data: { title: string; projectId: string; priority: string }) => {
+      setErrorMsg('');
+      const res = await api.post('/tasks', data);
+      return res.data;
+    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['tasks'] }); setIsModalOpen(false); },
+    onError: (err: any) => { setErrorMsg(err.response?.data?.message || 'Failed to create task'); }
+  });
+
+  const updateTaskStatus = useMutation({
+    mutationFn: async ({ taskId, status }: { taskId: string; status: string }) => {
+      const res = await api.patch(`/tasks/${taskId}`, { status });
+      return res.data;
+    },
+    onMutate: async ({ taskId, status }) => {
+      await queryClient.cancelQueries({ queryKey: ['tasks'] });
+      const previousTasks = queryClient.getQueryData(['tasks']);
+      queryClient.setQueryData(['tasks'], (old: any) => old?.map((t: any) => t._id === taskId ? { ...t, status } : t));
+      return { previousTasks };
+    },
+    onError: (_: any, __: any, context: any) => { queryClient.setQueryData(['tasks'], context?.previousTasks); },
+    onSettled: () => { queryClient.invalidateQueries({ queryKey: ['tasks'] }); }
+  });
+
+  const columns = ['Todo', 'In Progress', 'In Review', 'Done'];
+
+  const handleDragStart = (e: React.DragEvent, taskId: string) => {
+    setDraggedTaskId(taskId);
+    e.dataTransfer.setData('text/plain', taskId);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDrop = (e: React.DragEvent, col: string) => {
+    e.preventDefault();
+    const taskId = e.dataTransfer.getData('text/plain');
+    setDraggedTaskId(null);
+    setDragOverCol(null);
+    if (taskId) updateTaskStatus.mutate({ taskId, status: col });
   };
 
   return (
-    <div className="h-[calc(100vh-8rem)] flex flex-col">
-      <div className="flex items-end justify-between mb-12 border-b-[4px] border-black pb-8 shrink-0">
-        <div>
-          <h1 className="text-7xl font-black tracking-tighter text-black uppercase leading-none">
-            Kanban<br/><span className="text-white" style={{ WebkitTextStroke: '3px black' }}>Board</span>
-          </h1>
-          <p className="text-xl font-bold text-black/70 mt-4 uppercase">Manage workflows and deployments.</p>
+    <div className="flex flex-col h-full">
+
+      {/* Slim toolbar */}
+      <div className="px-6 py-4 border-b-[3px] border-[#1A1A1A] bg-[#FFFDF5] flex items-center justify-between shrink-0">
+        <div className="flex items-center gap-4">
+          <h1 className="text-xl font-bold text-[#1A1A1A]">Kanban Board</h1>
+          <div className="hidden sm:flex items-center gap-2">
+            {columns.map(col => {
+              const count = tasks.filter((t: any) => t.status === col).length;
+              const cfg = columnConfig[col];
+              return (
+                <div key={col} className="flex items-center gap-1.5 px-3 py-1 rounded-full border-[2px] border-[#1A1A1A] text-xs font-bold" style={{ backgroundColor: cfg.header }}>
+                  {col} <span className="opacity-50">{count}</span>
+                </div>
+              );
+            })}
+          </div>
         </div>
-        <Button onClick={() => setIsModalOpen(true)} className="bg-black text-[#00FF4C] border-[3px] border-black shadow-[4px_4px_0_0_#000000] hover:bg-[#00FF4C] hover:text-black hover:shadow-none hover:translate-x-1 hover:translate-y-1 h-16 px-8 text-lg">
-          <Plus className="w-6 h-6 mr-2" strokeWidth={3} />
-          Deploy Task
+        <Button onClick={() => setIsModalOpen(true)} size="sm">
+          <Plus className="w-4 h-4 mr-1.5" strokeWidth={3} />
+          New Task
         </Button>
       </div>
 
+      {/* Board */}
       {tasks.length === 0 ? (
-        <EmptyState
-          icon={CheckSquare}
-          title="Board Offline"
-          description="Initialize your first task to bring the board online."
-          primaryAction={{ label: 'Deploy Task', onClick: () => setIsModalOpen(true) }}
-        />
+        <div className="flex-1 flex items-center justify-center p-10">
+          <div className="max-w-md w-full">
+            <EmptyState
+              icon={CheckSquare}
+              title="Board is empty"
+              description="Create your first task and bring your Kanban board to life."
+              accentColor="#BBF7D0"
+              primaryAction={{ label: '+ New Task', onClick: () => setIsModalOpen(true) }}
+            />
+          </div>
+        </div>
       ) : (
-        <div className="flex gap-8 overflow-x-auto pb-8 h-full custom-scrollbar">
-          {columns.map((col) => {
+        <div className="flex-1 overflow-x-auto kanban-scroll bg-[#FFFDF5]">
+          <div className="flex h-full w-max min-w-full">
+            {columns.map((col) => {
             const colTasks = tasks.filter((t: any) => t.status === col);
+            const cfg = columnConfig[col];
+            const isDragOver = dragOverCol === col;
+
             return (
-              <div 
-                key={col} 
-                className="w-96 shrink-0 flex flex-col border-[4px] border-black bg-[#ECECEC] shadow-[8px_8px_0_0_#000000]"
-                onDragOver={handleDragOver}
+              <div
+                key={col}
+                className={`flex-1 min-w-[300px] flex flex-col border-r-[3px] border-[#1A1A1A] last:border-r-0 transition-colors ${isDragOver ? 'bg-[#F8F8F0]' : ''}`}
+                style={{ backgroundColor: cfg.bg }}
+                onDragOver={(e) => { 
+                  e.preventDefault(); 
+                  if (dragOverCol !== col) setDragOverCol(col);
+                }}
+                onDragLeave={() => {
+                  // We could clear it here, but leaving it until drop prevents flickering
+                  // setDragOverCol(null)
+                }}
                 onDrop={(e) => handleDrop(e, col)}
               >
-                <div className="flex items-center justify-between p-4 bg-white border-b-[4px] border-black">
-                  <div className="flex items-center gap-3">
-                    <h3 className="text-xl font-black text-black uppercase tracking-tighter leading-none">{col.replace('_', ' ')}</h3>
-                    <span className="bg-black text-[#00FF4C] text-sm px-2 py-0.5 font-black border-[2px] border-black">
-                      {colTasks.length}
-                    </span>
+                {/* Column header */}
+                <div
+                  className="px-5 py-4 border-b-[3px] border-[#1A1A1A] flex items-center justify-between sticky top-0 z-20"
+                  style={{ backgroundColor: cfg.header }}
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-base font-bold text-[#1A1A1A]">{col}</span>
+                    <span className="text-xs font-bold text-[#1A1A1A]/40">({colTasks.length})</span>
                   </div>
-                  <button className="text-black hover:bg-[#00FF4C] p-1 border-[2px] border-transparent hover:border-black transition-colors" onClick={() => setIsModalOpen(true)}>
-                    <Plus className="w-6 h-6" strokeWidth={3} />
+                  <button
+                    onClick={() => setIsModalOpen(true)}
+                    className="w-7 h-7 rounded-lg border-[2px] border-[#1A1A1A] bg-white/70 flex items-center justify-center hover:bg-white transition-colors"
+                  >
+                    <Plus className="w-3.5 h-3.5 text-[#1A1A1A]" strokeWidth={3} />
                   </button>
                 </div>
 
-                <div className="flex-1 overflow-y-auto space-y-4 p-4 min-h-[150px]">
+                {/* Cards */}
+                <div className="flex-1 p-3 space-y-3 overflow-y-auto">
                   {colTasks.map((task: any) => (
                     <motion.div
+                      key={task._id}
                       draggable
                       onDragStart={(e: any) => handleDragStart(e, task._id)}
-                      layoutId={task._id}
-                      key={task._id}
-                      className={`bg-white border-[3px] border-black p-5 cursor-grab active:cursor-grabbing hover:bg-[#00FF4C] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0_0_#000000] transition-all group ${draggedTaskId === task._id ? 'opacity-50 scale-95' : 'shadow-[4px_4px_0_0_#000000]'}`}
+                      className={`group rounded-xl border-[3px] border-[#1A1A1A] bg-white p-4 cursor-grab active:cursor-grabbing shadow-[3px_3px_0px_#1A1A1A] hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_#1A1A1A] transition-all ${draggedTaskId === task._id ? 'opacity-40 scale-95' : ''}`}
                     >
-                      <div className="flex items-center justify-between mb-4">
-                        <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-0.5 ${priorities[task.priority || 'Medium']}`}>
-                          {task.priority || 'Medium'}
-                        </span>
-                        <button className="text-black opacity-0 group-hover:opacity-100 transition-opacity bg-white border-[2px] border-black">
-                          <MoreVertical className="w-5 h-5" />
-                        </button>
+                      {/* Priority pill */}
+                      <div className={`inline-flex items-center px-2.5 py-0.5 rounded-full border-[2px] text-[11px] font-bold mb-3 ${priorityStyle[task.priority || 'Medium']}`}>
+                        {task.priority || 'Medium'}
                       </div>
-                      
-                      <h4 className="text-xl font-black text-black mb-2 uppercase leading-none tracking-tighter">
-                        {task.title}
-                      </h4>
+
+                      <h4 className="text-sm font-bold text-[#1A1A1A] mb-2 leading-snug">{task.title}</h4>
+
                       {task.project && (
-                        <p className="text-sm font-bold text-black/60 uppercase tracking-widest mb-6 border-b-[2px] border-black pb-4">{task.project.name}</p>
+                        <p className="text-xs font-medium text-[#1A1A1A]/40 mb-3">{task.project.name}</p>
                       )}
 
-                      <div className="flex items-center justify-between mt-auto pt-2">
-                        <div className="flex items-center gap-4 text-black">
-                          <div className="flex items-center gap-1 font-black">
-                            <MessageSquare className="w-5 h-5" strokeWidth={2.5} /> 0
+                      <div className="flex items-center justify-between pt-3 border-t-[2px] border-[#1A1A1A]/10">
+                        <div className="flex items-center gap-3 text-[#1A1A1A]/30">
+                          <div className="flex items-center gap-1">
+                            <MessageSquare className="w-3.5 h-3.5" strokeWidth={2} />
+                            <span className="text-xs font-medium">0</span>
                           </div>
-                          <div className="flex items-center gap-1 font-black">
-                            <Paperclip className="w-5 h-5" strokeWidth={2.5} /> 0
+                          <div className="flex items-center gap-1">
+                            <Paperclip className="w-3.5 h-3.5" strokeWidth={2} />
+                            <span className="text-xs font-medium">0</span>
                           </div>
                         </div>
-                        
                         {task.assignee ? (
                           <Avatar src={task.assignee.avatar} fallback={task.assignee.name} size="sm" />
                         ) : (
-                          <div className="w-8 h-8 bg-black border-[2px] border-white text-white flex items-center justify-center shadow-[2px_2px_0_0_#00FF4C]">
-                            <Users className="w-4 h-4" />
+                          <div className="w-7 h-7 rounded-full border-[2px] border-[#1A1A1A]/20 border-dashed flex items-center justify-center">
+                            <Users className="w-3 h-3 text-[#1A1A1A]/20" strokeWidth={2} />
                           </div>
                         )}
                       </div>
                     </motion.div>
                   ))}
+
+                  {isDragOver && colTasks.length === 0 && (
+                    <div className="rounded-xl border-[3px] border-dashed border-[#1A1A1A]/20 p-8 flex items-center justify-center">
+                      <span className="text-sm font-medium text-[#1A1A1A]/20">Drop here</span>
+                    </div>
+                  )}
                 </div>
               </div>
             );
           })}
+          </div>
         </div>
       )}
 
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Deploy Task" description="Inject a new task into the pipeline.">
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="New Task" description="Add a task to the board." accentColor="#BBF7D0">
         <form onSubmit={(e) => {
           e.preventDefault();
           const fd = new FormData(e.currentTarget);
-          createTask.mutate({ 
-            title: fd.get('title') as string, 
-            projectId: fd.get('projectId') as string,
-            priority: fd.get('priority') as string 
-          });
-        }} className="space-y-6">
-          {errorMsg && (
-            <div className="p-4 bg-[#FF0000] border-[4px] border-black text-black font-black uppercase shadow-[4px_4px_0_0_#000000]">
-              {errorMsg}
-            </div>
-          )}
+          createTask.mutate({ title: fd.get('title') as string, projectId: fd.get('projectId') as string, priority: fd.get('priority') as string });
+        }} className="space-y-5">
+          {errorMsg && <div className="p-3 rounded-xl bg-red-50 border-[2px] border-red-300 text-sm font-medium text-red-600">{errorMsg}</div>}
           <div>
-            <label className="block text-xl font-black text-black mb-2 uppercase tracking-tighter">Task Title</label>
-            <Input name="title" required placeholder="DESIGN NEW UI" />
+            <label className="block text-sm font-bold text-[#1A1A1A] mb-2">Task Title</label>
+            <Input name="title" required placeholder="Design new component..." />
           </div>
           <div>
-            <label className="block text-xl font-black text-black mb-2 uppercase tracking-tighter">Project</label>
-            <select name="projectId" required className="flex w-full h-12 border-[3px] border-black bg-white px-4 text-sm font-bold text-black shadow-[4px_4px_0_0_#000000] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00FF4C] focus-visible:ring-offset-2 transition-all cursor-pointer">
-              <option value="" disabled selected>SELECT A PROJECT</option>
-              {projects.map((p: any) => (
-                <option key={p._id} value={p._id} className="font-bold">{p.name}</option>
-              ))}
+            <label className="block text-sm font-bold text-[#1A1A1A] mb-2">Project</label>
+            <select name="projectId" required className="flex w-full h-12 rounded-xl border-[3px] border-[#1A1A1A] bg-white px-4 py-2 text-sm font-medium text-[#1A1A1A] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#C4B5FD] shadow-[3px_3px_0px_#1A1A1A]">
+              <option value="">Select a project</option>
+              {projects.map((p: any) => <option key={p._id} value={p._id}>{p.name}</option>)}
             </select>
           </div>
           <div>
-            <label className="block text-xl font-black text-black mb-2 uppercase tracking-tighter">Priority</label>
-            <select name="priority" className="flex w-full h-12 border-[3px] border-black bg-white px-4 text-sm font-bold text-black shadow-[4px_4px_0_0_#000000] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00FF4C] focus-visible:ring-offset-2 transition-all cursor-pointer" defaultValue="Medium">
-              <option value="Low" className="font-bold">LOW</option>
-              <option value="Medium" className="font-bold">MEDIUM</option>
-              <option value="High" className="font-bold">HIGH</option>
-              <option value="Urgent" className="font-bold">URGENT</option>
+            <label className="block text-sm font-bold text-[#1A1A1A] mb-2">Priority</label>
+            <select name="priority" defaultValue="Medium" className="flex w-full h-12 rounded-xl border-[3px] border-[#1A1A1A] bg-white px-4 py-2 text-sm font-medium text-[#1A1A1A] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#C4B5FD] shadow-[3px_3px_0px_#1A1A1A]">
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+              <option value="Urgent">Urgent</option>
             </select>
           </div>
-          <div className="pt-6 flex justify-end gap-4 border-t-[4px] border-black mt-8">
-            <Button variant="ghost" type="button" onClick={() => setIsModalOpen(false)}>Cancel</Button>
-            <Button type="submit" disabled={createTask.isPending || projects.length === 0} className="bg-black text-[#00FF4C] hover:bg-[#00FF4C] hover:text-black">
-              {createTask.isPending ? 'DEPLOYING...' : 'DEPLOY TASK'}
+          <div className="flex justify-end gap-3 pt-2">
+            <Button type="button" variant="ghost" onClick={() => setIsModalOpen(false)}>Cancel</Button>
+            <Button type="submit" disabled={createTask.isPending || !projects.length} variant="mint">
+              {createTask.isPending ? 'Creating...' : 'Create Task'}
             </Button>
           </div>
-          {projects.length === 0 && (
-            <p className="text-sm font-black text-[#FF0000] mt-4 uppercase border-[2px] border-black p-2 bg-white inline-block">PROJECT REQUIRED BEFORE DEPLOYMENT.</p>
-          )}
+          {!projects.length && <p className="text-xs font-medium text-red-500">Please create a project first.</p>}
         </form>
       </Modal>
     </div>

@@ -19,7 +19,7 @@ export const globalSearch = async (req: Request, res: Response, next: NextFuncti
     const [projects, tasks, files, members] = await Promise.all([
       Project.find({ organizationId, $or: [{ name: searchRegex }, { description: searchRegex }] }).limit(5),
       Task.find({ organizationId, $or: [{ title: searchRegex }, { description: searchRegex }] }).limit(5),
-      File.find({ organizationId, name: searchRegex }).limit(5),
+      File.find({ organizationId, filename: searchRegex }).limit(5),
       Member.find({ organizationId }).populate({
         path: 'userId',
         match: { $or: [{ name: searchRegex }, { email: searchRegex }] },

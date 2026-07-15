@@ -74,11 +74,13 @@ export const getOrganizationById = async (req: Request, res: Response, next: Nex
 
 export const updateOrganization = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { name, logo } = req.body;
+    const { name, logo, plan, billingCycle } = req.body;
     const org = req.organization!;
 
     if (name) org.name = name;
     if (logo) org.logo = logo;
+    if (plan) org.plan = plan;
+    if (billingCycle) org.billingCycle = billingCycle;
 
     await org.save();
 

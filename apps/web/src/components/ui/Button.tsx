@@ -2,25 +2,29 @@ import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import { motion, HTMLMotionProps } from 'framer-motion';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center text-sm font-black uppercase tracking-wider transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00FF4C] focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-white border-[3px] border-black shadow-[4px_4px_0_0_#000000] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none',
+  // Base — rounded, bold, thick border, chunky shadow, press effect
+  'inline-flex items-center justify-center font-bold tracking-wide transition-all duration-150 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#C4B5FD] focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none select-none border-[3px] border-[#1A1A1A] shadow-[4px_4px_0px_#1A1A1A] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none hover:-translate-y-[1px] hover:shadow-[5px_5px_0px_#1A1A1A]',
   {
     variants: {
       variant: {
-        default: 'bg-white text-black hover:bg-black hover:text-[#00FF4C]',
-        destructive: 'bg-[#FF0000] text-white hover:bg-black hover:text-[#FF0000]',
-        outline: 'bg-transparent text-black hover:bg-black hover:text-[#00FF4C]',
-        secondary: 'bg-[#00FF4C] text-black hover:bg-black hover:text-[#00FF4C]',
-        ghost: 'border-transparent shadow-none hover:border-black hover:shadow-[4px_4px_0_0_#000000] text-black hover:bg-white',
-        link: 'border-none shadow-none underline-offset-4 hover:underline text-black hover:text-[#00FF4C] active:translate-x-0 active:translate-y-0',
+        default:     'bg-[#1A1A1A] text-white hover:bg-[#2D2D2D]',
+        primary:     'bg-[#DDD6FE] text-[#1A1A1A] hover:bg-[#C4B5FD]',
+        sky:         'bg-[#BAE6FD] text-[#1A1A1A] hover:bg-[#7DD3FC]',
+        mint:        'bg-[#BBF7D0] text-[#1A1A1A] hover:bg-[#86EFAC]',
+        pink:        'bg-[#FBCFE8] text-[#1A1A1A] hover:bg-[#F9A8D4]',
+        yellow:      'bg-[#FEF08A] text-[#1A1A1A] hover:bg-[#FDE047]',
+        destructive: 'bg-red-100 text-red-700 border-red-400 shadow-[4px_4px_0px_#f87171] hover:bg-red-200 hover:shadow-[5px_5px_0px_#f87171] active:shadow-none',
+        outline:     'bg-white text-[#1A1A1A] hover:bg-[#FFFDF5]',
+        ghost:       'border-transparent shadow-none bg-transparent hover:bg-[#1A1A1A]/5 active:translate-x-0 active:translate-y-0',
+        link:        'border-none shadow-none underline-offset-4 hover:underline text-[#1A1A1A] active:translate-x-0 active:translate-y-0',
       },
       size: {
-        default: 'h-12 py-3 px-6',
-        sm: 'h-10 px-4 text-xs',
-        lg: 'h-14 px-10 text-base',
-        icon: 'h-12 w-12',
+        default: 'h-11 px-5 text-sm rounded-xl',
+        sm:      'h-9 px-4 text-xs rounded-lg',
+        lg:      'h-13 px-7 text-base rounded-xl',
+        icon:    'h-11 w-11 rounded-xl',
       },
     },
     defaultVariants: {
@@ -38,9 +42,7 @@ export interface ButtonProps
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button";
-    
-    // We omit framer motion for simple usage but handle scale on active via tailwind `active:scale-[0.98]`
+    const Comp = asChild ? Slot : 'button';
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}

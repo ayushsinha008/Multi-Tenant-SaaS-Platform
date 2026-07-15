@@ -4,28 +4,33 @@ import { useState, useRef, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
 import { useAuthStore } from '@/store/useAuthStore';
-import { Users, UserPlus, Mail, Shield, MoreHorizontal, Trash2, ArrowUpCircle, ArrowDownCircle } from 'lucide-react';
+import { Users, UserPlus, Mail, Shield, MoreHorizontal, Trash2, ArrowUpCircle, ArrowDownCircle, Search } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/Badge';
 import { Avatar } from '@/components/ui/Avatar';
+import { Badge } from '@/components/ui/Badge';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Modal } from '@/components/ui/Modal';
 import { Input } from '@/components/ui/Input';
 import { motion, AnimatePresence } from 'framer-motion';
+
+const roleConfig: Record<string, { variant: any; icon: any }> = {
+  'OWNER':  { variant: 'default',   icon: Shield },
+  'ADMIN':  { variant: 'lavender',  icon: Shield },
+  'MEMBER': { variant: 'sky',       icon: Users },
+};
 
 export default function MembersPage() {
   const queryClient = useQueryClient();
   const activeWorkspaceId = useAuthStore((state) => state.activeWorkspaceId);
   const [isInviteOpen, setIsInviteOpen] = useState(false);
   const [openActionId, setOpenActionId] = useState<string | null>(null);
-
+  const [search, setSearch] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
   const actionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (actionRef.current && !actionRef.current.contains(e.target as Node)) {
-        setOpenActionId(null);
-      }
+      if (actionRef.current && !actionRef.current.contains(e.target as Node)) setOpenActionId(null);
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -33,202 +38,185 @@ export default function MembersPage() {
 
   const { data: members = [], isLoading } = useQuery({
     queryKey: ['members', activeWorkspaceId],
-    queryFn: async () => {
-      const res = await api.get(`/organizations/${activeWorkspaceId}/members`);
-      return res.data.members;
-    },
+    queryFn: async () => { const res = await api.get(`/organizations/${activeWorkspaceId}/members`); return res.data.members; },
     enabled: !!activeWorkspaceId
   });
-
-  const [errorMsg, setErrorMsg] = useState('');
 
   const inviteMember = useMutation({
     mutationFn: async (email: string) => {
       setErrorMsg('');
-      const res = await api.post(`/members/invite`, { email, role: 'MEMBER' });
+      const res = await api.post('/members/invite', { email, role: 'MEMBER' });
       return res.data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['members'] });
-      setIsInviteOpen(false);
-    },
-    onError: (err: any) => {
-      setErrorMsg(err.response?.data?.message || 'Failed to invite member');
-    }
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['members'] }); setIsInviteOpen(false); },
+    onError: (err: any) => { setErrorMsg(err.response?.data?.message || 'Failed to invite'); }
   });
 
   const updateRole = useMutation({
-    mutationFn: async ({ id, role }: { id: string, role: string }) => {
-      await api.patch(`/members/${id}/role`, { role });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['members'] });
-      setOpenActionId(null);
-    }
+    mutationFn: async ({ id, role }: { id: string; role: string }) => { await api.patch(`/members/${id}/role`, { role }); },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['members'] }); setOpenActionId(null); }
   });
 
   const removeMember = useMutation({
-    mutationFn: async (id: string) => {
-      if (confirm('Are you sure you want to remove this member?')) {
-        await api.delete(`/members/${id}`);
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['members'] });
-      setOpenActionId(null);
-    }
+    mutationFn: async (id: string) => { if (confirm('Remove this member?')) await api.delete(`/members/${id}`); },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['members'] }); setOpenActionId(null); }
   });
 
-  if (isLoading) return <div className="animate-pulse">Loading members...</div>;
+  const filtered = members.filter((m: any) => {
+    if (!search) return true;
+    return (m.userId?.name || '').toLowerCase().includes(search.toLowerCase()) ||
+           (m.email || m.userId?.email || '').toLowerCase().includes(search.toLowerCase());
+  });
 
   return (
-    <div className="space-y-12 pb-12">
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between border-b-[4px] border-black pb-8 gap-8">
-        <div>
-          <h1 className="text-7xl font-black tracking-tighter text-black uppercase leading-none">
-            Team<br/><span className="text-[#00FF4C]" style={{ WebkitTextStroke: '3px black' }}>Directory</span>
-          </h1>
-          <p className="text-xl font-bold text-black/70 mt-4 uppercase">Manage personnel and access roles.</p>
+    <div className="p-6 md:p-8 max-w-7xl mx-auto">
+
+      {/* Header */}
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-baseline gap-4">
+          <span className="text-5xl font-bold text-[#1A1A1A] tracking-tighter">
+            {isLoading ? '—' : String(members.length).padStart(2, '0')}
+          </span>
+          <div>
+            <h1 className="text-2xl font-bold text-[#1A1A1A] tracking-tight leading-none">Members</h1>
+            <p className="text-xs font-medium text-[#1A1A1A]/40 mt-0.5">People in this workspace</p>
+          </div>
         </div>
-        <Button onClick={() => setIsInviteOpen(true)} className="bg-[#00FF4C] text-black border-[3px] border-black shadow-[4px_4px_0_0_#000000] hover:bg-black hover:text-[#00FF4C] hover:shadow-none hover:translate-x-1 hover:translate-y-1 h-16 px-8 text-lg">
-          <UserPlus className="w-6 h-6 mr-2" strokeWidth={3} />
-          Invite Member
-        </Button>
+        <div className="flex items-center gap-3">
+          <div className="relative hidden sm:block">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#1A1A1A]/30" strokeWidth={2} />
+            <input
+              type="text"
+              placeholder="Search members..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-10 pr-4 h-11 w-52 rounded-xl border-[3px] border-[#1A1A1A] bg-white text-sm font-medium text-[#1A1A1A] placeholder:text-[#1A1A1A]/30 focus:outline-none focus:ring-3 focus:ring-[#C4B5FD] shadow-[3px_3px_0px_#1A1A1A]"
+            />
+          </div>
+          <Button onClick={() => setIsInviteOpen(true)} variant="pink">
+            <UserPlus className="w-4 h-4 mr-2" strokeWidth={2.5} />
+            Invite
+          </Button>
+        </div>
       </div>
 
-      <div className="border-[4px] border-black bg-white shadow-[12px_12px_0_0_#000000] overflow-visible pb-12 relative">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-black border-l-[4px] border-b-[4px] border-black flex items-center justify-center -mr-[4px] -mt-[4px]">
-          <Users className="w-16 h-16 text-[#00FF4C]" strokeWidth={1} />
+      {/* Grid */}
+      {isLoading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          {[...Array(6)].map((_, i) => <div key={i} className="h-52 rounded-2xl border-[3px] border-[#1A1A1A] bg-[#FFFDF5] animate-pulse" />)}
         </div>
-        
-        <div className="overflow-visible pt-16 px-8">
-          <table className="w-full text-sm text-left border-collapse">
-            <thead className="text-xl text-black font-black uppercase tracking-tighter border-b-[4px] border-black">
-              <tr>
-                <th className="py-4 px-4 border-r-[4px] border-black">Operative</th>
-                <th className="py-4 px-4 border-r-[4px] border-black">Clearance</th>
-                <th className="py-4 px-4 border-r-[4px] border-black">Status</th>
-                <th className="py-4 px-4 border-r-[4px] border-black">Onboarded</th>
-                <th className="py-4 px-4 text-right">Directives</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y-[4px] divide-black font-bold uppercase">
-              {members.map((member: any) => (
-                <tr key={member._id} className="hover:bg-[#00FF4C] transition-colors group">
-                  <td className="py-6 px-4 border-r-[4px] border-black">
-                    <div className="flex items-center gap-4">
-                      <div className="border-[3px] border-black rounded-none overflow-hidden">
-                        <Avatar src={member.userId?.avatar} fallback={member.userId?.name || member.email} />
-                      </div>
-                      <div>
-                        <div className="text-xl font-black text-black leading-none">{member.userId?.name || 'Pending Invite'}</div>
-                        <div className="text-black/60 text-sm mt-1">{member.email || member.userId?.email}</div>
-                      </div>
+      ) : members.length === 0 ? (
+        <EmptyState
+          icon={Users}
+          title="No members yet"
+          description="Invite your team to collaborate in this workspace."
+          accentColor="#FBCFE8"
+          primaryAction={{ label: 'Invite Member', onClick: () => setIsInviteOpen(true) }}
+        />
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          <AnimatePresence>
+            {filtered.map((member: any, i: number) => {
+              const cfg = roleConfig[member.role] || roleConfig['MEMBER'];
+              return (
+                <motion.div
+                  key={member._id}
+                  layout
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.2, delay: i * 0.04 }}
+                  className="rounded-2xl border-[3px] border-[#1A1A1A] bg-white shadow-[4px_4px_0px_#1A1A1A] hover:-translate-y-1 hover:shadow-[6px_6px_0px_#1A1A1A] transition-all overflow-hidden"
+                >
+                  {/* Role color band */}
+                  <div className="h-1.5" style={{
+                    backgroundColor: member.role === 'OWNER' ? '#1A1A1A' : member.role === 'ADMIN' ? '#DDD6FE' : '#BAE6FD'
+                  }} />
+
+                  <div className="p-6 flex flex-col items-center text-center gap-4">
+                    <div className="relative">
+                      <Avatar src={member.userId?.avatar} fallback={member.userId?.name || member.email || '?'} size="xl" />
+                      <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-[2px] border-white ${member.status === 'ACTIVE' ? 'bg-[#86EFAC]' : 'bg-[#E5E7EB]'}`} />
                     </div>
-                  </td>
-                  <td className="py-6 px-4 border-r-[4px] border-black">
-                    <div className="flex items-center gap-2 text-black">
-                      {member.role === 'OWNER' ? <Shield className="w-5 h-5 text-black" strokeWidth={3} /> : <Users className="w-5 h-5 text-black" strokeWidth={3} />}
-                      <span className="text-lg font-black tracking-tighter">{member.role}</span>
+
+                    <div>
+                      <h3 className="text-base font-bold text-[#1A1A1A] tracking-tight">{member.userId?.name || 'Pending'}</h3>
+                      <p className="text-xs font-medium text-[#1A1A1A]/40 mt-0.5 truncate max-w-[160px]">
+                        {member.email || member.userId?.email}
+                      </p>
                     </div>
-                  </td>
-                  <td className="py-6 px-4 border-r-[4px] border-black">
-                    <Badge variant={member.status === 'ACTIVE' ? 'success' : 'secondary'}>
-                      {member.status}
+
+                    <Badge variant={cfg.variant} className="gap-1.5">
+                      <cfg.icon className="w-3 h-3" strokeWidth={2.5} />
+                      {member.role}
                     </Badge>
-                  </td>
-                  <td className="py-6 px-4 text-black border-r-[4px] border-black text-lg">
-                    {new Date(member.joinedAt || member.createdAt).toLocaleDateString()}
-                  </td>
-                  <td className="py-6 px-4 text-right relative">
-                    {member.role !== 'OWNER' && (
-                      <div ref={openActionId === member._id ? actionRef : null}>
-                        <button 
+                  </div>
+
+                  {member.role !== 'OWNER' && (
+                    <div className="border-t-[2px] border-[#1A1A1A]/10 px-4 py-3 flex justify-end">
+                      <div ref={openActionId === member._id ? actionRef : null} className="relative">
+                        <button
                           onClick={() => setOpenActionId(openActionId === member._id ? null : member._id)}
-                          className={`p-3 border-[3px] border-black transition-colors ${openActionId === member._id ? 'bg-black text-[#00FF4C]' : 'bg-white text-black hover:bg-black hover:text-[#00FF4C] opacity-0 group-hover:opacity-100'}`}
+                          className={`p-2 rounded-lg border-[2px] border-transparent transition-colors ${openActionId === member._id ? 'border-[#1A1A1A] bg-[#1A1A1A] text-white' : 'text-[#1A1A1A]/30 hover:text-[#1A1A1A] hover:border-[#1A1A1A]/20 hover:bg-[#FFFDF5]'}`}
                         >
-                          <MoreHorizontal className="w-5 h-5" strokeWidth={3} />
+                          <MoreHorizontal className="w-4 h-4" strokeWidth={2} />
                         </button>
-                        
                         <AnimatePresence>
                           {openActionId === member._id && (
-                            <motion.div 
-                              initial={{ opacity: 0, scale: 0.95 }}
-                              animate={{ opacity: 1, scale: 1 }}
+                            <motion.div
+                              initial={{ opacity: 0, scale: 0.95, y: -4 }}
+                              animate={{ opacity: 1, scale: 1, y: 0 }}
                               exit={{ opacity: 0, scale: 0.95 }}
                               transition={{ duration: 0.1 }}
-                              className="absolute right-16 top-6 w-56 bg-white border-[4px] border-black shadow-[8px_8px_0_0_#000000] z-50 flex flex-col"
+                              className="absolute right-0 bottom-full mb-2 w-44 bg-white rounded-xl border-[3px] border-[#1A1A1A] shadow-[4px_4px_0px_#1A1A1A] z-50 overflow-hidden"
                             >
                               {member.role === 'MEMBER' ? (
-                                <button
-                                  onClick={() => updateRole.mutate({ id: member._id, role: 'ADMIN' })}
-                                  className="w-full px-4 py-3 text-left font-black text-black hover:bg-black hover:text-[#00FF4C] flex items-center gap-3 border-b-[2px] border-black transition-colors"
-                                >
-                                  <ArrowUpCircle className="w-5 h-5" strokeWidth={3} />
-                                  ELEVATE TO ADMIN
+                                <button onClick={() => updateRole.mutate({ id: member._id, role: 'ADMIN' })} className="w-full px-4 py-3 text-left text-sm font-medium text-[#1A1A1A] hover:bg-[#DDD6FE] flex items-center gap-2.5 border-b-[2px] border-[#1A1A1A]/10 transition-colors">
+                                  <ArrowUpCircle className="w-4 h-4" strokeWidth={2} />
+                                  Make Admin
                                 </button>
                               ) : (
-                                <button
-                                  onClick={() => updateRole.mutate({ id: member._id, role: 'MEMBER' })}
-                                  className="w-full px-4 py-3 text-left font-black text-black hover:bg-black hover:text-white flex items-center gap-3 border-b-[2px] border-black transition-colors"
-                                >
-                                  <ArrowDownCircle className="w-5 h-5" strokeWidth={3} />
-                                  DEMOTE TO MEMBER
+                                <button onClick={() => updateRole.mutate({ id: member._id, role: 'MEMBER' })} className="w-full px-4 py-3 text-left text-sm font-medium text-[#1A1A1A] hover:bg-[#BAE6FD] flex items-center gap-2.5 border-b-[2px] border-[#1A1A1A]/10 transition-colors">
+                                  <ArrowDownCircle className="w-4 h-4" strokeWidth={2} />
+                                  Make Member
                                 </button>
                               )}
-                              <button
-                                onClick={() => removeMember.mutate(member._id)}
-                                className="w-full px-4 py-3 text-left font-black text-black bg-[#FF0000] hover:bg-black hover:text-[#FF0000] flex items-center gap-3 transition-colors"
-                              >
-                                <Trash2 className="w-5 h-5" strokeWidth={3} />
-                                TERMINATE
+                              <button onClick={() => removeMember.mutate(member._id)} className="w-full px-4 py-3 text-left text-sm font-medium text-red-500 hover:bg-red-50 flex items-center gap-2.5 transition-colors">
+                                <Trash2 className="w-4 h-4" strokeWidth={2} />
+                                Remove
                               </button>
                             </motion.div>
                           )}
                         </AnimatePresence>
                       </div>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        
-        {members.length === 0 && (
-          <div className="p-16 border-t-[4px] border-black bg-[#ECECEC]">
-            <EmptyState
-              icon={Users}
-              title="NO OPERATIVES DETECTED"
-              description="Transmit an invitation to expand your operational capacity."
-              primaryAction={{ label: 'INITIATE INVITE', onClick: () => setIsInviteOpen(true) }}
-            />
-          </div>
-        )}
-      </div>
-
-      <Modal isOpen={isInviteOpen} onClose={() => setIsInviteOpen(false)} title="Transmit Invitation" description="Deploy an encrypted email token to recruit personnel.">
-        <form onSubmit={(e) => {
-          e.preventDefault();
-          const fd = new FormData(e.currentTarget);
-          inviteMember.mutate(fd.get('email') as string);
-        }} className="space-y-6">
-          {errorMsg && (
-            <div className="p-4 bg-[#FF0000] border-[4px] border-black text-black font-black uppercase shadow-[4px_4px_0_0_#000000]">
-              {errorMsg}
+                    </div>
+                  )}
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+          {filtered.length === 0 && search && (
+            <div className="col-span-full py-16 text-center">
+              <p className="text-sm font-medium text-[#1A1A1A]/40">No members match "{search}"</p>
             </div>
           )}
+        </div>
+      )}
+
+      <Modal isOpen={isInviteOpen} onClose={() => setIsInviteOpen(false)} title="Invite Member" description="Send an invitation to join this workspace." accentColor="#FBCFE8">
+        <form onSubmit={(e) => { e.preventDefault(); const fd = new FormData(e.currentTarget); inviteMember.mutate(fd.get('email') as string); }} className="space-y-5">
+          {errorMsg && <div className="p-3 rounded-xl bg-red-50 border-[2px] border-red-300 text-sm font-medium text-red-600">{errorMsg}</div>}
           <div>
-            <label className="block text-xl font-black text-black mb-2 uppercase tracking-tighter">Target Email Address</label>
+            <label className="block text-sm font-bold text-[#1A1A1A] mb-2">Email Address</label>
             <div className="relative">
-              <Mail className="absolute left-4 top-4 w-6 h-6 text-black" strokeWidth={2} />
-              <Input name="email" type="email" required placeholder="colleague@example.com" className="pl-14 h-14" />
+              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#1A1A1A]/30" strokeWidth={2} />
+              <Input name="email" type="email" required placeholder="colleague@company.com" className="pl-11" />
             </div>
           </div>
-          <div className="pt-6 flex justify-end gap-4 border-t-[4px] border-black mt-8">
-            <Button variant="ghost" type="button" onClick={() => setIsInviteOpen(false)}>Cancel</Button>
-            <Button type="submit" disabled={inviteMember.isPending} className="bg-black text-[#00FF4C] hover:bg-[#00FF4C] hover:text-black h-14 px-8">
-              {inviteMember.isPending ? 'TRANSMITTING...' : 'SEND INVITE'}
+          <div className="flex justify-end gap-3 pt-2">
+            <Button type="button" variant="ghost" onClick={() => setIsInviteOpen(false)}>Cancel</Button>
+            <Button type="submit" disabled={inviteMember.isPending} variant="pink">
+              {inviteMember.isPending ? 'Sending...' : 'Send Invite'}
             </Button>
           </div>
         </form>

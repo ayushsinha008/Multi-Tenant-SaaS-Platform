@@ -1,31 +1,32 @@
 'use client';
+
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowRight, CheckCircle2, Layout, Zap, Shield, Users } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Layout, Zap, Shield, Users, Sparkles, Folder, CheckSquare } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { Card, CardContent } from '@/components/ui/Card';
 
 export default function Home() {
   const fadeIn = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
+    hidden: { opacity: 0, y: 15 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
   };
 
   return (
-    <div className="min-h-screen bg-[#0F172A] text-slate-50 selection:bg-indigo-500/30">
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-[#0F172A]/80 backdrop-blur-md border-b border-white/10">
+    <div className="min-h-screen bg-[#FFFDF5] text-[#1A1A1A] selection:bg-[#DDD6FE] selection:text-[#1A1A1A] pb-16">
+      
+      {/* ─── Navigation ────────────────────────────────────────────────────── */}
+      <nav className="fixed top-0 w-full z-50 bg-[#FFFDF5]/90 backdrop-blur-md border-b-[3px] border-[#1A1A1A]">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="font-bold text-xl tracking-tight flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#6D28D9] to-[#8B5CF6] flex items-center justify-center">
-              <span className="text-white font-bold text-sm">O</span>
+          <div className="font-bold text-lg flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-[#DDD6FE] border-[2px] border-[#1A1A1A] flex items-center justify-center shadow-[2px_2px_0px_#1A1A1A]">
+              <Sparkles className="w-4 h-4 text-[#1A1A1A]" strokeWidth={2.5} />
             </div>
-            Omnistack
+            <span className="font-bold text-xl tracking-tight text-[#1A1A1A]">Omnistack</span>
           </div>
           <div className="flex items-center gap-4">
-            <Link href="/login" className="text-sm font-medium text-slate-300 hover:text-white transition">Sign in</Link>
+            <Link href="/login" className="text-sm font-bold text-[#1A1A1A] hover:underline">Sign in</Link>
             <Link href="/register">
-              <Button className="bg-[#6D28D9] hover:bg-[#7C3AED] text-white border-0 shadow-lg shadow-indigo-900/20">
+              <Button size="sm" variant="primary">
                 Get Started
               </Button>
             </Link>
@@ -33,152 +34,164 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="pt-40 pb-20 px-6 overflow-hidden relative">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#6D28D9]/20 blur-[120px] rounded-full pointer-events-none" />
-        <div className="max-w-7xl mx-auto text-center relative z-10">
-          <motion.div initial="hidden" animate="visible" variants={fadeIn} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-sm text-indigo-300 mb-8">
-            <span className="flex h-2 w-2 rounded-full bg-indigo-500"></span>
-            v2.0 is now live
+      {/* ─── Hero Section ──────────────────────────────────────────────────── */}
+      <section className="pt-32 pb-20 px-6 relative overflow-hidden">
+        {/* Background shapes */}
+        <div className="absolute top-[20%] left-[-5%] w-48 h-48 rounded-full border-[3px] border-[#1A1A1A] bg-[#BAE6FD] opacity-20 pointer-events-none -rotate-12" />
+        <div className="absolute bottom-[10%] right-[-5%] w-64 h-64 rounded-3xl border-[3px] border-[#1A1A1A] bg-[#FBCFE8] opacity-20 pointer-events-none rotate-12" />
+
+        <div className="max-w-4xl mx-auto text-center relative z-10 space-y-8">
+          <motion.div initial="hidden" animate="visible" variants={fadeIn} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border-[2px] border-[#1A1A1A] bg-[#FEF08A] text-xs font-bold shadow-[2px_2px_0px_#1A1A1A]">
+            <Sparkles className="w-3.5 h-3.5" strokeWidth={2.5} />
+            Neo Brutalist Workspace v2.0 is Live
           </motion.div>
           
-          <motion.h1 initial="hidden" animate="visible" variants={fadeIn} className="text-5xl md:text-7xl font-bold tracking-tight mb-8 leading-tight">
-            The workspace for <br/>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
+          <motion.h1 initial="hidden" animate="visible" variants={fadeIn} className="text-4xl md:text-6xl font-bold tracking-tight text-[#1A1A1A] leading-none">
+            The playful workspace for <br/>
+            <span className="underline decoration-[#DDD6FE] decoration-8 underline-offset-4">
               modern product teams
             </span>
           </motion.h1>
           
-          <motion.p initial="hidden" animate="visible" variants={fadeIn} className="text-xl text-slate-400 mb-12 max-w-2xl mx-auto">
-            Bring your organization's projects, tasks, files, and communication together in one unified, blazingly fast platform.
+          <motion.p initial="hidden" animate="visible" variants={fadeIn} className="text-lg md:text-xl font-medium text-[#1A1A1A]/60 max-w-2xl mx-auto leading-relaxed">
+            Bring your organization's projects, tasks, files, and updates together in one beautifully handcrafted dashboard.
           </motion.p>
           
-          <motion.div initial="hidden" animate="visible" variants={fadeIn} className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <motion.div initial="hidden" animate="visible" variants={fadeIn} className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
             <Link href="/register">
-              <Button size="lg" className="h-14 px-8 text-lg bg-[#6D28D9] hover:bg-[#7C3AED] text-white border-0 shadow-lg shadow-indigo-900/20 w-full sm:w-auto">
-                Start for free <ArrowRight className="ml-2 w-5 h-5" />
+              <Button size="lg" variant="primary" className="w-full sm:w-auto">
+                Start for free <ArrowRight className="ml-2 w-4 h-4" strokeWidth={3} />
               </Button>
             </Link>
             <Link href="/login">
-              <Button size="lg" variant="outline" className="h-14 px-8 text-lg bg-white/5 border-white/10 hover:bg-white/10 text-white w-full sm:w-auto">
-                Book a demo
+              <Button size="lg" variant="outline" className="w-full sm:w-auto">
+                Explore Dashboard
               </Button>
             </Link>
           </motion.div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-24 px-6 bg-black/20 border-y border-white/5 relative z-10">
+      {/* ─── Features Section ──────────────────────────────────────────────── */}
+      <section className="py-20 px-6 bg-white border-y-[3px] border-[#1A1A1A] relative z-10 shadow-[0_8px_0_0_rgba(26,26,26,0.02)]">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">Everything you need to ship faster</h2>
-            <p className="text-slate-400 max-w-2xl mx-auto">Designed with extreme attention to detail, performance, and collaboration.</p>
+          <div className="text-center mb-16 space-y-3">
+            <h2 className="text-3xl font-bold text-[#1A1A1A] tracking-tight">Everything you need to ship faster</h2>
+            <p className="text-base font-medium text-[#1A1A1A]/40 max-w-xl mx-auto">Designed with attention to performance, isolation, and collaboration.</p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { icon: Layout, title: "Kanban & Lists", desc: "Organize your workflow perfectly with real-time syncing boards." },
-              { icon: Users, title: "Multi-Tenant Isolation", desc: "Enterprise-grade data separation. Your data never touches another organization's." },
-              { icon: Zap, title: "Real-time Engine", desc: "Built on WebSockets for instant updates, typing indicators, and presence." },
-              { icon: Shield, title: "Role-Based Access", desc: "Fine-grained permissions for Owners, Admins, Members, and Viewers." },
-              { icon: CheckCircle2, title: "Activity Audit Logs", desc: "Track every action, login, and change for compliance and transparency." },
-              { icon: ArrowRight, title: "Extensible APIs", desc: "Connect your custom tools via our thoroughly documented REST endpoints." },
+              { icon: Layout, title: "Kanban & Lists", desc: "Organize your workflow cleanly with real-time drag-and-drop boards.", color: '#BAE6FD' },
+              { icon: Users, title: "Multi-Tenant Isolation", desc: "Solid data separation. Your data stays within your organization node.", color: '#DDD6FE' },
+              { icon: Zap, title: "Real-time updates", desc: "Updates presence and activity feed automatically with zero refresh.", color: '#BBF7D0' },
+              { icon: Shield, title: "Role Permissions", desc: "Assign custom operational roles: Owners, Admins, and Members.", color: '#FBCFE8' },
+              { icon: CheckCircle2, title: "Activity Audit Logs", desc: "Audit logs document changes for complete operations visibility.", color: '#FEF08A' },
+              { icon: Sparkles, title: "Lovely UI", desc: "A colorful Neo Brutalist system that makes daily coordination fun.", color: '#FED7AA' },
             ].map((feature, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
-                <Card className="bg-[#111827] border-white/10 hover:border-indigo-500/30 transition-colors">
-                  <CardContent className="p-6">
-                    <div className="w-12 h-12 rounded-lg bg-indigo-500/10 flex items-center justify-center mb-4 text-indigo-400">
-                      <feature.icon className="w-6 h-6" />
-                    </div>
-                    <h3 className="text-lg font-semibold mb-2 text-white">{feature.title}</h3>
-                    <p className="text-slate-400 text-sm leading-relaxed">{feature.desc}</p>
-                  </CardContent>
-                </Card>
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08 }}
+                className="rounded-2xl border-[3px] border-[#1A1A1A] bg-[#FFFDF5] p-6 shadow-[3px_3px_0px_#1A1A1A] hover:-translate-y-1 hover:shadow-[5px_5px_0px_#1A1A1A] transition-all"
+              >
+                <div
+                  className="w-11 h-11 rounded-xl border-[2px] border-[#1A1A1A] flex items-center justify-center mb-4 shadow-[2px_2px_0px_#1A1A1A]"
+                  style={{ backgroundColor: feature.color }}
+                >
+                  <feature.icon className="w-5 h-5 text-[#1A1A1A]" strokeWidth={2.5} />
+                </div>
+                <h3 className="text-lg font-bold text-[#1A1A1A] mb-2">{feature.title}</h3>
+                <p className="text-sm font-medium text-[#1A1A1A]/50 leading-relaxed">{feature.desc}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Pricing */}
-      <section className="py-24 px-6 relative z-10">
+      {/* ─── Pricing ───────────────────────────────────────────────────────── */}
+      <section className="py-20 px-6 relative z-10">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">Simple, transparent pricing</h2>
-            <p className="text-slate-400 max-w-2xl mx-auto">Start for free, upgrade when you need more power.</p>
+          <div className="text-center mb-16 space-y-3">
+            <h2 className="text-3xl font-bold text-[#1A1A1A] tracking-tight">Simple, transparent pricing</h2>
+            <p className="text-base font-medium text-[#1A1A1A]/40 max-w-xl mx-auto">Start free, upgrade as your team grows.</p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto items-stretch">
             {/* Free */}
-            <Card className="bg-[#111827] border-white/10 flex flex-col">
-              <CardContent className="p-8 flex-1">
-                <h3 className="text-xl font-bold text-white mb-2">Starter</h3>
-                <div className="flex items-baseline gap-1 mb-6">
-                  <span className="text-4xl font-bold text-white">$0</span>
-                  <span className="text-slate-400">/mo</span>
+            <div className="rounded-2xl border-[3px] border-[#1A1A1A] bg-white p-8 flex flex-col justify-between shadow-[4px_4px_0px_#1A1A1A] hover:-translate-y-1 hover:shadow-[5px_5px_0px_#1A1A1A] transition-all">
+              <div className="space-y-4">
+                <h3 className="text-lg font-bold text-[#1A1A1A]">Starter</h3>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-4xl font-bold text-[#1A1A1A] tracking-tight">$0</span>
+                  <span className="text-xs font-semibold text-[#1A1A1A]/40 uppercase">/month</span>
                 </div>
-                <ul className="space-y-4 mb-8 text-sm text-slate-300">
-                  <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400"/> Up to 5 members</li>
-                  <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400"/> 3 Projects</li>
-                  <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400"/> Basic Support</li>
+                <ul className="space-y-3.5 text-sm font-semibold text-[#1A1A1A]/60 pt-4">
+                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-green-500" strokeWidth={3} /> Up to 5 members</li>
+                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-green-500" strokeWidth={3} /> 3 Projects limit</li>
+                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-green-500" strokeWidth={3} /> Basic ticket support</li>
                 </ul>
-                <Button className="w-full bg-white/10 hover:bg-white/20 text-white mt-auto">Get Started</Button>
-              </CardContent>
-            </Card>
+              </div>
+              <Link href="/register" className="block mt-8">
+                <Button variant="outline" className="w-full">Get Started</Button>
+              </Link>
+            </div>
 
             {/* Pro */}
-            <Card className="bg-gradient-to-b from-[#6D28D9]/20 to-[#111827] border-indigo-500/30 flex flex-col relative transform md:-translate-y-4 shadow-2xl shadow-indigo-900/20">
-              <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-t-xl" />
-              <CardContent className="p-8 flex-1">
-                <div className="inline-block px-3 py-1 bg-indigo-500/20 text-indigo-300 text-xs font-semibold rounded-full mb-4">MOST POPULAR</div>
-                <h3 className="text-xl font-bold text-white mb-2">Professional</h3>
-                <div className="flex items-baseline gap-1 mb-6">
-                  <span className="text-4xl font-bold text-white">$29</span>
-                  <span className="text-slate-400">/mo per user</span>
+            <div className="rounded-2xl border-[3px] border-[#1A1A1A] bg-[#DDD6FE] p-8 flex flex-col justify-between shadow-[6px_6px_0px_#1A1A1A] hover:-translate-y-1 hover:shadow-[8px_8px_0px_#1A1A1A] transition-all relative transform md:-translate-y-2">
+              <div className="absolute top-3 right-3 px-2.5 py-1 bg-[#1A1A1A] text-white text-[9px] font-bold rounded-full uppercase tracking-wider">
+                Popular
+              </div>
+              <div className="space-y-4">
+                <h3 className="text-lg font-bold text-[#1A1A1A]">Professional</h3>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-4xl font-bold text-[#1A1A1A] tracking-tight">$29</span>
+                  <span className="text-xs font-semibold text-[#1A1A1A]/40 uppercase">/month</span>
                 </div>
-                <ul className="space-y-4 mb-8 text-sm text-slate-300">
-                  <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400"/> Unlimited members</li>
-                  <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400"/> Unlimited Projects</li>
-                  <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400"/> 100GB Storage</li>
-                  <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400"/> Priority Support</li>
+                <ul className="space-y-3.5 text-sm font-semibold text-[#1A1A1A]/70 pt-4">
+                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-white" strokeWidth={3} /> Unlimited members</li>
+                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-white" strokeWidth={3} /> Unlimited Projects</li>
+                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-white" strokeWidth={3} /> 100GB secure storage</li>
+                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-white" strokeWidth={3} /> Priority direct support</li>
                 </ul>
-                <Button className="w-full bg-[#6D28D9] hover:bg-[#7C3AED] text-white mt-auto">Start Free Trial</Button>
-              </CardContent>
-            </Card>
+              </div>
+              <Link href="/register" className="block mt-8">
+                <Button variant="default" className="w-full bg-[#1A1A1A] text-white">Start Free Trial</Button>
+              </Link>
+            </div>
 
             {/* Enterprise */}
-            <Card className="bg-[#111827] border-white/10 flex flex-col">
-              <CardContent className="p-8 flex-1">
-                <h3 className="text-xl font-bold text-white mb-2">Enterprise</h3>
-                <div className="flex items-baseline gap-1 mb-6">
-                  <span className="text-4xl font-bold text-white">Custom</span>
+            <div className="rounded-2xl border-[3px] border-[#1A1A1A] bg-white p-8 flex flex-col justify-between shadow-[4px_4px_0px_#1A1A1A] hover:-translate-y-1 hover:shadow-[5px_5px_0px_#1A1A1A] transition-all">
+              <div className="space-y-4">
+                <h3 className="text-lg font-bold text-[#1A1A1A]">Enterprise</h3>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-4xl font-bold text-[#1A1A1A] tracking-tight">Custom</span>
                 </div>
-                <ul className="space-y-4 mb-8 text-sm text-slate-300">
-                  <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400"/> Custom limits</li>
-                  <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400"/> Advanced Security</li>
-                  <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400"/> Dedicated Success Manager</li>
-                  <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-indigo-400"/> Single Sign-On (SSO)</li>
+                <ul className="space-y-3.5 text-sm font-semibold text-[#1A1A1A]/60 pt-4">
+                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-green-500" strokeWidth={3} /> Custom seat parameters</li>
+                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-green-500" strokeWidth={3} /> Advanced security logs</li>
+                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-green-500" strokeWidth={3} /> Dedicated success manager</li>
+                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-green-500" strokeWidth={3} /> Single Sign-On (SSO)</li>
                 </ul>
-                <Button className="w-full bg-white/10 hover:bg-white/20 text-white mt-auto">Contact Sales</Button>
-              </CardContent>
-            </Card>
+              </div>
+              <Link href="mailto:sales@omnistack.com" className="block mt-8">
+                <Button variant="outline" className="w-full">Contact Sales</Button>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-white/10 py-12 px-6 relative z-10 bg-[#0B1120]">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="text-slate-400 text-sm">
-            © 2026 Omnistack. All rights reserved.
-          </div>
-          <div className="flex gap-6 text-sm text-slate-400">
-            <Link href="#" className="hover:text-white transition">Twitter</Link>
-            <Link href="#" className="hover:text-white transition">GitHub</Link>
-            <Link href="#" className="hover:text-white transition">Terms</Link>
-            <Link href="#" className="hover:text-white transition">Privacy</Link>
-          </div>
+      {/* ─── Footer ────────────────────────────────────────────────────────── */}
+      <footer className="max-w-7xl mx-auto px-6 pt-12 border-t-[3px] border-[#1A1A1A]/10 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm font-medium text-[#1A1A1A]/40">
+        <div>© 2026 Omnistack. All rights reserved.</div>
+        <div className="flex gap-5">
+          <a href="#" className="hover:text-[#1A1A1A] hover:underline">Twitter</a>
+          <a href="#" className="hover:text-[#1A1A1A] hover:underline">GitHub</a>
+          <a href="#" className="hover:text-[#1A1A1A] hover:underline">Terms</a>
+          <a href="#" className="hover:text-[#1A1A1A] hover:underline">Privacy</a>
         </div>
       </footer>
     </div>

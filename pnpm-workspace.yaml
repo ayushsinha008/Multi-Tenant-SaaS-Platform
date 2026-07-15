@@ -2,4 +2,6 @@ packages:
   - 'apps/*'
   - 'packages/*'
 allowBuilds:
+  '@firebase/util': set this to true or false
   mongodb-memory-server: true
+  protobufjs: set this to true or false
