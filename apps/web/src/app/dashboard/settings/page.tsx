@@ -123,6 +123,32 @@ export default function SettingsPage() {
       queryClient.invalidateQueries({ queryKey: ['organizations'] });
     }
   });
+  const { data: files = [] } = useQuery({
+    queryKey: ['files', activeWorkspaceId],
+    queryFn: async () => {
+      const res = await api.get('/files');
+      return res.data.files;
+    },
+    enabled: !!activeWorkspaceId
+  });
+
+  const { data: projectsData = [] } = useQuery({
+    queryKey: ['projects', activeWorkspaceId],
+    queryFn: async () => {
+      const res = await api.get('/projects');
+      return res.data.projects;
+    },
+    enabled: !!activeWorkspaceId
+  });
+
+  const totalStorageBytes = files.reduce((acc: number, f: any) => acc + (f.size || 0), 0);
+  const totalStorageMB = (totalStorageBytes / (1024 * 1024)).toFixed(1);
+  const maxStorageMB = activeOrg?.plan === 'FREE' ? 5 : activeOrg?.plan === 'PRO' ? 100 : 1024;
+  const storagePercentage = Math.min((totalStorageBytes / (maxStorageMB * 1024 * 1024)) * 100, 100);
+
+  const totalProjects = projectsData.length || 0;
+  const maxProjects = activeOrg?.plan === 'FREE' ? 3 : Infinity;
+  const projectsPercentage = maxProjects === Infinity ? (totalProjects > 0 ? 5 : 0) : Math.min((totalProjects / maxProjects) * 100, 100);
 
   return (
     <div className="flex min-h-[calc(100vh-72px)] flex-col md:flex-row bg-[#FFFDF5]">
@@ -364,9 +390,7 @@ export default function SettingsPage() {
               <div>
                 <h2 className="text-2xl font-bold text-[#1A1A1A] tracking-tight">Security</h2>
                 <p className="text-sm font-medium text-[#1A1A1A]/40 mt-1">Manage your account security and authentication</p>
-              </div>
-
-              {/* Connected Accounts */}
+{/* Connected Accounts */}
               <div className="rounded-2xl border-[3px] border-[#1A1A1A] bg-white p-6 md:p-8 shadow-[4px_4px_0px_#1A1A1A]">
                 <h3 className="text-sm font-bold text-[#1A1A1A] mb-4">Connected Accounts</h3>
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-xl border-[2px] border-[#1A1A1A]/10 bg-[#FFFDF5] gap-4">
@@ -421,19 +445,19 @@ export default function SettingsPage() {
                   <div>
                     <div className="flex justify-between text-sm font-bold text-[#1A1A1A] mb-2">
                       <span>Storage Used</span>
-                      <span>45 MB / {activeOrg?.plan === 'FREE' ? '5 MB' : activeOrg?.plan === 'PRO' ? '100 MB' : '1 GB'}</span>
+                      <span>{totalStorageMB} MB / {maxStorageMB === 1024 ? '1 GB' : `${maxStorageMB} MB`}</span>
                     </div>
                     <div className="h-3 w-full bg-[#1A1A1A]/5 rounded-full overflow-hidden border-[2px] border-[#1A1A1A]">
-                      <div className="h-full bg-[#BBF7D0] border-r-[2px] border-[#1A1A1A]" style={{ width: '45%' }} />
+                      <div className="h-full bg-[#BBF7D0] border-r-[2px] border-[#1A1A1A]" style={{ width: `${storagePercentage}%` }} />
                     </div>
                   </div>
                   <div>
                     <div className="flex justify-between text-sm font-bold text-[#1A1A1A] mb-2">
                       <span>Projects Used</span>
-                      <span>2 / {activeOrg?.plan === 'FREE' ? '3' : 'Unlimited'}</span>
+                      <span>{totalProjects} / {activeOrg?.plan === 'FREE' ? '3' : 'Unlimited'}</span>
                     </div>
                     <div className="h-3 w-full bg-[#1A1A1A]/5 rounded-full overflow-hidden border-[2px] border-[#1A1A1A]">
-                      <div className="h-full bg-[#BAE6FD] border-r-[2px] border-[#1A1A1A]" style={{ width: '66%' }} />
+                      <div className="h-full bg-[#BAE6FD] border-r-[2px] border-[#1A1A1A]" style={{ width: `${projectsPercentage}%` }} />
                     </div>
                   </div>
                 </div>
