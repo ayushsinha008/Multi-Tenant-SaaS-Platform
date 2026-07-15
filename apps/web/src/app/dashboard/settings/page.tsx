@@ -46,15 +46,15 @@ export default function SettingsPage() {
         phone: '9999999999',
         udf1: activeWorkspaceId
       });
-      
+
       const { key, txnid, hash, surl, furl } = res.data;
-      
+
       const form = document.createElement('form');
       form.method = 'POST';
       form.action = 'https://test.payu.in/_payment';
-      
+
       const fields = { key, txnid, amount, productinfo: plan, firstname: user?.name || 'User', email: user?.email || '', phone: '9999999999', surl, furl, hash, udf1: activeWorkspaceId };
-      
+
       for (const [k, v] of Object.entries(fields)) {
         if (v) {
           const input = document.createElement('input');
@@ -64,7 +64,7 @@ export default function SettingsPage() {
           form.appendChild(input);
         }
       }
-      
+
       document.body.appendChild(form);
       form.submit();
     } catch (error) {
@@ -122,32 +122,6 @@ export default function SettingsPage() {
       queryClient.invalidateQueries({ queryKey: ['organizations'] });
     }
   });
-  const { data: files = [] } = useQuery({
-    queryKey: ['files', activeWorkspaceId],
-    queryFn: async () => {
-      const res = await api.get('/files');
-      return res.data.files;
-    },
-    enabled: !!activeWorkspaceId
-  });
-
-  const { data: projectsData = [] } = useQuery({
-    queryKey: ['projects', activeWorkspaceId],
-    queryFn: async () => {
-      const res = await api.get('/projects');
-      return res.data.projects;
-    },
-    enabled: !!activeWorkspaceId
-  });
-
-  const totalStorageBytes = files.reduce((acc: number, f: any) => acc + (f.size || 0), 0);
-  const totalStorageMB = (totalStorageBytes / (1024 * 1024)).toFixed(1);
-  const maxStorageMB = activeOrg?.plan === 'FREE' ? 5 : activeOrg?.plan === 'PRO' ? 100 : 1024;
-  const storagePercentage = Math.min((totalStorageBytes / (maxStorageMB * 1024 * 1024)) * 100, 100);
-
-  const totalProjects = projectsData.length || 0;
-  const maxProjects = activeOrg?.plan === 'FREE' ? 3 : Infinity;
-  const projectsPercentage = maxProjects === Infinity ? (totalProjects > 0 ? 5 : 0) : Math.min((totalProjects / maxProjects) * 100, 100);
 
   return (
     <div className="flex min-h-[calc(100vh-72px)] flex-col md:flex-row bg-[#FFFDF5]">
@@ -162,11 +136,10 @@ export default function SettingsPage() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border-[3px] text-left transition-all duration-150 ${
-                  isActive
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border-[3px] text-left transition-all duration-150 ${isActive
                     ? 'border-[#1A1A1A] shadow-[3px_3px_0px_#1A1A1A]'
                     : 'border-transparent text-[#1A1A1A]/60 hover:text-[#1A1A1A] hover:bg-[#FFFDF5]'
-                }`}
+                  }`}
                 style={{ backgroundColor: isActive ? tab.color : 'transparent' }}
               >
                 <tab.icon className="w-4 h-4 shrink-0" strokeWidth={2.5} />
@@ -441,24 +414,24 @@ export default function SettingsPage() {
                     </Button>
                   </Link>
                 </div>
-                
+
                 <div className="space-y-4">
                   <div>
                     <div className="flex justify-between text-sm font-bold text-[#1A1A1A] mb-2">
                       <span>Storage Used</span>
-                      <span>{totalStorageMB} MB / {maxStorageMB === 1024 ? '1 GB' : `${maxStorageMB} MB`}</span>
+                      <span>45 MB / {activeOrg?.plan === 'FREE' ? '5 MB' : activeOrg?.plan === 'PRO' ? '100 MB' : '1 GB'}</span>
                     </div>
                     <div className="h-3 w-full bg-[#1A1A1A]/5 rounded-full overflow-hidden border-[2px] border-[#1A1A1A]">
-                      <div className="h-full bg-[#BBF7D0] border-r-[2px] border-[#1A1A1A]" style={{ width: `${storagePercentage}%` }} />
+                      <div className="h-full bg-[#BBF7D0] border-r-[2px] border-[#1A1A1A]" style={{ width: '45%' }} />
                     </div>
                   </div>
                   <div>
                     <div className="flex justify-between text-sm font-bold text-[#1A1A1A] mb-2">
                       <span>Projects Used</span>
-                      <span>{totalProjects} / {activeOrg?.plan === 'FREE' ? '3' : 'Unlimited'}</span>
+                      <span>2 / {activeOrg?.plan === 'FREE' ? '3' : 'Unlimited'}</span>
                     </div>
                     <div className="h-3 w-full bg-[#1A1A1A]/5 rounded-full overflow-hidden border-[2px] border-[#1A1A1A]">
-                      <div className="h-full bg-[#BAE6FD] border-r-[2px] border-[#1A1A1A]" style={{ width: `${projectsPercentage}%` }} />
+                      <div className="h-full bg-[#BAE6FD] border-r-[2px] border-[#1A1A1A]" style={{ width: '66%' }} />
                     </div>
                   </div>
                 </div>

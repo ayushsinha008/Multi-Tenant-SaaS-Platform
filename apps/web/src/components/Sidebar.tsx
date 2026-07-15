@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
+import { useAuthStore } from '@/store/useAuthStore';
 import {
   LayoutDashboard,
   CheckSquare,
@@ -13,6 +14,7 @@ import {
   File,
   Sparkles,
   ChevronRight,
+  LogOut,
 } from 'lucide-react';
 
 const navItems = [
