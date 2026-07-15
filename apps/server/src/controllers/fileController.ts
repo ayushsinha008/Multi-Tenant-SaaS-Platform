@@ -80,7 +80,12 @@ export const deleteFile = async (req: Request, res: Response, next: NextFunction
       throw createHttpError(404, 'File not found');
     }
 
-    await cloudinary.uploader.destroy(file.publicId);
+    try {
+      await cloudinary.uploader.destroy(file.publicId);
+    } catch (cldErr) {
+      console.error('Cloudinary deletion failed, ignoring:', cldErr);
+    }
+    
     await File.deleteOne({ _id: file._id });
 
     await ActivityLogService.log({
@@ -95,6 +100,7 @@ export const deleteFile = async (req: Request, res: Response, next: NextFunction
 
     res.status(200).json({ message: 'File deleted successfully' });
   } catch (error) {
+    console.error('Delete file error:', error);
     next(error);
   }
 };
