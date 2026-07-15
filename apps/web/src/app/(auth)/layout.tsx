@@ -33,25 +33,6 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             </h1>
           </motion.div>
           
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="rounded-3xl border-[4px] border-[#1A1A1A] bg-white p-8 shadow-[8px_8px_0px_#1A1A1A] relative mt-16"
-          >
-            <h2 className="text-xl text-[#1A1A1A] font-bold leading-relaxed">
-              "Migrating to ReadyNest was incredibly smooth. The brutalist UI is so refreshing, and the Kanban boards make our updates crystal clear."
-            </h2>
-            <div className="mt-8 flex items-center gap-5">
-              <div className="w-14 h-14 rounded-full bg-[#DDD6FE] border-[4px] border-[#1A1A1A] flex items-center justify-center font-black text-xl text-[#1A1A1A] shadow-[4px_4px_0px_#1A1A1A]">
-                SW
-              </div>
-              <div>
-                <p className="text-lg font-black uppercase text-[#1A1A1A]">Sarah Walker</p>
-                <p className="text-xs font-bold text-[#1A1A1A]/60 uppercase tracking-widest mt-1">VP Ops @ TechNova</p>
-              </div>
-            </div>
-          </motion.div>
         </div>
 
         <div className="relative z-10 font-bold text-[#1A1A1A]/60 uppercase tracking-widest text-sm flex gap-8 mt-12">
