@@ -193,7 +193,7 @@ export default function PlansPage() {
             </div>
             {activeOrg?.plan !== 'BUSINESS' ? (
               <button
-                onClick={() => { window.location.href = 'mailto:sales@readynest.com'; }}
+                onClick={() => { window.location.href = 'mailto:sales@omnistack.com'; }}
                 className="w-full py-4 bg-white text-[#1A1A1A] border-[3px] border-[#1A1A1A] rounded-xl text-sm font-black tracking-wider hover:bg-[#FEF08A] hover:-translate-y-1 hover:shadow-[4px_4px_0px_#1A1A1A] transition-all"
               >
                 Contact Sales

@@ -51,7 +51,7 @@ export default function LoginPage() {
           Sign In
         </h1>
         <p className="text-sm font-bold text-[#1A1A1A]/60 uppercase tracking-widest">
-          Welcome back to ReadyNest
+          Welcome back to Omnistack
         </p>
       </div>
 
