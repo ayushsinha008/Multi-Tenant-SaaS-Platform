@@ -1,5 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express';
-// Trigger DB Reconnect to MongoDB Atlas
+import path from 'path';
 import cors from 'cors';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
@@ -9,8 +9,12 @@ import dotenv from 'dotenv';
 import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
 
-// Load env vars
-dotenv.config({ path: '../../.env' }); // Adjust according to monorepo root
+// Load env from common locations (platform env vars always win — dotenv does not override)
+dotenv.config();
+dotenv.config({ path: path.resolve(process.cwd(), '.env') });
+dotenv.config({ path: path.resolve(process.cwd(), '../../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
 
 import { connectDB } from './config/db';
 import { errorHandler } from './middleware/errorHandler';
@@ -28,10 +32,15 @@ initCronJobs();
 const app = express();
 const httpServer = createServer(app);
 
+// Required behind Render / reverse proxies (rate limit + secure cookies)
+app.set('trust proxy', 1);
+
+const frontendOrigin = process.env.FRONTEND_URL || 'http://localhost:3000';
+
 // Socket.io initialization
 const io = new Server(httpServer, {
   cors: {
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: frontendOrigin,
     credentials: true,
   },
 });
@@ -47,10 +56,12 @@ const limiter = rateLimit({
 });
 
 // Middleware
-app.use(helmet());
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
+}));
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: frontendOrigin,
     credentials: true,
   })
 );

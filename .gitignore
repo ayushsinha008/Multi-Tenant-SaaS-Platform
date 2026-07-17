@@ -1,6 +1,32 @@
+# Dependencies
 node_modules/
+.pnpm-store/
+
+# Env / secrets — never commit
 .env
+.env.*
+!.env.example
+apps/server/.env
+apps/web/.env
+apps/web/.env.local
+apps/web/.env.*.local
+
+# Build outputs
 dist/
+build/
 .next/
+out/
 coverage/
+*.tsbuildinfo
+
+# Logs & OS
+*.log
+npm-debug.log*
+pnpm-debug.log*
 .DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp

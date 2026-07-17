@@ -322,24 +322,25 @@ git push origin master
 ### Step 2 — Deploy Backend (Render)
 
 1. Go to [render.com](https://render.com) → **New Web Service** → connect GitHub
-2. Select the **Multi-Tenant-SaaS-Platform** repo
+2. Select the **Multi-Tenant-SaaS-Platform** repo (repo root, not a subfolder)
 3. Configure:
    - **Build Command:** `pnpm install && pnpm --filter @saas/server build`
    - **Start Command:** `pnpm --filter @saas/server start`
-4. Add all backend env variables from the table above
-5. Set `FRONTEND_URL` to your Vercel URL
+4. Add backend env vars from the table above (`JWT_ACCESS_SECRET`, not `JWT_SECRET`)
+5. Set `FRONTEND_URL` to your Vercel URL (no trailing slash)
 6. Test: `https://YOUR-RENDER-URL/api/health`
 
 ### Step 3 — Deploy Frontend (Vercel)
 
 1. Go to [vercel.com](https://vercel.com) → **Import Project** from GitHub
 2. Set **Root Directory** → `apps/web`
-3. Add environment variables:
+3. Enable include files outside root; Install: `cd ../.. && pnpm install`
+4. Add environment variables:
    ```
    NEXT_PUBLIC_API_URL=https://YOUR-RENDER-URL/api/v1
    NEXT_PUBLIC_SOCKET_URL=https://YOUR-RENDER-URL
    ```
-4. Click **Deploy**
+5. Click **Deploy**
 
 ### Step 4 — Connect Frontend & Backend
 
@@ -353,7 +354,7 @@ git push origin master
 
 - **Network Access** → Allow `0.0.0.0/0` (required for Render cloud IPs)
 
-More detail: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md)
+Full checklist: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md)
 
 ---
 

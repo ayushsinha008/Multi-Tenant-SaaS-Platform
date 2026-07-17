@@ -3,7 +3,20 @@ import createHttpError from 'http-errors';
 import { User } from '../models/User';
 import { Member, MemberStatus } from '../models/Member';
 import { generateAccessToken, generateRefreshToken } from '../utils/jwt';
+import {
+  ACCESS_TOKEN_MAX_AGE,
+  REFRESH_TOKEN_MAX_AGE,
+  authCookieOptions,
+  clearAuthCookieOptions,
+} from '../utils/cookies';
 import jwt from 'jsonwebtoken';
+
+const setAuthCookies = (res: Response, userId: string) => {
+  const accessToken = generateAccessToken(userId);
+  const refreshToken = generateRefreshToken(userId);
+  res.cookie('accessToken', accessToken, authCookieOptions(ACCESS_TOKEN_MAX_AGE));
+  res.cookie('refreshToken', refreshToken, authCookieOptions(REFRESH_TOKEN_MAX_AGE));
+};
 
 export const register = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -15,23 +28,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
     }
 
     const user = await User.create({ name, email, password });
-
-    const accessToken = generateAccessToken(user._id);
-    const refreshToken = generateRefreshToken(user._id);
-
-    res.cookie('accessToken', accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 15 * 60 * 1000, // 15 mins
-    });
-
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
+    setAuthCookies(res, String(user._id));
 
     res.status(201).json({
       message: 'User registered successfully',
@@ -61,22 +58,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
       throw createHttpError(401, 'Invalid email or password');
     }
 
-    const accessToken = generateAccessToken(user._id);
-    const refreshToken = generateRefreshToken(user._id);
-
-    res.cookie('accessToken', accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 15 * 60 * 1000, // 15 mins
-    });
-
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
+    setAuthCookies(res, String(user._id));
 
     res.status(200).json({
       message: 'Login successful',
@@ -121,22 +103,7 @@ export const googleLogin = async (req: Request, res: Response, next: NextFunctio
       await user.save();
     }
 
-    const accessToken = generateAccessToken(user._id);
-    const refreshToken = generateRefreshToken(user._id);
-
-    res.cookie('accessToken', accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 15 * 60 * 1000, // 15 mins
-    });
-
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
+    setAuthCookies(res, String(user._id));
 
     res.status(200).json({
       message: 'Login successful',
@@ -155,8 +122,8 @@ export const googleLogin = async (req: Request, res: Response, next: NextFunctio
 
 export const logout = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    res.clearCookie('accessToken');
-    res.clearCookie('refreshToken');
+    res.clearCookie('accessToken', clearAuthCookieOptions);
+    res.clearCookie('refreshToken', clearAuthCookieOptions);
     res.status(200).json({ message: 'Logged out successfully' });
   } catch (error) {
     next(error);
@@ -179,13 +146,7 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
     }
 
     const accessToken = generateAccessToken(user._id);
-
-    res.cookie('accessToken', accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 15 * 60 * 1000, // 15 mins
-    });
+    res.cookie('accessToken', accessToken, authCookieOptions(ACCESS_TOKEN_MAX_AGE));
 
     res.status(200).json({ message: 'Token refreshed successfully' });
   } catch (error) {
