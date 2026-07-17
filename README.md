@@ -324,7 +324,7 @@ git push origin master
 1. Go to [render.com](https://render.com) → **New Web Service** → connect GitHub
 2. Select the **Multi-Tenant-SaaS-Platform** repo (repo root, not a subfolder)
 3. Configure:
-   - **Build Command:** `pnpm install && pnpm --filter @saas/server build`
+   - **Build Command:** `corepack enable && pnpm install --frozen-lockfile --prod=false && pnpm --filter @saas/server build`
    - **Start Command:** `pnpm --filter @saas/server start`
 4. Add backend env vars from the table above (`JWT_ACCESS_SECRET`, not `JWT_SECRET`)
 5. Set `FRONTEND_URL` to your Vercel URL (no trailing slash)
