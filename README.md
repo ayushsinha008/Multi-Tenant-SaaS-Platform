@@ -13,7 +13,9 @@ Built as a **Week 5 Full-Stack Assignment**: *Multi-Tenant SaaS Platform* using 
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-06B6D4?logo=tailwindcss)](https://tailwindcss.com/)
 
-**Repository:** [github.com/ayushsinha008/Multi-Tenant-SaaS-Platform](https://github.com/ayushsinha008/Multi-Tenant-SaaS-Platform)
+**Live App:** [multi-tenant-saa-s-platform-web.vercel.app](https://multi-tenant-saa-s-platform-web.vercel.app)  
+**Repository:** [github.com/ayushsinha008/Multi-Tenant-SaaS-Platform](https://github.com/ayushsinha008/Multi-Tenant-SaaS-Platform)  
+**API Health:** [multi-tenant-saas-platform-vxmc.onrender.com/api/health](https://multi-tenant-saas-platform-vxmc.onrender.com/api/health)
 
 ---
 
@@ -57,11 +59,10 @@ The backend uses **JWT authentication** (access + refresh tokens), **Socket.io**
 
 | Service | URL |
 |---------|-----|
-| Frontend (Vercel) | `https://your-app.vercel.app` *(update after deploy)* |
-| Backend API (Render) | `https://your-backend.onrender.com/api/v1` *(update after deploy)* |
-| Health Check | `GET /api/health` → `{ "status": "ok" }` |
-
-> After deploying, replace the placeholder URLs above and in your GitHub **About** section.
+| Frontend (Vercel) | [multi-tenant-saa-s-platform-web.vercel.app](https://multi-tenant-saa-s-platform-web.vercel.app) |
+| Backend API (Render) | [multi-tenant-saas-platform-vxmc.onrender.com/api/v1](https://multi-tenant-saas-platform-vxmc.onrender.com/api/v1) |
+| Health Check | [GET /api/health](https://multi-tenant-saas-platform-vxmc.onrender.com/api/health) → `{ "status": "ok" }` |
+| Repository | [github.com/ayushsinha008/Multi-Tenant-SaaS-Platform](https://github.com/ayushsinha008/Multi-Tenant-SaaS-Platform) |
 
 ---
 
@@ -328,7 +329,7 @@ git push origin master
    - **Start Command:** `pnpm --filter @saas/server start`
 4. Add backend env vars from the table above (`JWT_ACCESS_SECRET`, not `JWT_SECRET`)
 5. Set `FRONTEND_URL` to your Vercel URL (no trailing slash)
-6. Test: `https://YOUR-RENDER-URL/api/health`
+6. Test: `https://multi-tenant-saas-platform-vxmc.onrender.com/api/health`
 
 ### Step 3 — Deploy Frontend (Vercel)
 
@@ -337,8 +338,8 @@ git push origin master
 3. Enable include files outside root; Install: `cd ../.. && pnpm install`
 4. Add environment variables:
    ```
-   NEXT_PUBLIC_API_URL=https://YOUR-RENDER-URL/api/v1
-   NEXT_PUBLIC_SOCKET_URL=https://YOUR-RENDER-URL
+   NEXT_PUBLIC_API_URL=https://multi-tenant-saas-platform-vxmc.onrender.com/api/v1
+   NEXT_PUBLIC_SOCKET_URL=https://multi-tenant-saas-platform-vxmc.onrender.com
    ```
 5. Click **Deploy**
 
@@ -346,7 +347,7 @@ git push origin master
 
 1. In Render, set:
    ```
-   FRONTEND_URL=https://YOUR-VERCEL-URL.vercel.app
+   FRONTEND_URL=https://multi-tenant-saa-s-platform-web.vercel.app
    ```
 2. Redeploy both services if needed
 
