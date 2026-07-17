@@ -29,12 +29,15 @@ Deploy frontend on **Vercel** and backend on **Render**. MongoDB Atlas + Cloudin
    - **Runtime:** Node
    - **Build Command:**
      ```bash
-     pnpm install && pnpm --filter @saas/server build
+     corepack enable && pnpm install --frozen-lockfile && pnpm --filter @saas/server build
      ```
    - **Start Command:**
      ```bash
      pnpm --filter @saas/server start
      ```
+
+   If install fails with lockfile mismatch, temporarily use:
+   `pnpm install --no-frozen-lockfile && pnpm --filter @saas/server build`
 3. Add environment variables:
 
 | Variable | Example / notes |
