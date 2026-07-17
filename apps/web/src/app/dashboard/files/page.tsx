@@ -13,11 +13,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 const fileTypeFilters = ['All', 'Images', 'Documents', 'Audio', 'Video', 'Other'];
 
 const fileTypeConfig: Record<string, { color: string; icon: any; badge: any }> = {
-  'Images':    { color: '#BAE6FD', icon: ImageIcon, badge: 'sky' },
-  'Documents': { color: '#DDD6FE', icon: FileText,  badge: 'lavender' },
-  'Audio':     { color: '#FED7AA', icon: Music,      badge: 'orange' },
-  'Video':     { color: '#FBCFE8', icon: Film,       badge: 'pink' },
-  'Other':     { color: '#FEF08A', icon: FileIcon,   badge: 'yellow' },
+  'Images':    { color: 'var(--sky)', icon: ImageIcon, badge: 'sky' },
+  'Documents': { color: 'var(--lavender)', icon: FileText,  badge: 'lavender' },
+  'Audio':     { color: 'var(--orange-pastel)', icon: Music,      badge: 'orange' },
+  'Video':     { color: 'var(--pink-pastel)', icon: Film,       badge: 'pink' },
+  'Other':     { color: 'var(--yellow-pastel)', icon: FileIcon,   badge: 'yellow' },
 };
 
 export default function FilesPage() {
@@ -79,17 +79,17 @@ export default function FilesPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-[#1A1A1A] tracking-tight">Files</h1>
-          <p className="text-sm font-medium text-[#1A1A1A]/40 mt-1">
+          <h1 className="text-3xl font-bold text-ink tracking-tight">Files</h1>
+          <p className="text-sm font-medium text-ink/40 mt-1">
             {files.length} files · {formatSize(totalSize)} used
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <div className="flex rounded-xl border-[3px] border-[#1A1A1A] overflow-hidden shadow-[3px_3px_0px_#1A1A1A]">
-            <button onClick={() => setView('grid')} className={`p-2.5 transition-colors ${view === 'grid' ? 'bg-[#1A1A1A] text-white' : 'bg-white text-[#1A1A1A] hover:bg-[#FFFDF5]'}`}>
+          <div className="flex rounded-xl border-[3px] border-ink overflow-hidden shadow-neo-sm">
+            <button onClick={() => setView('grid')} className={`p-2.5 transition-colors ${view === 'grid' ? 'bg-ink text-white' : 'bg-white text-ink hover:bg-cream'}`}>
               <Grid className="w-4 h-4" strokeWidth={2} />
             </button>
-            <button onClick={() => setView('list')} className={`p-2.5 border-l-[2px] border-[#1A1A1A] transition-colors ${view === 'list' ? 'bg-[#1A1A1A] text-white' : 'bg-white text-[#1A1A1A] hover:bg-[#FFFDF5]'}`}>
+            <button onClick={() => setView('list')} className={`p-2.5 border-l-[2px] border-ink transition-colors ${view === 'list' ? 'bg-ink text-white' : 'bg-white text-ink hover:bg-cream'}`}>
               <List className="w-4 h-4" strokeWidth={2} />
             </button>
           </div>
@@ -107,8 +107,8 @@ export default function FilesPage() {
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={`px-4 py-2 rounded-xl border-[3px] border-[#1A1A1A] text-sm font-bold transition-all shadow-[2px_2px_0px_#1A1A1A] hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_#1A1A1A] ${
-              filter === f ? 'bg-[#1A1A1A] text-white' : 'bg-white text-[#1A1A1A]'
+            className={`px-4 py-2 rounded-xl border-[3px] border-ink text-sm font-bold transition-all shadow-neo-xs hover:-translate-y-0.5 hover:shadow-neo-sm ${
+              filter === f ? 'bg-ink text-white' : 'bg-white text-ink'
             }`}
           >
             {f}
@@ -119,14 +119,14 @@ export default function FilesPage() {
       {/* Content */}
       {isLoading ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-          {[...Array(8)].map((_, i) => <div key={i} className="aspect-square rounded-2xl border-[3px] border-[#1A1A1A] bg-[#FFFDF5] animate-pulse" />)}
+          {[...Array(8)].map((_, i) => <div key={i} className="aspect-square rounded-2xl border-[3px] border-ink bg-cream animate-pulse" />)}
         </div>
       ) : files.length === 0 ? (
         <EmptyState
           icon={FileIcon}
           title="No files yet"
           description="Upload your first file to get started."
-          accentColor="#FEF08A"
+          accentColor='var(--yellow-pastel)'
           primaryAction={{ label: 'Upload File', onClick: () => fileInputRef.current?.click() }}
         />
       ) : view === 'grid' ? (
@@ -143,7 +143,7 @@ export default function FilesPage() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ delay: idx * 0.04 }}
-                  className="rounded-2xl border-[3px] border-[#1A1A1A] bg-white shadow-[3px_3px_0px_#1A1A1A] hover:-translate-y-1 hover:shadow-[5px_5px_0px_#1A1A1A] transition-all group overflow-hidden"
+                  className="rounded-2xl border-[3px] border-ink bg-white shadow-neo-sm hover:-translate-y-1 hover:shadow-neo-lg transition-all group overflow-hidden"
                 >
                   {/* Thumbnail */}
                   <div className="aspect-square relative" style={{ backgroundColor: cfg.color }}>
@@ -151,13 +151,13 @@ export default function FilesPage() {
                       <img src={file.url} alt={file.name} className="w-full h-full object-cover" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                        <cfg.icon className="w-12 h-12 text-[#1A1A1A]/40" strokeWidth={1.5} />
+                        <cfg.icon className="w-12 h-12 text-ink/40" strokeWidth={1.5} />
                       </div>
                     )}
                     {/* Hover overlay */}
-                    <div className="absolute inset-0 bg-[#1A1A1A]/60 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 focus-within:opacity-100 transition-opacity flex items-center justify-center gap-3">
-                      <a href={file.url} download target="_blank" rel="noreferrer" className="w-9 h-9 rounded-lg border-[2px] border-white bg-white flex items-center justify-center hover:bg-[#BBF7D0] transition-colors">
-                        <Download className="w-4 h-4 text-[#1A1A1A]" strokeWidth={2.5} />
+                    <div className="absolute inset-0 bg-ink/60 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 focus-within:opacity-100 transition-opacity flex items-center justify-center gap-3">
+                      <a href={file.url} download target="_blank" rel="noreferrer" className="w-9 h-9 rounded-lg border-[2px] border-white bg-white flex items-center justify-center hover:bg-mint transition-colors">
+                        <Download className="w-4 h-4 text-ink" strokeWidth={2.5} />
                       </a>
                       <button
                         onClick={() => {
@@ -174,10 +174,10 @@ export default function FilesPage() {
 
                   {/* Info */}
                   <div className="p-3">
-                    <p className="text-xs font-bold text-[#1A1A1A] truncate leading-tight">{file.name}</p>
+                    <p className="text-xs font-bold text-ink truncate leading-tight">{file.name}</p>
                     <div className="flex items-center justify-between mt-1.5">
                       <Badge variant={cfg.badge as any} className="text-[10px] px-2 py-0.5">{file.mimetype?.split('/')[1]?.toUpperCase() || 'FILE'}</Badge>
-                      <span className="text-[10px] font-medium text-[#1A1A1A]/30">{formatSize(file.size)}</span>
+                      <span className="text-[10px] font-medium text-ink/30">{formatSize(file.size)}</span>
                     </div>
                   </div>
                 </motion.div>
@@ -187,8 +187,8 @@ export default function FilesPage() {
         </div>
       ) : (
         /* List view */
-        <div className="rounded-2xl border-[3px] border-[#1A1A1A] overflow-hidden shadow-[4px_4px_0px_#1A1A1A]">
-          <div className="grid grid-cols-[auto_1fr_auto_auto_auto] gap-5 px-6 py-3.5 bg-[#1A1A1A] text-white text-xs font-bold uppercase tracking-wide">
+        <div className="rounded-2xl border-[3px] border-ink overflow-hidden shadow-neo-md">
+          <div className="grid grid-cols-[auto_1fr_auto_auto_auto] gap-5 px-6 py-3.5 bg-ink text-white text-xs font-bold uppercase tracking-wide">
             <span className="w-8">#</span>
             <span>File</span>
             <span className="w-20 text-center">Type</span>
@@ -200,24 +200,24 @@ export default function FilesPage() {
               const ft = getFileType(file.mimetype);
               const cfg = fileTypeConfig[ft];
               return (
-                <div key={file._id} className="grid grid-cols-[auto_1fr_auto_auto_auto] gap-5 px-6 py-4 bg-white hover:bg-[#FFFDF5] items-center transition-colors group">
-                  <span className="w-8 text-xs font-bold text-[#1A1A1A]/20">#{idx + 1}</span>
+                <div key={file._id} className="grid grid-cols-[auto_1fr_auto_auto_auto] gap-5 px-6 py-4 bg-white hover:bg-cream items-center transition-colors group">
+                  <span className="w-8 text-xs font-bold text-ink/20">#{idx + 1}</span>
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-9 h-9 rounded-xl border-[2px] border-[#1A1A1A] flex items-center justify-center shrink-0" style={{ backgroundColor: cfg.color }}>
+                    <div className="w-9 h-9 rounded-xl border-[2px] border-ink flex items-center justify-center shrink-0" style={{ backgroundColor: cfg.color }}>
                       {file.mimetype?.startsWith('image/') ? (
                         <img src={file.url} alt={file.name} className="w-full h-full object-cover rounded-xl" />
                       ) : (
-                        <cfg.icon className="w-4 h-4 text-[#1A1A1A]/60" strokeWidth={1.5} />
+                        <cfg.icon className="w-4 h-4 text-ink/60" strokeWidth={1.5} />
                       )}
                     </div>
-                    <p className="text-sm font-bold text-[#1A1A1A] truncate">{file.name}</p>
+                    <p className="text-sm font-bold text-ink truncate">{file.name}</p>
                   </div>
                   <div className="w-20 flex justify-center">
                     <Badge variant={cfg.badge as any} className="text-[10px]">{file.mimetype?.split('/')[1]?.toUpperCase() || 'FILE'}</Badge>
                   </div>
-                  <span className="w-16 text-right text-xs font-medium text-[#1A1A1A]/30">{formatSize(file.size)}</span>
+                  <span className="w-16 text-right text-xs font-medium text-ink/30">{formatSize(file.size)}</span>
                   <div className="w-16 flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <a href={file.url} download target="_blank" rel="noreferrer" className="p-1.5 rounded-lg border-[2px] border-[#1A1A1A] hover:bg-[#BBF7D0] transition-colors">
+                    <a href={file.url} download target="_blank" rel="noreferrer" className="p-1.5 rounded-lg border-[2px] border-ink hover:bg-mint transition-colors">
                       <Download className="w-3.5 h-3.5" strokeWidth={2.5} />
                     </a>
                     <button
@@ -226,7 +226,7 @@ export default function FilesPage() {
                           deleteFile.mutate(file._id);
                         }
                       }}
-                      className="p-1.5 rounded-lg border-[2px] border-[#1A1A1A] hover:bg-red-100 transition-colors"
+                      className="p-1.5 rounded-lg border-[2px] border-ink hover:bg-red-100 transition-colors"
                     >
                       <Trash2 className="w-3.5 h-3.5 text-red-500" strokeWidth={2.5} />
                     </button>
@@ -240,7 +240,7 @@ export default function FilesPage() {
 
       {filtered.length === 0 && files.length > 0 && (
         <div className="py-16 text-center">
-          <p className="text-sm font-medium text-[#1A1A1A]/40">No {filter.toLowerCase()} files uploaded yet</p>
+          <p className="text-sm font-medium text-ink/40">No {filter.toLowerCase()} files uploaded yet</p>
         </div>
       )}
     </div>

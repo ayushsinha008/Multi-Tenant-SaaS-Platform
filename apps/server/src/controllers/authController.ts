@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import createHttpError from 'http-errors';
 import { User } from '../models/User';
+import { Member, MemberStatus } from '../models/Member';
 import { generateAccessToken, generateRefreshToken } from '../utils/jwt';
 import jwt from 'jsonwebtoken';
 
@@ -110,8 +111,14 @@ export const googleLogin = async (req: Request, res: Response, next: NextFunctio
         name: name || 'User', 
         email, 
         password: randomPassword,
-        avatar 
+        avatar,
+        googleId: uid
       });
+    } else {
+      // Always update avatar and googleId for existing users on every Google login
+      if (avatar) user.avatar = avatar;
+      if (uid) (user as any).googleId = uid;
+      await user.save();
     }
 
     const accessToken = generateAccessToken(user._id);
@@ -250,6 +257,57 @@ export const updatePreferences = async (req: Request, res: Response, next: NextF
         preferences: req.user?.preferences,
       },
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getPendingInvitations = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const invitations = await Member.find({
+      userId: req.user!._id,
+      status: MemberStatus.PENDING,
+    }).populate('organizationId', 'name logo slug');
+    
+    res.status(200).json({ invitations });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const acceptGlobalInvitation = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params; // Member ID
+
+    const member = await Member.findOneAndUpdate(
+      { _id: id, userId: req.user!._id, status: MemberStatus.PENDING },
+      { $set: { status: MemberStatus.ACTIVE } },
+      { new: true }
+    );
+
+    if (!member) {
+      throw createHttpError(404, 'Invitation not found or already accepted');
+    }
+
+    res.status(200).json({ message: 'Invitation accepted successfully', member });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const rejectGlobalInvitation = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params; // Member ID
+
+    const member = await Member.findOneAndDelete(
+      { _id: id, userId: req.user!._id, status: MemberStatus.PENDING }
+    );
+
+    if (!member) {
+      throw createHttpError(404, 'Invitation not found or already acted upon');
+    }
+
+    res.status(200).json({ message: 'Invitation rejected successfully' });
   } catch (error) {
     next(error);
   }

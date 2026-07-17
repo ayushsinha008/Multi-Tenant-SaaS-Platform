@@ -3,21 +3,21 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const badgeVariants = cva(
-  'inline-flex items-center gap-1 border-[2px] border-[#1A1A1A] px-3 py-1 text-xs font-bold tracking-wide transition-colors rounded-full',
+  'inline-flex items-center gap-1 border-[2px] border-ink px-3 py-1 text-xs font-bold tracking-wide transition-colors rounded-full',
   {
     variants: {
       variant: {
-        default:     'bg-[#1A1A1A] text-white',
-        sky:         'bg-[#BAE6FD] text-[#1A1A1A]',
-        lavender:    'bg-[#DDD6FE] text-[#1A1A1A]',
-        mint:        'bg-[#BBF7D0] text-[#1A1A1A]',
-        pink:        'bg-[#FBCFE8] text-[#1A1A1A]',
-        yellow:      'bg-[#FEF08A] text-[#1A1A1A]',
-        orange:      'bg-[#FED7AA] text-[#1A1A1A]',
+        default:     'bg-ink text-white',
+        sky:         'bg-sky text-ink',
+        lavender:    'bg-lavender text-ink',
+        mint:        'bg-mint text-ink',
+        pink:        'bg-pink-pastel text-ink',
+        yellow:      'bg-yellow-pastel text-ink',
+        orange:      'bg-orange-pastel text-ink',
         destructive: 'bg-red-100 text-red-700 border-red-300',
-        outline:     'bg-white text-[#1A1A1A]',
-        success:     'bg-[#BBF7D0] text-[#1A1A1A]',
-        secondary:   'bg-[#FFFDF5] text-[#1A1A1A]',
+        outline:     'bg-white text-ink',
+        success:     'bg-mint text-ink',
+        secondary:   'bg-cream text-ink',
       },
     },
     defaultVariants: {

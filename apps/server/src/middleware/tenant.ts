@@ -47,6 +47,13 @@ export const requireTenant = async (req: Request, res: Response, next: NextFunct
     req.organization = organization;
     req.member = member;
 
+    // Auto-generate inviteCode for orgs created before this feature was added
+    if (!organization.inviteCode) {
+      const crypto = await import('crypto');
+      organization.inviteCode = crypto.randomBytes(4).toString('hex').toUpperCase();
+      await organization.save();
+    }
+
     next();
   } catch (error) {
     next(error);

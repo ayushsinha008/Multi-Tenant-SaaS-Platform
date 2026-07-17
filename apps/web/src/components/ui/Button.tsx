@@ -4,21 +4,20 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-  // Base — rounded, bold, thick border, chunky shadow, press effect
-  'inline-flex items-center justify-center font-bold tracking-wide transition-all duration-150 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#C4B5FD] focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none select-none border-[3px] border-[#1A1A1A] shadow-[4px_4px_0px_#1A1A1A] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none hover:-translate-y-[1px] hover:shadow-[5px_5px_0px_#1A1A1A]',
+  'inline-flex items-center justify-center font-bold tracking-wide transition-all duration-150 focus-visible:outline-4 focus-visible:outline-lavender-dark focus-visible:outline-offset-2 disabled:opacity-50 disabled:pointer-events-none select-none border-[3px] border-ink shadow-neo-md active:translate-x-[3px] active:translate-y-[3px] active:shadow-none hover:-translate-y-[1px] hover:shadow-neo-lg',
   {
     variants: {
       variant: {
-        default:     'bg-[#1A1A1A] text-white hover:bg-[#2D2D2D]',
-        primary:     'bg-[#DDD6FE] text-[#1A1A1A] hover:bg-[#C4B5FD]',
-        sky:         'bg-[#BAE6FD] text-[#1A1A1A] hover:bg-[#7DD3FC]',
-        mint:        'bg-[#BBF7D0] text-[#1A1A1A] hover:bg-[#86EFAC]',
-        pink:        'bg-[#FBCFE8] text-[#1A1A1A] hover:bg-[#F9A8D4]',
-        yellow:      'bg-[#FEF08A] text-[#1A1A1A] hover:bg-[#FDE047]',
-        destructive: 'bg-red-100 text-red-700 border-red-400 shadow-[4px_4px_0px_#f87171] hover:bg-red-200 hover:shadow-[5px_5px_0px_#f87171] active:shadow-none',
-        outline:     'bg-white text-[#1A1A1A] hover:bg-[#FFFDF5]',
-        ghost:       'border-transparent shadow-none bg-transparent hover:bg-[#1A1A1A]/5 active:translate-x-0 active:translate-y-0',
-        link:        'border-none shadow-none underline-offset-4 hover:underline text-[#1A1A1A] active:translate-x-0 active:translate-y-0',
+        default:     'bg-ink text-white hover:bg-ink-dark',
+        primary:     'bg-lavender text-ink hover:bg-lavender-dark',
+        sky:         'bg-sky text-ink hover:bg-sky-dark',
+        mint:        'bg-mint text-ink hover:bg-mint-dark',
+        pink:        'bg-pink-pastel text-ink hover:bg-pink-dark',
+        yellow:      'bg-yellow-pastel text-ink hover:bg-yellow-dark',
+        destructive: 'bg-red-100 text-red-700 border-red-400 shadow-neo-md-red hover:bg-red-200 hover:shadow-neo-lg-red active:shadow-none',
+        outline:     'bg-white text-ink hover:bg-cream',
+        ghost:       'border-transparent shadow-none bg-transparent hover:bg-ink/5 active:translate-x-0 active:translate-y-0',
+        link:        'border-none shadow-none underline-offset-4 hover:underline text-ink active:translate-x-0 active:translate-y-0',
       },
       size: {
         default: 'h-11 px-5 text-sm rounded-xl',

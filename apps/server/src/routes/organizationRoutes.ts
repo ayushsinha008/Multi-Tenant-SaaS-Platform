@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createOrganization, getOrganizations, getOrganizationById, updateOrganization, deleteOrganization } from '../controllers/organizationController';
+import { createOrganization, getOrganizations, getOrganizationById, updateOrganization, deleteOrganization, joinOrganizationByCode } from '../controllers/organizationController';
 import { authenticate } from '../middleware/auth';
 import { requireTenant } from '../middleware/tenant';
 import { requireRole } from '../middleware/role';
@@ -9,6 +9,7 @@ const router = Router();
 
 // Routes that don't need tenant context
 router.post('/', authenticate, createOrganization);
+router.post('/join', authenticate, joinOrganizationByCode);
 router.get('/', authenticate, getOrganizations);
 
 // Routes that need tenant context

@@ -47,28 +47,28 @@ export default function LoginPage() {
       className="w-full"
     >
       <div className="mb-10">
-        <h1 className="text-4xl font-black text-[#1A1A1A] tracking-tight mb-3">
+        <h1 className="text-4xl font-black text-ink tracking-tight mb-3">
           Sign In
         </h1>
-        <p className="text-sm font-bold text-[#1A1A1A]/60 uppercase tracking-widest">
+        <p className="text-sm font-bold text-ink/60 uppercase tracking-widest">
           Welcome back to Omnistack
         </p>
       </div>
 
       {error && (
-        <div className="mb-6 p-4 bg-[#FEE2E2] rounded-xl border-[3px] border-[#1A1A1A] shadow-[4px_4px_0px_#1A1A1A] flex items-start gap-3">
-          <span className="text-[#1A1A1A] font-black mt-px">!</span>
-          <p className="text-sm font-bold text-[#1A1A1A]">{error}</p>
+        <div className="mb-6 p-4 bg-[#FEE2E2] rounded-xl border-[3px] border-ink shadow-neo-md flex items-start gap-3">
+          <span className="text-ink font-black mt-px">!</span>
+          <p className="text-sm font-bold text-ink">{error}</p>
         </div>
       )}
 
       <button
         onClick={handleGoogleSignIn}
         disabled={loading}
-        className="w-full flex items-center justify-center gap-3 bg-white border-[3px] border-[#1A1A1A] text-[#1A1A1A] font-bold py-4 px-6 rounded-xl shadow-[4px_4px_0px_#1A1A1A] hover:-translate-y-1 hover:shadow-[6px_6px_0px_#1A1A1A] active:translate-y-[2px] active:shadow-[2px_2px_0px_#1A1A1A] transition-all disabled:opacity-60 disabled:cursor-not-allowed group"
+        className="w-full flex items-center justify-center gap-3 bg-white border-[3px] border-ink text-ink font-bold py-4 px-6 rounded-xl shadow-neo-md hover:-translate-y-1 hover:shadow-neo-lg active:translate-y-[2px] active:shadow-neo-xs transition-all disabled:opacity-60 disabled:cursor-not-allowed group"
       >
         {loading ? (
-          <div className="w-6 h-6 border-[3px] border-[#1A1A1A] border-t-transparent rounded-full animate-spin" />
+          <div className="w-6 h-6 border-[3px] border-ink border-t-transparent rounded-full animate-spin" />
         ) : (
           <>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -83,21 +83,21 @@ export default function LoginPage() {
       </button>
 
       <div className="mt-8 flex items-center gap-4">
-        <div className="h-[3px] flex-1 bg-[#1A1A1A]/10 rounded-full" />
-        <span className="text-xs font-bold text-[#1A1A1A]/40 uppercase tracking-widest">or</span>
-        <div className="h-[3px] flex-1 bg-[#1A1A1A]/10 rounded-full" />
+        <div className="h-[3px] flex-1 bg-ink/10 rounded-full" />
+        <span className="text-xs font-bold text-ink/40 uppercase tracking-widest">or</span>
+        <div className="h-[3px] flex-1 bg-ink/10 rounded-full" />
       </div>
 
       <div className="mt-8 text-center">
-        <p className="text-sm font-bold text-[#1A1A1A]/60">
+        <p className="text-sm font-bold text-ink/60">
           Don't have an account?{' '}
-          <Link href="/register" className="text-[#1A1A1A] hover:underline decoration-[3px] underline-offset-4">
+          <Link href="/register" className="text-ink hover:underline decoration-[3px] underline-offset-4">
             Sign up
           </Link>
         </p>
       </div>
 
-      <div className="mt-12 flex items-center justify-center gap-2 text-xs font-bold text-[#1A1A1A]/40 uppercase tracking-widest">
+      <div className="mt-12 flex items-center justify-center gap-2 text-xs font-bold text-ink/40 uppercase tracking-widest">
         <ShieldCheck className="w-4 h-4" strokeWidth={2.5} />
         <span>Secure Authentication</span>
       </div>

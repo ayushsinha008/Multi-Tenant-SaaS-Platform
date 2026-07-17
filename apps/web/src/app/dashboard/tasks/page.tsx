@@ -13,17 +13,17 @@ import { Input } from '@/components/ui/Input';
 
 // Each column gets its own pastel identity
 const columnConfig: Record<string, { bg: string; header: string; pill: string; empty: string }> = {
-  'Todo':        { bg: '#FFFDF5',  header: '#BAE6FD', pill: 'sky',     empty: '#BAE6FD' },
-  'In Progress': { bg: '#FFFDF5',  header: '#FEF08A', pill: 'yellow',  empty: '#FEF08A' },
-  'In Review':   { bg: '#FFFDF5',  header: '#DDD6FE', pill: 'lavender',empty: '#DDD6FE' },
-  'Done':        { bg: '#FFFDF5',  header: '#BBF7D0', pill: 'mint',    empty: '#BBF7D0' },
+  'Todo':        { bg: '#FFFDF5',  header: 'var(--sky)', pill: 'sky',     empty: 'var(--sky)' },
+  'In Progress': { bg: '#FFFDF5',  header: 'var(--yellow-pastel)', pill: 'yellow',  empty: 'var(--yellow-pastel)' },
+  'In Review':   { bg: '#FFFDF5',  header: 'var(--lavender)', pill: 'lavender',empty: 'var(--lavender)' },
+  'Done':        { bg: '#FFFDF5',  header: 'var(--mint)', pill: 'mint',    empty: 'var(--mint)' },
 };
 
 const priorityStyle: Record<string, string> = {
-  'Low':    'bg-[#BAE6FD] text-[#1A1A1A] border-[#1A1A1A]',
-  'Medium': 'bg-[#FEF08A] text-[#1A1A1A] border-[#1A1A1A]',
-  'High':   'bg-[#FBCFE8] text-[#1A1A1A] border-[#1A1A1A]',
-  'Urgent': 'bg-[#1A1A1A] text-white border-[#1A1A1A]',
+  'Low':    'bg-sky text-ink border-ink',
+  'Medium': 'bg-yellow-pastel text-ink border-ink',
+  'High':   'bg-pink-pastel text-ink border-ink',
+  'Urgent': 'bg-ink text-white border-ink',
 };
 
 export default function TasksPage() {
@@ -88,15 +88,15 @@ export default function TasksPage() {
     <div className="flex flex-col h-full">
 
       {/* Slim toolbar */}
-      <div className="px-6 py-4 border-b-[3px] border-[#1A1A1A] bg-[#FFFDF5] flex items-center justify-between shrink-0">
+      <div className="px-6 py-4 border-b-[3px] border-ink bg-cream flex items-center justify-between shrink-0">
         <div className="flex items-center gap-4">
-          <h1 className="text-xl font-bold text-[#1A1A1A]">Kanban Board</h1>
+          <h1 className="text-xl font-bold text-ink">Kanban Board</h1>
           <div className="hidden sm:flex items-center gap-2">
             {columns.map(col => {
               const count = tasks.filter((t: any) => t.status === col).length;
               const cfg = columnConfig[col];
               return (
-                <div key={col} className="flex items-center gap-1.5 px-3 py-1 rounded-full border-[2px] border-[#1A1A1A] text-xs font-bold" style={{ backgroundColor: cfg.header }}>
+                <div key={col} className="flex items-center gap-1.5 px-3 py-1 rounded-full border-[2px] border-ink text-xs font-bold" style={{ backgroundColor: cfg.header }}>
                   {col} <span className="opacity-50">{count}</span>
                 </div>
               );
@@ -117,13 +117,13 @@ export default function TasksPage() {
               icon={CheckSquare}
               title="Board is empty"
               description="Create your first task and bring your Kanban board to life."
-              accentColor="#BBF7D0"
+              accentColor='var(--mint)'
               primaryAction={{ label: '+ New Task', onClick: () => setIsModalOpen(true) }}
             />
           </div>
         </div>
       ) : (
-        <div className="flex-1 overflow-x-hidden bg-[#FFFDF5]">
+        <div className="flex-1 overflow-x-hidden bg-cream">
           <div className="grid grid-cols-4 h-full w-full">
             {columns.map((col) => {
             const colTasks = tasks.filter((t: any) => t.status === col);
@@ -133,7 +133,7 @@ export default function TasksPage() {
             return (
               <div
                 key={col}
-                className={`flex flex-col border-r-[3px] border-[#1A1A1A] last:border-r-0 transition-colors ${isDragOver ? 'bg-[#F8F8F0]' : ''}`}
+                className={`flex flex-col border-r-[3px] border-ink last:border-r-0 transition-colors ${isDragOver ? 'bg-[#F8F8F0]' : ''}`}
                 style={{ backgroundColor: cfg.bg }}
                 onDragOver={(e) => { 
                   e.preventDefault(); 
@@ -147,18 +147,18 @@ export default function TasksPage() {
               >
                 {/* Column header */}
                 <div
-                  className="px-5 py-4 border-b-[3px] border-[#1A1A1A] flex items-center justify-between sticky top-0 z-20"
+                  className="px-5 py-4 border-b-[3px] border-ink flex items-center justify-between sticky top-0 z-20"
                   style={{ backgroundColor: cfg.header }}
                 >
                   <div className="flex items-center gap-2">
-                    <span className="text-base font-bold text-[#1A1A1A]">{col}</span>
-                    <span className="text-xs font-bold text-[#1A1A1A]/40">({colTasks.length})</span>
+                    <span className="text-base font-bold text-ink">{col}</span>
+                    <span className="text-xs font-bold text-ink/40">({colTasks.length})</span>
                   </div>
                   <button
                     onClick={() => setIsModalOpen(true)}
-                    className="w-7 h-7 rounded-lg border-[2px] border-[#1A1A1A] bg-white/70 flex items-center justify-center hover:bg-white transition-colors"
+                    className="w-7 h-7 rounded-lg border-[2px] border-ink bg-white/70 flex items-center justify-center hover:bg-white transition-colors"
                   >
-                    <Plus className="w-3.5 h-3.5 text-[#1A1A1A]" strokeWidth={3} />
+                    <Plus className="w-3.5 h-3.5 text-ink" strokeWidth={3} />
                   </button>
                 </div>
 
@@ -169,21 +169,21 @@ export default function TasksPage() {
                       key={task._id}
                       draggable
                       onDragStart={(e: any) => handleDragStart(e, task._id)}
-                      className={`group rounded-xl border-[3px] border-[#1A1A1A] bg-white p-4 cursor-grab active:cursor-grabbing shadow-[3px_3px_0px_#1A1A1A] hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_#1A1A1A] transition-all ${draggedTaskId === task._id ? 'opacity-40 scale-95' : ''}`}
+                      className={`group rounded-xl border-[3px] border-ink bg-white p-4 cursor-grab active:cursor-grabbing shadow-neo-sm hover:-translate-y-0.5 hover:shadow-neo-md transition-all ${draggedTaskId === task._id ? 'opacity-40 scale-95' : ''}`}
                     >
                       {/* Priority pill */}
                       <div className={`inline-flex items-center px-2.5 py-0.5 rounded-full border-[2px] text-[11px] font-bold mb-3 ${priorityStyle[task.priority || 'Medium']}`}>
                         {task.priority || 'Medium'}
                       </div>
 
-                      <h4 className="text-sm font-bold text-[#1A1A1A] mb-2 leading-snug">{task.title}</h4>
+                      <h4 className="text-sm font-bold text-ink mb-2 leading-snug">{task.title}</h4>
 
                       {task.project && (
-                        <p className="text-xs font-medium text-[#1A1A1A]/40 mb-3">{task.project.name}</p>
+                        <p className="text-xs font-medium text-ink/40 mb-3">{task.project.name}</p>
                       )}
 
-                      <div className="flex items-center justify-between pt-3 border-t-[2px] border-[#1A1A1A]/10">
-                        <div className="flex items-center gap-3 text-[#1A1A1A]/30">
+                      <div className="flex items-center justify-between pt-3 border-t-[2px] border-ink/10">
+                        <div className="flex items-center gap-3 text-ink/30">
                           <div className="flex items-center gap-1">
                             <MessageSquare className="w-3.5 h-3.5" strokeWidth={2} />
                             <span className="text-xs font-medium">0</span>
@@ -196,8 +196,8 @@ export default function TasksPage() {
                         {task.assignee ? (
                           <Avatar src={task.assignee.avatar} fallback={task.assignee.name} size="sm" />
                         ) : (
-                          <div className="w-7 h-7 rounded-full border-[2px] border-[#1A1A1A]/20 border-dashed flex items-center justify-center">
-                            <Users className="w-3 h-3 text-[#1A1A1A]/20" strokeWidth={2} />
+                          <div className="w-7 h-7 rounded-full border-[2px] border-ink/20 border-dashed flex items-center justify-center">
+                            <Users className="w-3 h-3 text-ink/20" strokeWidth={2} />
                           </div>
                         )}
                       </div>
@@ -205,8 +205,8 @@ export default function TasksPage() {
                   ))}
 
                   {isDragOver && colTasks.length === 0 && (
-                    <div className="rounded-xl border-[3px] border-dashed border-[#1A1A1A]/20 p-8 flex items-center justify-center">
-                      <span className="text-sm font-medium text-[#1A1A1A]/20">Drop here</span>
+                    <div className="rounded-xl border-[3px] border-dashed border-ink/20 p-8 flex items-center justify-center">
+                      <span className="text-sm font-medium text-ink/20">Drop here</span>
                     </div>
                   )}
                 </div>
@@ -217,7 +217,7 @@ export default function TasksPage() {
         </div>
       )}
 
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="New Task" description="Add a task to the board." accentColor="#BBF7D0">
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="New Task" description="Add a task to the board." accentColor='var(--mint)'>
         <form onSubmit={(e) => {
           e.preventDefault();
           const fd = new FormData(e.currentTarget);
@@ -225,19 +225,19 @@ export default function TasksPage() {
         }} className="space-y-5">
           {errorMsg && <div className="p-3 rounded-xl bg-red-50 border-[2px] border-red-300 text-sm font-medium text-red-600">{errorMsg}</div>}
           <div>
-            <label className="block text-sm font-bold text-[#1A1A1A] mb-2">Task Title</label>
+            <label className="block text-sm font-bold text-ink mb-2">Task Title</label>
             <Input name="title" required placeholder="Design new component..." />
           </div>
           <div>
-            <label className="block text-sm font-bold text-[#1A1A1A] mb-2">Project</label>
-            <select name="projectId" required className="flex w-full h-12 rounded-xl border-[3px] border-[#1A1A1A] bg-white px-4 py-2 text-sm font-medium text-[#1A1A1A] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#C4B5FD] shadow-[3px_3px_0px_#1A1A1A]">
+            <label className="block text-sm font-bold text-ink mb-2">Project</label>
+            <select name="projectId" required className="flex w-full h-12 rounded-xl border-[3px] border-ink bg-white px-4 py-2 text-sm font-medium text-ink focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-lavender-dark shadow-neo-sm">
               <option value="">Select a project</option>
               {projects.map((p: any) => <option key={p._id} value={p._id}>{p.name}</option>)}
             </select>
           </div>
           <div>
-            <label className="block text-sm font-bold text-[#1A1A1A] mb-2">Priority</label>
-            <select name="priority" defaultValue="Medium" className="flex w-full h-12 rounded-xl border-[3px] border-[#1A1A1A] bg-white px-4 py-2 text-sm font-medium text-[#1A1A1A] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#C4B5FD] shadow-[3px_3px_0px_#1A1A1A]">
+            <label className="block text-sm font-bold text-ink mb-2">Priority</label>
+            <select name="priority" defaultValue="Medium" className="flex w-full h-12 rounded-xl border-[3px] border-ink bg-white px-4 py-2 text-sm font-medium text-ink focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-lavender-dark shadow-neo-sm">
               <option value="Low">Low</option>
               <option value="Medium">Medium</option>
               <option value="High">High</option>

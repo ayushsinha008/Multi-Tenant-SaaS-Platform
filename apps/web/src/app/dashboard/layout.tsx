@@ -31,19 +31,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   if (!isMounted || !user || !activeWorkspaceId) {
     return (
-      <div className="min-h-screen bg-[#FFFDF5] flex items-center justify-center">
+      <div className="min-h-screen bg-cream flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-14 h-14 rounded-2xl border-[3px] border-[#1A1A1A] bg-[#DDD6FE] shadow-[4px_4px_0px_#1A1A1A] flex items-center justify-center">
-            <div className="w-5 h-5 rounded-full border-[3px] border-[#1A1A1A] border-t-transparent animate-spin" />
+          <div className="w-14 h-14 rounded-2xl border-[3px] border-ink bg-lavender shadow-neo-md flex items-center justify-center">
+            <div className="w-5 h-5 rounded-full border-[3px] border-ink border-t-transparent animate-spin" />
           </div>
-          <p className="text-sm font-bold text-[#1A1A1A]/40">Loading your workspace...</p>
+          <p className="text-sm font-bold text-ink/40">Loading your workspace...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="flex h-screen bg-[#FFFDF5] overflow-hidden">
+    <div className="flex h-screen bg-cream overflow-hidden">
       <Sidebar />
 
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">

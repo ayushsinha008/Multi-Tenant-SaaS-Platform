@@ -13,12 +13,12 @@ import { Input } from '@/components/ui/Input';
 
 // Rotating pastel card colors for projects
 const projectCardColors = [
-  '#BAE6FD', // sky
-  '#DDD6FE', // lavender
-  '#BBF7D0', // mint
-  '#FBCFE8', // pink
-  '#FEF08A', // yellow
-  '#FED7AA', // orange
+  'var(--sky)', // sky
+  'var(--lavender)', // lavender
+  'var(--mint)', // mint
+  'var(--pink-pastel)', // pink
+  'var(--yellow-pastel)', // yellow
+  'var(--orange-pastel)', // orange
 ];
 
 const statusBadgeVariant: Record<string, any> = {
@@ -51,23 +51,23 @@ export default function ProjectsPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-[#1A1A1A] tracking-tight">Projects</h1>
-          <p className="text-sm font-medium text-[#1A1A1A]/40 mt-1">
+          <h1 className="text-3xl font-bold text-ink tracking-tight">Projects</h1>
+          <p className="text-sm font-medium text-ink/40 mt-1">
             {projects.length} {projects.length === 1 ? 'project' : 'projects'} in this workspace
           </p>
         </div>
         <div className="flex items-center gap-3">
           {/* View toggle */}
-          <div className="flex rounded-xl border-[3px] border-[#1A1A1A] overflow-hidden shadow-[3px_3px_0px_#1A1A1A]">
+          <div className="flex rounded-xl border-[3px] border-ink overflow-hidden shadow-neo-sm">
             <button
               onClick={() => setView('grid')}
-              className={`p-2.5 transition-colors ${view === 'grid' ? 'bg-[#1A1A1A] text-white' : 'bg-white text-[#1A1A1A] hover:bg-[#FFFDF5]'}`}
+              className={`p-2.5 transition-colors ${view === 'grid' ? 'bg-ink text-white' : 'bg-white text-ink hover:bg-cream'}`}
             >
               <LayoutGrid className="w-4 h-4" strokeWidth={2} />
             </button>
             <button
               onClick={() => setView('list')}
-              className={`p-2.5 transition-colors border-l-[2px] border-[#1A1A1A] ${view === 'list' ? 'bg-[#1A1A1A] text-white' : 'bg-white text-[#1A1A1A] hover:bg-[#FFFDF5]'}`}
+              className={`p-2.5 transition-colors border-l-[2px] border-ink ${view === 'list' ? 'bg-ink text-white' : 'bg-white text-ink hover:bg-cream'}`}
             >
               <List className="w-4 h-4" strokeWidth={2} />
             </button>
@@ -82,14 +82,14 @@ export default function ProjectsPage() {
       {/* Content */}
       {isLoading ? (
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-          {[1,2,3].map(i => <div key={i} className="h-52 rounded-2xl border-[3px] border-[#1A1A1A] bg-[#FFFDF5] animate-pulse" />)}
+          {[1,2,3].map(i => <div key={i} className="h-52 rounded-2xl border-[3px] border-ink bg-cream animate-pulse" />)}
         </div>
       ) : projects.length === 0 ? (
         <EmptyState
           icon={Folder}
           title="No projects yet"
           description="Create your first project to start organizing your team's work."
-          accentColor="#BAE6FD"
+          accentColor='var(--sky)'
           primaryAction={{ label: '+ New Project', onClick: () => setIsModalOpen(true) }}
         />
       ) : view === 'grid' ? (
@@ -105,7 +105,7 @@ export default function ProjectsPage() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ delay: i * 0.06 }}
-                  className="rounded-2xl border-[3px] border-[#1A1A1A] overflow-hidden shadow-[4px_4px_0px_#1A1A1A] hover:-translate-y-1 hover:shadow-[6px_6px_0px_#1A1A1A] transition-all group"
+                  className="rounded-2xl border-[3px] border-ink overflow-hidden shadow-neo-md hover:-translate-y-1 hover:shadow-neo-lg transition-all group"
                 >
                   {/* Card color band */}
                   <div className="h-2" style={{ backgroundColor: cardColor }} />
@@ -116,25 +116,25 @@ export default function ProjectsPage() {
                       <Badge variant={statusBadgeVariant[project.status] || 'sky'}>
                         {project.status || 'ACTIVE'}
                       </Badge>
-                      <span className="text-xs font-bold text-[#1A1A1A]/20">#{String(i + 1).padStart(2, '0')}</span>
+                      <span className="text-xs font-bold text-ink/20">#{String(i + 1).padStart(2, '0')}</span>
                     </div>
 
                     {/* Project name */}
-                    <h2 className="text-xl font-bold text-[#1A1A1A] tracking-tight mb-2 leading-tight">{project.name}</h2>
+                    <h2 className="text-xl font-bold text-ink tracking-tight mb-2 leading-tight">{project.name}</h2>
 
                     {project.description && (
-                      <p className="text-sm font-medium text-[#1A1A1A]/50 line-clamp-2 mb-4 leading-relaxed">{project.description}</p>
+                      <p className="text-sm font-medium text-ink/50 line-clamp-2 mb-4 leading-relaxed">{project.description}</p>
                     )}
 
                     {/* Footer */}
-                    <div className="flex items-center justify-between pt-4 border-t-[2px] border-[#1A1A1A]/10">
-                      <div className="flex items-center gap-1.5 text-[#1A1A1A]/30">
+                    <div className="flex items-center justify-between pt-4 border-t-[2px] border-ink/10">
+                      <div className="flex items-center gap-1.5 text-ink/30">
                         <Clock className="w-3.5 h-3.5" strokeWidth={2} />
                         <span className="text-xs font-medium">
                           {new Date(project.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
                         </span>
                       </div>
-                      <a href="/dashboard/tasks" className="flex items-center gap-1 text-xs font-bold text-[#1A1A1A]/30 hover:text-[#1A1A1A] transition-colors">
+                      <a href="/dashboard/tasks" className="flex items-center gap-1 text-xs font-bold text-ink/30 hover:text-ink transition-colors">
                         Tasks <ArrowRight className="w-3.5 h-3.5" strokeWidth={2.5} />
                       </a>
                     </div>
@@ -146,8 +146,8 @@ export default function ProjectsPage() {
         </div>
       ) : (
         /* List view */
-        <div className="rounded-2xl border-[3px] border-[#1A1A1A] overflow-hidden shadow-[4px_4px_0px_#1A1A1A]">
-          <div className="grid grid-cols-[auto_1fr_auto_auto] gap-6 px-6 py-3.5 bg-[#1A1A1A] text-white text-xs font-bold uppercase tracking-wide">
+        <div className="rounded-2xl border-[3px] border-ink overflow-hidden shadow-neo-md">
+          <div className="grid grid-cols-[auto_1fr_auto_auto] gap-6 px-6 py-3.5 bg-ink text-white text-xs font-bold uppercase tracking-wide">
             <span className="w-8">#</span>
             <span>Project</span>
             <span className="w-24 text-center">Status</span>
@@ -161,19 +161,19 @@ export default function ProjectsPage() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: i * 0.04 }}
-                className="grid grid-cols-[auto_1fr_auto_auto] gap-6 px-6 py-4 bg-white hover:bg-[#FFFDF5] items-center transition-colors"
+                className="grid grid-cols-[auto_1fr_auto_auto] gap-6 px-6 py-4 bg-white hover:bg-cream items-center transition-colors"
               >
-                <span className="w-8 text-xs font-bold text-[#1A1A1A]/20">#{i + 1}</span>
+                <span className="w-8 text-xs font-bold text-ink/20">#{i + 1}</span>
                 <div>
-                  <h3 className="text-base font-bold text-[#1A1A1A]">{project.name}</h3>
+                  <h3 className="text-base font-bold text-ink">{project.name}</h3>
                   {project.description && (
-                    <p className="text-xs font-medium text-[#1A1A1A]/40 mt-0.5 line-clamp-1">{project.description}</p>
+                    <p className="text-xs font-medium text-ink/40 mt-0.5 line-clamp-1">{project.description}</p>
                   )}
                 </div>
                 <div className="w-24 flex justify-center">
                   <Badge variant={statusBadgeVariant[project.status] || 'sky'}>{project.status || 'ACTIVE'}</Badge>
                 </div>
-                <div className="w-20 text-right text-xs font-medium text-[#1A1A1A]/30">
+                <div className="w-20 text-right text-xs font-medium text-ink/30">
                   {new Date(project.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
                 </div>
               </motion.div>
@@ -182,19 +182,19 @@ export default function ProjectsPage() {
         </div>
       )}
 
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="New Project" description="Create a project to organize your team." accentColor="#BAE6FD">
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="New Project" description="Create a project to organize your team." accentColor='var(--sky)'>
         <form onSubmit={(e) => {
           e.preventDefault();
           const fd = new FormData(e.currentTarget);
           createProject.mutate({ name: fd.get('name') as string, description: fd.get('description') as string });
         }} className="space-y-5">
           <div>
-            <label className="block text-sm font-bold text-[#1A1A1A] mb-2">Project Name</label>
+            <label className="block text-sm font-bold text-ink mb-2">Project Name</label>
             <Input name="name" required placeholder="Project Alpha" />
           </div>
           <div>
-            <label className="block text-sm font-bold text-[#1A1A1A] mb-2">Description</label>
-            <textarea name="description" rows={3} className="flex w-full rounded-xl border-[3px] border-[#1A1A1A] bg-white px-4 py-3 text-sm font-medium placeholder:text-[#1A1A1A]/30 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#C4B5FD] resize-none shadow-[3px_3px_0px_#1A1A1A]" placeholder="What's this project about?" />
+            <label className="block text-sm font-bold text-ink mb-2">Description</label>
+            <textarea name="description" rows={3} className="flex w-full rounded-xl border-[3px] border-ink bg-white px-4 py-3 text-sm font-medium placeholder:text-ink/30 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-lavender-dark resize-none shadow-neo-sm" placeholder="What's this project about?" />
           </div>
           <div className="flex justify-end gap-3 pt-2">
             <Button type="button" variant="ghost" onClick={() => setIsModalOpen(false)}>Cancel</Button>

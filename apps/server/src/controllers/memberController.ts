@@ -92,6 +92,15 @@ export const updateMemberRole = async (req: Request, res: Response, next: NextFu
       throw createHttpError(400, 'Invalid role');
     }
 
+    const memberToUpdate = await Member.findOne({ _id: id, organizationId });
+    if (!memberToUpdate) {
+      throw createHttpError(404, 'Member not found');
+    }
+
+    if (memberToUpdate.userId.toString() === req.user!._id.toString()) {
+      throw createHttpError(400, 'You cannot change your own role');
+    }
+
     const member = await Member.findOneAndUpdate(
       { _id: id, organizationId },
       { $set: { role } },
@@ -126,11 +135,17 @@ export const removeMember = async (req: Request, res: Response, next: NextFuncti
     const { id } = req.params;
     const organizationId = req.organization!._id;
 
-    const member = await Member.findOneAndDelete({ _id: id, organizationId });
+    const member = await Member.findOne({ _id: id, organizationId });
 
     if (!member) {
       throw createHttpError(404, 'Member not found');
     }
+
+    if (member.userId.toString() === req.user!._id.toString()) {
+      throw createHttpError(400, 'You cannot remove yourself');
+    }
+
+    await member.deleteOne();
 
     await ActivityLogService.log({
       organizationId,

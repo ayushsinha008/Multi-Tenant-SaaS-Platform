@@ -18,10 +18,10 @@ const getActionIcon = (action: string) => {
 };
 
 const getActionColors = (action: string): { bg: string; iconBg: string } => {
-  if (action.includes('DELETE')) return { bg: '#FBCFE8', iconBg: '#F9A8D4' }; // pink
-  if (action.includes('CREATE')) return { bg: '#BBF7D0', iconBg: '#86EFAC' }; // mint
-  if (action.includes('UPDATE')) return { bg: '#FEF08A', iconBg: '#FDE047' }; // yellow
-  return { bg: '#BAE6FD', iconBg: '#7DD3FC' }; // sky
+  if (action.includes('DELETE')) return { bg: 'var(--pink-pastel)', iconBg: '#F9A8D4' }; // pink
+  if (action.includes('CREATE')) return { bg: 'var(--mint)', iconBg: '#86EFAC' }; // mint
+  if (action.includes('UPDATE')) return { bg: 'var(--yellow-pastel)', iconBg: '#FDE047' }; // yellow
+  return { bg: 'var(--sky)', iconBg: '#7DD3FC' }; // sky
 };
 
 function groupByDate(activities: any[]) {
@@ -62,13 +62,13 @@ export default function ActivityPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-[#1A1A1A] tracking-tight">Activity Log</h1>
-          <p className="text-sm font-medium text-[#1A1A1A]/40 mt-1">
+          <h1 className="text-3xl font-bold text-ink tracking-tight">Activity Log</h1>
+          <p className="text-sm font-medium text-ink/40 mt-1">
             A chronological timeline of updates in this workspace
           </p>
         </div>
         {activities.length > 0 && (
-          <span className="px-3.5 py-1.5 rounded-full border-[2px] border-[#1A1A1A] bg-[#BAE6FD] text-xs font-bold shadow-[2px_2px_0px_#1A1A1A]">
+          <span className="px-3.5 py-1.5 rounded-full border-[2px] border-ink bg-sky text-xs font-bold shadow-neo-xs">
             {activities.length} Events
           </span>
         )}
@@ -76,9 +76,9 @@ export default function ActivityPage() {
 
       {isLoading ? (
         <div className="space-y-6">
-          <div className="h-8 w-32 bg-[#FFFDF5] border-[3px] border-[#1A1A1A] rounded-xl animate-pulse" />
+          <div className="h-8 w-32 bg-cream border-[3px] border-ink rounded-xl animate-pulse" />
           {[1, 2, 3].map(i => (
-            <div key={i} className="h-20 bg-[#FFFDF5] border-[3px] border-[#1A1A1A] rounded-2xl animate-pulse" />
+            <div key={i} className="h-20 bg-cream border-[3px] border-ink rounded-2xl animate-pulse" />
           ))}
         </div>
       ) : activities.length === 0 ? (
@@ -86,7 +86,7 @@ export default function ActivityPage() {
           icon={ActivityIcon}
           title="No activity yet"
           description="System is idle. Activity events will appear here as your team works."
-          accentColor="#FED7AA"
+          accentColor='var(--orange-pastel)'
         />
       ) : (
         /* Timeline */
@@ -96,18 +96,18 @@ export default function ActivityPage() {
               {/* Date Header */}
               <div className="flex items-center gap-4">
                 <div className="flex items-baseline gap-2.5">
-                  <span className="text-3xl font-bold text-[#1A1A1A] tracking-tight">
+                  <span className="text-3xl font-bold text-ink tracking-tight">
                     {getDateLabel(dateKey)}
                   </span>
-                  <span className="text-xs font-medium text-[#1A1A1A]/30">
+                  <span className="text-xs font-medium text-ink/30">
                     {format(new Date(dateKey), 'MMMM yyyy')}
                   </span>
                 </div>
-                <div className="flex-1 h-[2px] bg-[#1A1A1A]/10" />
+                <div className="flex-1 h-[2px] bg-ink/10" />
               </div>
 
               {/* Day's events */}
-              <div className="relative pl-6 space-y-4 border-l-[3px] border-[#1A1A1A]/10 ml-4">
+              <div className="relative pl-6 space-y-4 border-l-[3px] border-ink/10 ml-4">
                 {dayActivities.map((activity: any, idx: number) => {
                   const Icon = getActionIcon(activity.action);
                   const { bg, iconBg } = getActionColors(activity.action);
@@ -121,39 +121,39 @@ export default function ActivityPage() {
                       className="relative group"
                     >
                       {/* Timeline dot bubble */}
-                      <div className="absolute -left-[35px] top-4 w-5 h-5 rounded-full border-[2px] border-[#1A1A1A] bg-white flex items-center justify-center shadow-[1px_1px_0px_#1A1A1A]">
+                      <div className="absolute -left-[35px] top-4 w-5 h-5 rounded-full border-[2px] border-ink bg-white flex items-center justify-center shadow-[1px_1px_0px_#1A1A1A]">
                         <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: iconBg }} />
                       </div>
 
                       {/* Event Card */}
                       <div
-                        className="rounded-2xl border-[3px] border-[#1A1A1A] p-5 shadow-[3px_3px_0px_#1A1A1A] hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_#1A1A1A] transition-all flex items-start justify-between gap-4"
+                        className="rounded-2xl border-[3px] border-ink p-5 shadow-neo-sm hover:-translate-y-0.5 hover:shadow-neo-md transition-all flex items-start justify-between gap-4"
                         style={{ backgroundColor: bg }}
                       >
                         <div className="flex items-start gap-4">
                           <div
-                            className="w-9 h-9 rounded-xl border-[2px] border-[#1A1A1A] flex items-center justify-center shrink-0 shadow-[2px_2px_0px_#1A1A1A]"
+                            className="w-9 h-9 rounded-xl border-[2px] border-ink flex items-center justify-center shrink-0 shadow-neo-xs"
                             style={{ backgroundColor: iconBg }}
                           >
-                            <Icon className="w-4 h-4 text-[#1A1A1A]" strokeWidth={2.5} />
+                            <Icon className="w-4 h-4 text-ink" strokeWidth={2.5} />
                           </div>
                           <div>
-                            <p className="text-sm font-bold text-[#1A1A1A] leading-tight">
+                            <p className="text-sm font-bold text-ink leading-tight">
                               {typeof activity.details === 'object' && activity.details !== null 
                                 ? (activity.details.filename || activity.details.title || activity.details.name || JSON.stringify(activity.details))
                                 : activity.details || activity.action.replace(/_/g, ' ')}
                             </p>
                             {activity.userId?.name && (
-                              <p className="text-xs font-semibold text-[#1A1A1A]/40 mt-1">
+                              <p className="text-xs font-semibold text-ink/40 mt-1">
                                 By {activity.userId.name}
                               </p>
                             )}
                             <div className="flex items-center gap-2 mt-2">
-                              <span className="text-[10px] font-bold text-[#1A1A1A]/40 bg-white/50 border-[1px] border-[#1A1A1A]/10 px-2 py-0.5 rounded-full">
+                              <span className="text-[10px] font-bold text-ink/40 bg-white/50 border-[1px] border-ink/10 px-2 py-0.5 rounded-full">
                                 {activity.action}
                               </span>
                               {activity.ipAddress && (
-                                <span className="text-[10px] font-medium text-[#1A1A1A]/30">
+                                <span className="text-[10px] font-medium text-ink/30">
                                   {activity.ipAddress}
                                 </span>
                               )}
@@ -161,7 +161,7 @@ export default function ActivityPage() {
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-1 text-[#1A1A1A]/40 shrink-0">
+                        <div className="flex items-center gap-1 text-ink/40 shrink-0">
                           <Clock className="w-3.5 h-3.5" strokeWidth={2} />
                           <span className="text-xs font-bold">
                             {format(new Date(activity.createdAt), 'HH:mm')}

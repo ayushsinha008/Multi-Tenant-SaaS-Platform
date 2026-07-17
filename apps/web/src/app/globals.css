@@ -3,31 +3,31 @@
 /* ─── Neo Brutalist Design Tokens ─────────────────────────────────────────── */
 :root {
   /* Palette */
-  --cream:     #FFFDF5;
-  --ink:       #1A1A1A;
-  --sky:       #BAE6FD;
-  --sky-dark:  #7DD3FC;
-  --lavender:  #DDD6FE;
+  --cream: #FFFDF5;
+  --ink: #1A1A1A;
+  --sky: #BAE6FD;
+  --sky-dark: #7DD3FC;
+  --lavender: #DDD6FE;
   --lavender-dark: #C4B5FD;
-  --mint:      #BBF7D0;
+  --mint: #BBF7D0;
   --mint-dark: #86EFAC;
-  --pink:      #FBCFE8;
+  --pink: #FBCFE8;
   --pink-dark: #F9A8D4;
-  --yellow:    #FEF08A;
+  --yellow: #FEF08A;
   --yellow-dark: #FDE047;
-  --orange:    #FED7AA;
+  --orange: #FED7AA;
   --orange-dark: #FDBA74;
-  --white:     #FFFFFF;
+  --white: #FFFFFF;
 
   /* Borders */
   --border-width: 3px;
   --border-color: #1A1A1A;
 
   /* Shadows */
-  --shadow-sm:  3px 3px 0px 0px #1A1A1A;
-  --shadow-md:  4px 4px 0px 0px #1A1A1A;
-  --shadow-lg:  6px 6px 0px 0px #1A1A1A;
-  --shadow-xl:  8px 8px 0px 0px #1A1A1A;
+  --shadow-sm: 3px 3px 0px 0px #1A1A1A;
+  --shadow-md: 4px 4px 0px 0px #1A1A1A;
+  --shadow-lg: 6px 6px 0px 0px #1A1A1A;
+  --shadow-xl: 8px 8px 0px 0px #1A1A1A;
   --shadow-2xl: 12px 12px 0px 0px #1A1A1A;
 }
 
@@ -64,14 +64,17 @@ body {
   width: 10px;
   height: 10px;
 }
+
 ::-webkit-scrollbar-track {
   background: var(--cream);
 }
+
 ::-webkit-scrollbar-thumb {
   background: var(--ink);
   border-radius: 999px;
   border: 2px solid var(--cream);
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: #333;
 }
@@ -90,17 +93,33 @@ body {
 
 /* ─── Utility: Bounce animation for empty states ─────────────────────────── */
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-8px); }
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
 }
+
 .animate-float {
   animation: float 3s ease-in-out infinite;
 }
 
 @keyframes wiggle {
-  0%, 100% { transform: rotate(-2deg); }
-  50% { transform: rotate(2deg); }
+
+  0%,
+  100% {
+    transform: rotate(-2deg);
+  }
+
+  50% {
+    transform: rotate(2deg);
+  }
 }
+
 .animate-wiggle {
   animation: wiggle 2s ease-in-out infinite;
 }

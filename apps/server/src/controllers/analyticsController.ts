@@ -37,6 +37,25 @@ export const getDashboardAnalytics = async (req: Request, res: Response, next: N
       { $sort: { _id: 1 } }
     ]);
 
+    // Velocity Chart (Last 7 days completed tasks)
+    const sevenDaysAgoForVelocity = new Date();
+    sevenDaysAgoForVelocity.setDate(sevenDaysAgoForVelocity.getDate() - 7);
+    const completedRecentTasks = await Task.find({
+      organizationId,
+      status: TaskStatus.DONE,
+      updatedAt: { $gte: sevenDaysAgoForVelocity }
+    });
+    
+    const velocityChart = new Array(7).fill(0);
+    const nowForVelocity = new Date();
+    completedRecentTasks.forEach(task => {
+      const diffTime = Math.abs(nowForVelocity.getTime() - task.updatedAt.getTime());
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      if (diffDays < 7) {
+        velocityChart[6 - diffDays]++;
+      }
+    });
+
     res.status(200).json({
       overview: {
         totalProjects,
@@ -48,6 +67,7 @@ export const getDashboardAnalytics = async (req: Request, res: Response, next: N
         projectsProgress: projects,
         taskStatus: taskStatusCounts,
         activityTrend,
+        velocityChart,
       }
     });
   } catch (error) {

@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
@@ -17,12 +19,12 @@ const sizeMap = {
 
 // Pastel colors for avatar fallback backgrounds
 const colorPalette = [
-  'bg-[#BAE6FD]', // sky
-  'bg-[#DDD6FE]', // lavender
-  'bg-[#BBF7D0]', // mint
-  'bg-[#FBCFE8]', // pink
-  'bg-[#FEF08A]', // yellow
-  'bg-[#FED7AA]', // orange
+  'bg-sky', // sky
+  'bg-lavender', // lavender
+  'bg-mint', // mint
+  'bg-pink-pastel', // pink
+  'bg-yellow-pastel', // yellow
+  'bg-orange-pastel', // orange
 ];
 
 function getColor(name: string) {
@@ -31,16 +33,29 @@ function getColor(name: string) {
 }
 
 export function Avatar({ src, fallback, className, size = 'md' }: AvatarProps) {
+  const [imgError, setImgError] = React.useState(false);
+
+  // Reset error state if src changes
+  React.useEffect(() => {
+    setImgError(false);
+  }, [src]);
+
   const initials = fallback
-    ? fallback.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)
+    ? fallback.trim().split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 2)
     : '?';
 
   const bgColor = getColor(fallback || '?');
 
-  if (src) {
+  if (src && !imgError) {
     return (
-      <div className={cn('rounded-full border-[3px] border-[#1A1A1A] overflow-hidden shrink-0', sizeMap[size], className)}>
-        <img src={src} alt={fallback} className="w-full h-full object-cover" />
+      <div className={cn('rounded-full border-[3px] border-ink overflow-hidden shrink-0', sizeMap[size], className)}>
+        <img
+          src={src}
+          alt={fallback}
+          className="w-full h-full object-cover"
+          onError={() => setImgError(true)}
+          referrerPolicy="no-referrer"
+        />
       </div>
     );
   }
@@ -48,7 +63,7 @@ export function Avatar({ src, fallback, className, size = 'md' }: AvatarProps) {
   return (
     <div
       className={cn(
-        'rounded-full border-[3px] border-[#1A1A1A] flex items-center justify-center font-bold text-[#1A1A1A] shrink-0 shadow-[2px_2px_0px_#1A1A1A]',
+        'rounded-full border-[3px] border-ink flex items-center justify-center font-bold text-ink shrink-0 shadow-neo-xs',
         bgColor,
         sizeMap[size],
         className

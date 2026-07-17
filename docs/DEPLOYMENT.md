@@ -8,8 +8,8 @@ This Multi-Tenant SaaS platform is designed to be highly scalable and is configu
 2. Connect your GitHub repository.
 3. Configure the service:
    - **Environment**: `Node`
-   - **Build Command**: `pnpm install && pnpm --filter server build`
-   - **Start Command**: `pnpm --filter server start`
+   - **Build Command**: `pnpm install && pnpm --filter @saas/server build`
+   - **Start Command**: `pnpm --filter @saas/server start`
 4. Set the following Environment Variables in the Render dashboard:
    - `NODE_ENV=production`
    - `MONGODB_URI=<Your MongoDB Atlas URI>`
