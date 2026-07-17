@@ -10,7 +10,7 @@ const plusJakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Omnistack — The workspace for modern teams",
+  title: "ReadyNest — The workspace for modern teams",
   description: "A beautiful, production-ready multi-tenant SaaS workspace platform.",
 };
 

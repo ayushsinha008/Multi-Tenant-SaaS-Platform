@@ -21,7 +21,7 @@ export default function Home() {
             <div className="w-9 h-9 rounded-xl bg-[#DDD6FE] border-[2px] border-[#1A1A1A] flex items-center justify-center shadow-[2px_2px_0px_#1A1A1A]">
               <Sparkles className="w-4 h-4 text-[#1A1A1A]" strokeWidth={2.5} />
             </div>
-            <span className="font-bold text-xl tracking-tight text-[#1A1A1A]">Omnistack</span>
+            <span className="font-bold text-xl tracking-tight text-[#1A1A1A]">ReadyNest</span>
           </div>
           <div className="flex items-center gap-4">
             <Link href="/login" className="text-sm font-bold text-[#1A1A1A] hover:underline">Sign in</Link>
@@ -176,7 +176,7 @@ export default function Home() {
                   <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-green-500" strokeWidth={3} /> Single Sign-On (SSO)</li>
                 </ul>
               </div>
-              <Link href="mailto:sales@omnistack.com" className="block mt-8">
+              <Link href="mailto:sales@readynest.com" className="block mt-8">
                 <Button variant="outline" className="w-full">Contact Sales</Button>
               </Link>
             </div>
