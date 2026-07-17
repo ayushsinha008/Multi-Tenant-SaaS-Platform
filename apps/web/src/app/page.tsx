@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowRight, CheckCircle2, Layout, Zap, Shield, Users, Sparkles, Folder, CheckSquare } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Layout, Zap, Shield, Users, Sparkles, Folder, CheckSquare, Layers } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
 export default function Home() {
@@ -19,7 +19,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="font-bold text-lg flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-xl bg-[#DDD6FE] border-[2px] border-[#1A1A1A] flex items-center justify-center shadow-[2px_2px_0px_#1A1A1A]">
-              <Sparkles className="w-4 h-4 text-[#1A1A1A]" strokeWidth={2.5} />
+              <Layers className="w-4 h-4 text-[#1A1A1A]" strokeWidth={2.5} />
             </div>
             <span className="font-bold text-xl tracking-tight text-[#1A1A1A]">Omnistack</span>
           </div>

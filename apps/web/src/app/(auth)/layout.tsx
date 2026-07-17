@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Sparkles, LayoutDashboard, CheckSquare, Users } from 'lucide-react';
+import { Sparkles, LayoutDashboard, CheckSquare, Users, Layers } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
@@ -14,9 +14,9 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
         <div className="relative z-10 w-full max-w-md">
           {/* Logo */}
-          <div className="flex items-center gap-3 mb-12">
+          <div className="flex items-center gap-4 mb-16">
             <div className="w-12 h-12 rounded-xl border-[3px] border-[#1A1A1A] bg-white flex items-center justify-center shadow-[4px_4px_0px_#1A1A1A]">
-              <Sparkles className="w-6 h-6 text-[#1A1A1A]" strokeWidth={2.5} />
+              <Layers className="w-6 h-6 text-[#1A1A1A]" strokeWidth={2.5} />
             </div>
             <h1 className="text-3xl font-bold tracking-tight">Omnistack</h1>
           </div>

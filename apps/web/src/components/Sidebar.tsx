@@ -13,6 +13,7 @@ import {
   Activity,
   File,
   Sparkles,
+  Layers,
   ChevronRight,
   LogOut,
 } from 'lucide-react';
@@ -39,7 +40,7 @@ export function Sidebar() {
       <div className="p-6 pb-4 border-b-[3px] border-[#1A1A1A]">
         <Link href="/dashboard" className="flex items-center gap-3 group">
           <div className="w-11 h-11 rounded-xl border-[3px] border-[#1A1A1A] bg-[#DDD6FE] flex items-center justify-center shadow-[3px_3px_0px_#1A1A1A] group-hover:-translate-y-0.5 group-hover:shadow-[4px_4px_0px_#1A1A1A] transition-all">
-            <Sparkles className="w-5 h-5 text-[#1A1A1A]" strokeWidth={2.5} />
+            <Layers className="w-5 h-5 text-[#1A1A1A]" strokeWidth={2.5} />
           </div>
           <div>
             <h1 className="text-lg font-bold text-[#1A1A1A] tracking-tight leading-none">Omnistack</h1>
