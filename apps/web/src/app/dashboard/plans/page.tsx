@@ -88,7 +88,7 @@ export default function PlansPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Free Tier */}
+          {/* Starter Tier */}
           <div className={`relative p-8 rounded-3xl border-[4px] border-[#1A1A1A] flex flex-col transition-all duration-300 ${activeOrg?.plan === 'FREE' ? 'bg-[#FEF08A] shadow-[8px_8px_0px_#1A1A1A] -translate-y-2' : 'bg-white hover:shadow-[8px_8px_0px_#1A1A1A] hover:-translate-y-1'}`}>
             {activeOrg?.plan === 'FREE' && (
               <div className="absolute -top-4 -right-4 px-4 py-2 bg-[#BBF7D0] border-[3px] border-[#1A1A1A] rounded-xl text-sm font-black text-[#1A1A1A] transform rotate-6 shadow-[4px_4px_0px_#1A1A1A]">
@@ -96,17 +96,16 @@ export default function PlansPage() {
               </div>
             )}
             <div className="flex-1">
-              <div className="inline-block px-3 py-1 bg-[#1A1A1A] text-white text-xs font-bold uppercase tracking-wider rounded-lg mb-4">Starter</div>
-              <h3 className="text-3xl font-black text-[#1A1A1A] uppercase">Free</h3>
+              <h3 className="text-2xl font-black text-[#1A1A1A] mb-4">Starter</h3>
               <div className="mt-2 mb-8 flex items-end gap-1">
-                <span className="text-5xl font-black text-[#1A1A1A]">₹0</span>
-                <span className="text-lg font-bold text-[#1A1A1A]/50 mb-1">/mo</span>
+                <span className="text-5xl font-black text-[#1A1A1A]">$0</span>
+                <span className="text-sm font-bold text-[#1A1A1A]/50 mb-2 uppercase tracking-widest">/MONTH</span>
               </div>
               <ul className="space-y-4 mb-8">
-                {['Up to 3 Projects', 'Basic Kanban Boards', 'Standard Support', '5MB File Upload Limit'].map((feat, i) => (
+                {['Up to 5 members', '3 Projects limit', 'Basic ticket support'].map((feat, i) => (
                   <li key={i} className="flex items-start gap-3 text-sm font-bold text-[#1A1A1A]">
-                    <div className="w-5 h-5 rounded-md bg-[#BBF7D0] border-[2px] border-[#1A1A1A] flex items-center justify-center shrink-0 mt-0.5">
-                      <CheckSquare className="w-3 h-3 text-[#1A1A1A]" strokeWidth={3} />
+                    <div className="w-5 h-5 rounded-full border-[2px] border-[#22C55E] flex items-center justify-center shrink-0 mt-0.5 bg-white text-[#22C55E]">
+                      <CheckSquare className="w-3 h-3" strokeWidth={3} />
                     </div>
                     {feat}
                   </li>
@@ -116,36 +115,38 @@ export default function PlansPage() {
             {activeOrg?.plan !== 'FREE' ? (
               <button
                 onClick={() => updateWorkspace.mutate({ plan: 'FREE' } as any)}
-                className="w-full py-4 bg-white border-[3px] border-[#1A1A1A] rounded-xl text-sm font-black uppercase tracking-wider hover:bg-[#FEF08A] transition-colors"
+                className="w-full py-4 bg-white border-[3px] border-[#1A1A1A] rounded-xl text-sm font-black tracking-wider hover:bg-[#FEF08A] transition-colors"
               >
-                Downgrade to Free
+                Get Started
               </button>
             ) : (
-              <button className="w-full py-4 bg-white/50 border-[3px] border-[#1A1A1A]/20 rounded-xl text-sm font-black uppercase tracking-wider text-[#1A1A1A]/40 cursor-not-allowed">
+              <button className="w-full py-4 bg-white border-[3px] border-[#1A1A1A] rounded-xl text-sm font-black tracking-wider text-[#1A1A1A]/50 cursor-not-allowed">
                 Current Plan
               </button>
             )}
           </div>
 
-          {/* Pro Tier */}
-          <div className={`relative p-8 rounded-3xl border-[4px] border-[#1A1A1A] flex flex-col transition-all duration-300 ${activeOrg?.plan === 'PRO' ? 'bg-[#BAE6FD] shadow-[8px_8px_0px_#1A1A1A] -translate-y-2' : 'bg-[#FDF4FF] hover:bg-[#FCE7F3] hover:shadow-[8px_8px_0px_#1A1A1A] hover:-translate-y-1'}`}>
+          {/* Professional Tier */}
+          <div className={`relative p-8 rounded-3xl border-[4px] border-[#1A1A1A] flex flex-col transition-all duration-300 ${activeOrg?.plan === 'PRO' ? 'bg-[#DDD6FE] shadow-[8px_8px_0px_#1A1A1A] -translate-y-2' : 'bg-[#E9D5FF] hover:bg-[#DDD6FE] hover:shadow-[8px_8px_0px_#1A1A1A] hover:-translate-y-1'}`}>
+            <div className="absolute top-6 right-6 px-3 py-1 bg-[#1A1A1A] border-[2px] border-[#1A1A1A] rounded-xl text-[10px] font-black text-white uppercase tracking-wider">
+              POPULAR
+            </div>
             {activeOrg?.plan === 'PRO' && (
               <div className="absolute -top-4 -right-4 px-4 py-2 bg-[#FBCFE8] border-[3px] border-[#1A1A1A] rounded-xl text-sm font-black text-[#1A1A1A] transform rotate-6 shadow-[4px_4px_0px_#1A1A1A]">
                 ACTIVE PLAN
               </div>
             )}
             <div className="flex-1">
-              <div className="inline-block px-3 py-1 bg-[#8B5CF6] text-white text-xs font-bold uppercase tracking-wider rounded-lg mb-4">Most Popular</div>
-              <h3 className="text-3xl font-black text-[#1A1A1A] uppercase">Pro</h3>
+              <h3 className="text-2xl font-black text-[#1A1A1A] mb-4">Professional</h3>
               <div className="mt-2 mb-8 flex items-end gap-1">
-                <span className="text-5xl font-black text-[#1A1A1A]">₹999</span>
-                <span className="text-lg font-bold text-[#1A1A1A]/50 mb-1">/mo</span>
+                <span className="text-5xl font-black text-[#1A1A1A]">$29</span>
+                <span className="text-sm font-bold text-[#1A1A1A]/50 mb-2 uppercase tracking-widest">/MONTH</span>
               </div>
               <ul className="space-y-4 mb-8">
-                {['Unlimited Projects', 'Advanced Analytics', 'Priority 24/7 Support', '100MB File Upload Limit'].map((feat, i) => (
+                {['Unlimited members', 'Unlimited Projects', '100GB secure storage', 'Priority direct support'].map((feat, i) => (
                   <li key={i} className="flex items-start gap-3 text-sm font-bold text-[#1A1A1A]">
-                    <div className="w-5 h-5 rounded-md bg-[#BAE6FD] border-[2px] border-[#1A1A1A] flex items-center justify-center shrink-0 mt-0.5">
-                      <CheckSquare className="w-3 h-3 text-[#1A1A1A]" strokeWidth={3} />
+                    <div className="w-5 h-5 rounded-full border-[2px] border-white flex items-center justify-center shrink-0 mt-0.5 bg-transparent text-white">
+                      <CheckSquare className="w-3 h-3" strokeWidth={3} />
                     </div>
                     {feat}
                   </li>
@@ -154,37 +155,35 @@ export default function PlansPage() {
             </div>
             {activeOrg?.plan !== 'PRO' ? (
               <button
-                onClick={() => handleUpgrade('PRO_PLAN', '999.00')}
-                className="w-full py-4 bg-[#8B5CF6] text-white border-[3px] border-[#1A1A1A] rounded-xl text-sm font-black uppercase tracking-wider hover:bg-[#7C3AED] hover:-translate-y-1 hover:shadow-[4px_4px_0px_#1A1A1A] transition-all"
+                onClick={() => handleUpgrade('PRO_PLAN', '29.00')}
+                className="w-full py-4 bg-[#1A1A1A] text-white border-[3px] border-[#1A1A1A] rounded-xl text-sm font-black tracking-wider hover:bg-[#2A2A2A] hover:-translate-y-1 hover:shadow-[4px_4px_0px_#1A1A1A] transition-all"
               >
-                Upgrade to Pro
+                Start Free Trial
               </button>
             ) : (
-              <button className="w-full py-4 bg-white/50 border-[3px] border-[#1A1A1A]/20 rounded-xl text-sm font-black uppercase tracking-wider text-[#1A1A1A]/40 cursor-not-allowed">
+              <button className="w-full py-4 bg-[#1A1A1A]/50 text-white/50 border-[3px] border-[#1A1A1A]/20 rounded-xl text-sm font-black tracking-wider cursor-not-allowed">
                 Current Plan
               </button>
             )}
           </div>
 
-          {/* Business Tier */}
-          <div className={`relative p-8 rounded-3xl border-[4px] border-[#1A1A1A] flex flex-col transition-all duration-300 ${activeOrg?.plan === 'BUSINESS' ? 'bg-[#DDD6FE] shadow-[8px_8px_0px_#1A1A1A] -translate-y-2' : 'bg-[#1A1A1A] text-white hover:shadow-[8px_8px_0px_#8B5CF6] hover:-translate-y-1'}`}>
+          {/* Enterprise Tier */}
+          <div className={`relative p-8 rounded-3xl border-[4px] border-[#1A1A1A] flex flex-col transition-all duration-300 ${activeOrg?.plan === 'BUSINESS' ? 'bg-[#FEF08A] shadow-[8px_8px_0px_#1A1A1A] -translate-y-2' : 'bg-white hover:shadow-[8px_8px_0px_#1A1A1A] hover:-translate-y-1'}`}>
             {activeOrg?.plan === 'BUSINESS' && (
               <div className="absolute -top-4 -right-4 px-4 py-2 bg-[#FEF08A] border-[3px] border-[#1A1A1A] rounded-xl text-sm font-black text-[#1A1A1A] transform rotate-6 shadow-[4px_4px_0px_#1A1A1A]">
                 ACTIVE PLAN
               </div>
             )}
             <div className="flex-1">
-              <div className="inline-block px-3 py-1 bg-white text-[#1A1A1A] text-xs font-bold uppercase tracking-wider rounded-lg mb-4">Enterprise</div>
-              <h3 className={`text-3xl font-black uppercase ${activeOrg?.plan === 'BUSINESS' ? 'text-[#1A1A1A]' : 'text-white'}`}>Business</h3>
+              <h3 className="text-2xl font-black text-[#1A1A1A] mb-4">Enterprise</h3>
               <div className="mt-2 mb-8 flex items-end gap-1">
-                <span className={`text-5xl font-black ${activeOrg?.plan === 'BUSINESS' ? 'text-[#1A1A1A]' : 'text-white'}`}>₹1999</span>
-                <span className={`text-lg font-bold mb-1 ${activeOrg?.plan === 'BUSINESS' ? 'text-[#1A1A1A]/50' : 'text-white/50'}`}>/mo</span>
+                <span className="text-5xl font-black text-[#1A1A1A]">Custom</span>
               </div>
               <ul className="space-y-4 mb-8">
-                {['Everything in Pro', 'Custom Domain', 'Dedicated Account Manager', '1GB File Upload Limit'].map((feat, i) => (
-                  <li key={i} className={`flex items-start gap-3 text-sm font-bold ${activeOrg?.plan === 'BUSINESS' ? 'text-[#1A1A1A]' : 'text-white/90'}`}>
-                    <div className="w-5 h-5 rounded-md bg-[#DDD6FE] border-[2px] border-[#1A1A1A] flex items-center justify-center shrink-0 mt-0.5">
-                      <CheckSquare className="w-3 h-3 text-[#1A1A1A]" strokeWidth={3} />
+                {['Custom seat parameters', 'Advanced security logs', 'Dedicated success manager', 'Single Sign-On (SSO)'].map((feat, i) => (
+                  <li key={i} className="flex items-start gap-3 text-sm font-bold text-[#1A1A1A]">
+                    <div className="w-5 h-5 rounded-full border-[2px] border-[#22C55E] flex items-center justify-center shrink-0 mt-0.5 bg-white text-[#22C55E]">
+                      <CheckSquare className="w-3 h-3" strokeWidth={3} />
                     </div>
                     {feat}
                   </li>
@@ -193,13 +192,13 @@ export default function PlansPage() {
             </div>
             {activeOrg?.plan !== 'BUSINESS' ? (
               <button
-                onClick={() => handleUpgrade('BUSINESS_PLAN', '1999.00')}
-                className="w-full py-4 bg-white text-[#1A1A1A] border-[3px] border-[#1A1A1A] rounded-xl text-sm font-black uppercase tracking-wider hover:bg-[#FEF08A] hover:-translate-y-1 hover:shadow-[4px_4px_0px_#1A1A1A] transition-all"
+                onClick={() => { window.location.href = 'mailto:sales@readynest.com'; }}
+                className="w-full py-4 bg-white text-[#1A1A1A] border-[3px] border-[#1A1A1A] rounded-xl text-sm font-black tracking-wider hover:bg-[#FEF08A] hover:-translate-y-1 hover:shadow-[4px_4px_0px_#1A1A1A] transition-all"
               >
-                Upgrade to Business
+                Contact Sales
               </button>
             ) : (
-              <button className="w-full py-4 bg-white/50 border-[3px] border-[#1A1A1A]/20 rounded-xl text-sm font-black uppercase tracking-wider text-[#1A1A1A]/40 cursor-not-allowed">
+              <button className="w-full py-4 bg-white border-[3px] border-[#1A1A1A] rounded-xl text-sm font-black tracking-wider text-[#1A1A1A]/50 cursor-not-allowed">
                 Current Plan
               </button>
             )}
