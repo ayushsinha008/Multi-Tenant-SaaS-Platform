@@ -185,14 +185,8 @@ export default function Home() {
       </section>
 
       {/* ─── Footer ────────────────────────────────────────────────────────── */}
-      <footer className="max-w-7xl mx-auto px-6 pt-12 border-t-[3px] border-[#1A1A1A]/10 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm font-medium text-[#1A1A1A]/40">
-        <div>© 2026 ReadyNest. Built by Ayush.</div>
-        <div className="flex gap-5">
-          <a href="#" className="hover:text-[#1A1A1A] hover:underline">Twitter</a>
-          <a href="#" className="hover:text-[#1A1A1A] hover:underline">GitHub</a>
-          <a href="#" className="hover:text-[#1A1A1A] hover:underline">Terms</a>
-          <a href="#" className="hover:text-[#1A1A1A] hover:underline">Privacy</a>
-        </div>
+      <footer className="max-w-7xl mx-auto px-6 pt-12 border-t-[3px] border-[#1A1A1A]/10 flex justify-center items-center gap-4 text-sm font-medium text-[#1A1A1A]/40">
+        <div>© 2026 Built by Ayush.</div>
       </footer>
     </div>
   );
