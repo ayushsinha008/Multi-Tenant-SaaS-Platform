@@ -136,30 +136,36 @@ Users can belong to multiple organizations and switch the active workspace from 
 ## Architecture
 
 ```mermaid
-flowchart TB
-    subgraph Client
-        FE[Next.js Frontend]
+flowchart LR
+    FE["Next.js Frontend"]
+
+    subgraph Gateway["Backend Gateway"]
+        direction TB
+        API["Express REST API"]
+        WS["Socket.io"]
+        Cron["Node Cron"]
     end
 
-    subgraph Server
-        API[Express REST API]
-        WS[Socket.io Server]
-        Cron[Node Cron Jobs]
-        Auth[Auth Middleware]
-        Tenant[Tenant Middleware]
-        Role[Role Middleware]
+    subgraph Pipeline["Request Pipeline"]
+        direction TB
+        Auth["1. Auth"]
+        Tenant["2. Tenant"]
+        Role["3. RBAC"]
+        Ctrl["Controllers"]
+        Auth --> Tenant --> Role --> Ctrl
     end
 
-    subgraph Data
-        DB[(MongoDB Atlas)]
-        CDN[Cloudinary]
+    subgraph Storage["Data Layer"]
+        direction TB
+        DB[("MongoDB Atlas")]
+        CDN["Cloudinary"]
     end
 
-    FE -->|HTTP /api/v1| API
-    FE -->|WebSocket| WS
-    API --> Auth --> Tenant --> Role --> Controllers
-    Controllers --> DB
-    Controllers --> CDN
+    FE -->|"HTTP /api/v1"| API
+    FE -->|"WebSocket"| WS
+    API --> Auth
+    Ctrl --> DB
+    Ctrl --> CDN
     WS --> DB
     Cron --> DB
 ```
