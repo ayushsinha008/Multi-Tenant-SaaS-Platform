@@ -28,7 +28,9 @@ export default function DashboardOverview() {
   });
 
   const activeOrg = organizations.find((org: any) => org._id === activeWorkspaceId);
-  const barHeights = [40, 70, 45, 90, 65, 80, 50, 100, 75, 60, 85, 95];
+  const rawVelocity = analytics?.charts?.velocityChart || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  const maxVelocity = Math.max(...rawVelocity, 1);
+  const barHeights = rawVelocity.map((count: number) => (count / maxVelocity) * 100);
 
   const kpis = [
     { label: 'Projects', value: analytics?.overview?.totalProjects ?? 0, icon: Folder, color: cardColors[0] },
