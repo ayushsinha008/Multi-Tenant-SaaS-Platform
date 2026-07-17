@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: omnistack-api
+    runtime: node
+    plan: free
+    buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm --filter @saas/server build
+    startCommand: pnpm --filter @saas/server start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
