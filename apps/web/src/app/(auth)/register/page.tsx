@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/useAuthStore';
 import { motion } from 'framer-motion';
 import { Sparkles, ShieldCheck } from 'lucide-react';
-import { auth, googleProvider } from '@/lib/firebase';
+import { getFirebaseAuth } from '@/lib/firebase';
 import { signInWithPopup } from 'firebase/auth';
 import { api } from '@/lib/axios';
 import Link from 'next/link';
@@ -22,6 +22,7 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
+      const { auth, googleProvider } = getFirebaseAuth();
       const result = await signInWithPopup(auth, googleProvider);
 
       const res = await api.post('/auth/google', { 
