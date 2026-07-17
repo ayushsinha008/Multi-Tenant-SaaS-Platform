@@ -42,7 +42,7 @@ export function Sidebar() {
             <Sparkles className="w-5 h-5 text-[#1A1A1A]" strokeWidth={2.5} />
           </div>
           <div>
-            <h1 className="text-lg font-bold text-[#1A1A1A] tracking-tight leading-none">ReadyNest</h1>
+            <h1 className="text-lg font-bold text-[#1A1A1A] tracking-tight leading-none">Omnistack</h1>
             <p className="text-xs font-medium text-[#1A1A1A]/40 mt-0.5">Workspace</p>
           </div>
         </Link>

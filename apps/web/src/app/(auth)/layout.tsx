@@ -18,7 +18,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             <div className="w-12 h-12 rounded-xl border-[3px] border-[#1A1A1A] bg-white flex items-center justify-center shadow-[4px_4px_0px_#1A1A1A]">
               <Sparkles className="w-6 h-6 text-[#1A1A1A]" strokeWidth={2.5} />
             </div>
-            <h1 className="text-3xl font-bold tracking-tight">ReadyNest</h1>
+            <h1 className="text-3xl font-bold tracking-tight">Omnistack</h1>
           </div>
 
           {/* Clean value prop */}

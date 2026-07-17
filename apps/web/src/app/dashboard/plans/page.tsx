@@ -98,7 +98,7 @@ export default function PlansPage() {
             <div className="flex-1">
               <h3 className="text-2xl font-black text-[#1A1A1A] mb-4">Starter</h3>
               <div className="mt-2 mb-8 flex items-end gap-1">
-                <span className="text-5xl font-black text-[#1A1A1A]">$0</span>
+                <span className="text-5xl font-black text-[#1A1A1A]">₹0</span>
                 <span className="text-sm font-bold text-[#1A1A1A]/50 mb-2 uppercase tracking-widest">/MONTH</span>
               </div>
               <ul className="space-y-4 mb-8">
@@ -139,7 +139,7 @@ export default function PlansPage() {
             <div className="flex-1">
               <h3 className="text-2xl font-black text-[#1A1A1A] mb-4">Professional</h3>
               <div className="mt-2 mb-8 flex items-end gap-1">
-                <span className="text-5xl font-black text-[#1A1A1A]">$29</span>
+                <span className="text-5xl font-black text-[#1A1A1A]">₹999</span>
                 <span className="text-sm font-bold text-[#1A1A1A]/50 mb-2 uppercase tracking-widest">/MONTH</span>
               </div>
               <ul className="space-y-4 mb-8">
@@ -177,7 +177,8 @@ export default function PlansPage() {
             <div className="flex-1">
               <h3 className="text-2xl font-black text-[#1A1A1A] mb-4">Enterprise</h3>
               <div className="mt-2 mb-8 flex items-end gap-1">
-                <span className="text-5xl font-black text-[#1A1A1A]">Custom</span>
+                <span className="text-5xl font-black text-[#1A1A1A]">₹1999</span>
+                <span className="text-sm font-bold text-[#1A1A1A]/50 mb-2 uppercase tracking-widest">/MONTH</span>
               </div>
               <ul className="space-y-4 mb-8">
                 {['Custom seat parameters', 'Advanced security logs', 'Dedicated success manager', 'Single Sign-On (SSO)'].map((feat, i) => (

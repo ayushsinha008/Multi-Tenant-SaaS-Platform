@@ -21,7 +21,7 @@ export default function Home() {
             <div className="w-9 h-9 rounded-xl bg-[#DDD6FE] border-[2px] border-[#1A1A1A] flex items-center justify-center shadow-[2px_2px_0px_#1A1A1A]">
               <Sparkles className="w-4 h-4 text-[#1A1A1A]" strokeWidth={2.5} />
             </div>
-            <span className="font-bold text-xl tracking-tight text-[#1A1A1A]">ReadyNest</span>
+            <span className="font-bold text-xl tracking-tight text-[#1A1A1A]">Omnistack</span>
           </div>
           <div className="flex items-center gap-4">
             <Link href="/login" className="text-sm font-bold text-[#1A1A1A] hover:underline">Sign in</Link>
@@ -125,7 +125,7 @@ export default function Home() {
               <div className="space-y-4">
                 <h3 className="text-lg font-bold text-[#1A1A1A]">Starter</h3>
                 <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-bold text-[#1A1A1A] tracking-tight">$0</span>
+                  <span className="text-4xl font-bold text-[#1A1A1A] tracking-tight">₹0</span>
                   <span className="text-xs font-semibold text-[#1A1A1A]/40 uppercase">/month</span>
                 </div>
                 <ul className="space-y-3.5 text-sm font-semibold text-[#1A1A1A]/60 pt-4">
@@ -147,7 +147,7 @@ export default function Home() {
               <div className="space-y-4">
                 <h3 className="text-lg font-bold text-[#1A1A1A]">Professional</h3>
                 <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-bold text-[#1A1A1A] tracking-tight">$29</span>
+                  <span className="text-4xl font-bold text-[#1A1A1A] tracking-tight">₹999</span>
                   <span className="text-xs font-semibold text-[#1A1A1A]/40 uppercase">/month</span>
                 </div>
                 <ul className="space-y-3.5 text-sm font-semibold text-[#1A1A1A]/70 pt-4">
@@ -167,7 +167,8 @@ export default function Home() {
               <div className="space-y-4">
                 <h3 className="text-lg font-bold text-[#1A1A1A]">Enterprise</h3>
                 <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-bold text-[#1A1A1A] tracking-tight">Custom</span>
+                  <span className="text-4xl font-bold text-[#1A1A1A] tracking-tight">₹1999</span>
+                  <span className="text-xs font-semibold text-[#1A1A1A]/40 uppercase">/month</span>
                 </div>
                 <ul className="space-y-3.5 text-sm font-semibold text-[#1A1A1A]/60 pt-4">
                   <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-green-500" strokeWidth={3} /> Custom seat parameters</li>
@@ -176,7 +177,7 @@ export default function Home() {
                   <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-green-500" strokeWidth={3} /> Single Sign-On (SSO)</li>
                 </ul>
               </div>
-              <Link href="mailto:sales@readynest.com" className="block mt-8">
+              <Link href="mailto:sales@omnistack.com" className="block mt-8">
                 <Button variant="outline" className="w-full">Contact Sales</Button>
               </Link>
             </div>
