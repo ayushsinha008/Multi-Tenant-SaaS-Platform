@@ -13,6 +13,7 @@ import Link from 'next/link';
 export default function LoginPage() {
   const router = useRouter();
   const setUser = useAuthStore((state) => state.setUser);
+  const setActiveWorkspace = useAuthStore((state) => state.setActiveWorkspace);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -31,7 +32,18 @@ export default function LoginPage() {
       });
       
       setUser(res.data.user);
-      router.push('/dashboard');
+      
+      try {
+        const orgRes = await api.get('/organizations');
+        if (orgRes.data.organizations && orgRes.data.organizations.length > 0) {
+          setActiveWorkspace(orgRes.data.organizations[0]._id);
+          router.push('/dashboard');
+        } else {
+          router.push('/onboarding');
+        }
+      } catch (err) {
+        router.push('/onboarding');
+      }
     } catch (err: any) {
       console.error(err);
       setError(err.message || 'Failed to sign in with Google');
