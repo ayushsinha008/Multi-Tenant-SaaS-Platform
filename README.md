@@ -1,6 +1,34 @@
-# Multi-Tenant SaaS Platform
+# 🔗 Nexora
 
-A production-ready Multi-Tenant SaaS platform built with a modern tech stack following Clean Architecture and SOLID principles.
+**A real-time collaborative workspace platform** for teams to manage projects, edit documents together, chat, and track work — all in one place.
+
+Built as a **Week 4 Full-Stack Assignment**: *Real-Time Collaborative Platform* using Next.js, Express, Socket.io, MongoDB, and Redis.
+
+![Next.js 16](https://img.shields.io/badge/Next.js-16-000000?style=flat-square&logo=next.js&logoColor=white)
+![React 19](https://img.shields.io/badge/React-19-20232A?style=flat-square&logo=react&logoColor=61DAFB)
+![Express 5](https://img.shields.io/badge/Express-5-404D59?style=flat-square&logo=express&logoColor=white)
+![Socket.io 4](https://img.shields.io/badge/Socket.io-4-010101?style=flat-square&logo=socket.io&logoColor=white)
+![MongoDB Atlas](https://img.shields.io/badge/MongoDB-Atlas-4EA94B?style=flat-square&logo=mongodb&logoColor=white)
+![Redis Presence](https://img.shields.io/badge/Redis-Presence-DC382D?style=flat-square&logo=redis&logoColor=white)
+![TypeScript 5](https://img.shields.io/badge/TypeScript-5-007ACC?style=flat-square&logo=typescript&logoColor=white)
+![Tailwind 4](https://img.shields.io/badge/Tailwind-4-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)
+
+**Repository:** [github.com/ayushsinha008/Nexora](https://github.com/ayushsinha008/Nexora)
+
+---
+
+## Table of Contents
+
+- [About](#about)
+- [Live Demo](#live-demo)
+- [Features](#features)
+- [Unique Highlights](#unique-highlights)
+- [Tech Stack](#tech-stack)
+- [Architecture](#architecture)
+- [Project Structure](#project-structure)
+- [Quick Start](#quick-start)
+
+---
 
 ## 🚀 Features
 
