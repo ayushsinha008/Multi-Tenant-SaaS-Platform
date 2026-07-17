@@ -66,14 +66,20 @@ Deploy frontend on **Vercel** and backend on **Render**. MongoDB Atlas + Cloudin
 
 ## 3. Frontend (Vercel)
 
-1. [vercel.com](https://vercel.com) → **Import** this GitHub repo
-2. Settings:
-   - **Root Directory:** `apps/web`
-   - **Framework Preset:** Next.js
-   - Enable **Include source files outside of the Root Directory** (needed for pnpm workspace)
-   - **Install Command:** `cd ../.. && pnpm install`
-   - **Build Command:** `pnpm build` (or leave default `next build`)
-3. Environment variables:
+> **Important:** Do **not** set Root Directory to `apps/server` or leave it empty.
+> That causes `Error: No entrypoint found` (Vercel looks for Express `index.js` instead of Next.js).
+> Always use **`apps/web`** and Framework **Next.js**.
+
+1. [vercel.com](https://vercel.com) → **Add New** → **Project** → import this GitHub repo  
+   *(If an old project named `...-server` exists, delete it or ignore it.)*
+2. Before first deploy, click **Edit** next to Root Directory:
+   - Root Directory → **`apps/web`**
+   - Framework Preset → **Next.js** (must not be "Other")
+   - Include files outside root → **ON**
+3. Override commands if needed:
+   - Install: `cd ../.. && corepack enable && pnpm install`
+   - Build: `pnpm run build` (or leave default)
+4. Environment variables:
 
 | Variable | Value |
 |----------|-------|
