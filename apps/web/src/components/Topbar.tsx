@@ -1,7 +1,7 @@
 'use client';
 
 import { useAuthStore } from '@/store/useAuthStore';
-import { Search, Bell, ChevronDown, Check, Building2, CheckCircle2, Circle, LogOut, User } from 'lucide-react';
+import { Search, Bell, ChevronDown, Check, Building2, CheckCircle2, Circle, LogOut, User, Menu } from 'lucide-react';
 import { Avatar } from './ui/Avatar';
 import { useState, useEffect, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 import { useRouter } from 'next/navigation';
 
-export function Topbar({ onOpenCmd }: { onOpenCmd: () => void }) {
+export function Topbar({ onOpenCmd, onOpenMenu }: { onOpenCmd: () => void, onOpenMenu?: () => void }) {
   const { user, activeWorkspaceId, setActiveWorkspace, logout } = useAuthStore();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
@@ -93,16 +93,25 @@ export function Topbar({ onOpenCmd }: { onOpenCmd: () => void }) {
   return (
     <header className="h-[72px] flex items-center justify-between px-6 bg-cream border-b-[3px] border-ink z-30 shrink-0">
 
-      {/* Workspace switcher */}
-      <div className="relative" ref={workspaceRef}>
-        <button
-          onClick={() => setIsWorkspaceOpen(!isWorkspaceOpen)}
-          className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl border-[3px] border-ink bg-sky font-bold text-sm text-ink shadow-neo-sm hover:-translate-y-0.5 hover:shadow-neo-md active:translate-y-[2px] active:shadow-none transition-all"
-        >
-          <Building2 className="w-4 h-4" strokeWidth={2.5} />
-          <span className="max-w-[180px] truncate">{activeOrg?.name || 'Select workspace'}</span>
-          <ChevronDown className={`w-4 h-4 transition-transform ${isWorkspaceOpen ? 'rotate-180' : ''}`} strokeWidth={2.5} />
-        </button>
+      {/* Left Section: Mobile Menu + Workspace switcher */}
+      <div className="flex items-center gap-3 relative" ref={workspaceRef}>
+        {onOpenMenu && (
+          <button 
+            onClick={onOpenMenu}
+            className="md:hidden flex items-center justify-center w-10 h-10 rounded-xl border-[3px] border-ink bg-white shadow-neo-sm hover:-translate-y-0.5 hover:shadow-neo-md active:translate-y-[2px] active:shadow-none transition-all"
+          >
+            <Menu className="w-5 h-5 text-ink" strokeWidth={2.5} />
+          </button>
+        )}
+        <div className="relative">
+          <button
+            onClick={() => setIsWorkspaceOpen(!isWorkspaceOpen)}
+            className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl border-[3px] border-ink bg-sky font-bold text-sm text-ink shadow-neo-sm hover:-translate-y-0.5 hover:shadow-neo-md active:translate-y-[2px] active:shadow-none transition-all"
+          >
+            <Building2 className="w-4 h-4 hidden sm:block" strokeWidth={2.5} />
+            <span className="max-w-[120px] sm:max-w-[180px] truncate">{activeOrg?.name || 'Select workspace'}</span>
+            <ChevronDown className={`w-4 h-4 transition-transform ${isWorkspaceOpen ? 'rotate-180' : ''}`} strokeWidth={2.5} />
+          </button>
 
         <AnimatePresence>
           {isWorkspaceOpen && (
@@ -136,6 +145,7 @@ export function Topbar({ onOpenCmd }: { onOpenCmd: () => void }) {
             </motion.div>
           )}
         </AnimatePresence>
+        </div>
       </div>
 
       {/* Right controls */}

@@ -28,13 +28,22 @@ const navItems = [
   { name: 'Settings', href: '/dashboard/settings', icon: Settings, color: 'var(--lavender)' },
 ];
 
-export function Sidebar() {
+export function Sidebar({ isOpen, onClose }: { isOpen?: boolean, onClose?: () => void }) {
   const pathname = usePathname();
   const router = useRouter();
   const { user } = useAuthStore();
 
   return (
-    <aside className="w-72 h-screen flex flex-col bg-cream border-r-[3px] border-ink overflow-hidden shrink-0 relative z-20">
+    <>
+      {/* Mobile overlay */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-ink/50 z-40 md:hidden" 
+          onClick={onClose}
+        />
+      )}
+
+      <aside className={`fixed inset-y-0 left-0 transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0 transition duration-200 ease-in-out w-72 h-screen flex flex-col bg-cream border-r-[3px] border-ink overflow-hidden shrink-0 z-50`}>
 
       {/* Logo */}
       <div className="p-6 pb-4 border-b-[3px] border-ink">
@@ -108,5 +117,6 @@ export function Sidebar() {
 
 
     </aside>
+    </>
   );
 }

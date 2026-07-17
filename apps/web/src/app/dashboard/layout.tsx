@@ -12,6 +12,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const router = useRouter();
   const { user, activeWorkspaceId, logout } = useAuthStore();
   const [cmdOpen, setCmdOpen] = React.useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [isMounted, setIsMounted] = React.useState(false);
 
   React.useEffect(() => {
@@ -44,10 +45,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="flex h-screen bg-cream overflow-hidden">
-      <Sidebar />
+      <Sidebar isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
 
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        <Topbar onOpenCmd={() => setCmdOpen(true)} />
+        <Topbar onOpenCmd={() => setCmdOpen(true)} onOpenMenu={() => setMobileMenuOpen(true)} />
 
         <main className="flex-1 overflow-y-auto">
           <AnimatePresence mode="wait">
