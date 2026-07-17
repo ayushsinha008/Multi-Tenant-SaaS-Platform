@@ -145,7 +145,7 @@ export default function DashboardOverview() {
           </div>
           <div className="p-6">
             <div className="flex items-end h-[180px] gap-1.5">
-              {barHeights.map((h, i) => (
+              {barHeights.map((h: number, i: number) => (
                 <motion.div
                   key={i}
                   initial={{ height: 0 }}
